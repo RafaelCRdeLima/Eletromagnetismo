@@ -1,0 +1,2624 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{calc,arrows.meta}
+
+%-------------------------------------------------
+% Cores padrao
+%-------------------------------------------------
+\definecolor{myblue}{RGB}{0,86,125}
+\definecolor{mycyan}{RGB}{0,183,235}
+\definecolor{myred}{RGB}{160,30,30}
+\definecolor{mygray}{RGB}{245,247,250}
+\definecolor{mydark}{RGB}{20,35,45}
+\definecolor{mygreen}{RGB}{35,120,80}
+
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{bg=myblue,fg=white}
+\setbeamercolor{title}{fg=white}
+\setbeamertemplate{navigation symbols}{}
+
+%-------------------------------------------------
+% Boxes padrao
+%-------------------------------------------------
+\newtcolorbox{mybox}[1]{
+colback=mygray,
+colframe=myblue,
+title=#1,
+fonttitle=\bfseries,
+arc=3mm,
+boxrule=0.8pt
+}
+
+\newtcolorbox{eqbox}{
+colback=white,
+colframe=mycyan,
+arc=3mm,
+boxrule=0.8pt
+}
+
+\newcommand{\sectioncover}[1]{
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+\fill[myblue] (current page.south west) rectangle (current page.north east);
+\fill[mycyan,opacity=0.25] (current page.north east) circle (4cm);
+\fill[mycyan,opacity=0.18] (current page.south west) circle (5cm);
+\end{tikzpicture}
+\vfill
+\begin{center}
+{\color{white}\Huge\bfseries #1}
+\end{center}
+\vfill
+\end{frame}
+}
+
+\newcommand{\notas}[1]{%
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=south west,
+      xshift=3mm,
+      yshift=3mm,
+      draw,
+      rectangle,
+      rounded corners=2pt,
+      fill=white,
+      font=\tiny,
+      inner sep=2pt]
+at (current page.south west)
+	{notas: #1};
+\end{tikzpicture}
+}
+
+\newcommand{\beautifulcover}{
+{
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+\fill[mydark] (current page.south west) rectangle (current page.north east);
+\fill[myblue!70] ([xshift=-2.5cm,yshift=1.5cm]current page.south west) circle (4.5cm);
+\fill[mycyan!45] ([xshift=2.5cm,yshift=-1.0cm]current page.north east) circle (4.2cm);
+\fill[white,opacity=0.05] (current page.center) circle (7.5cm);
+
+\node[align=center,text=white] at (current page.center) {
+{\Huge\bfseries Matéria Dielétrica}\\[0.35cm]
+{\Large Capítulo 6}\\[0.55cm]
+{\large Polarização, campo auxiliar, energia e forças}
+};
+
+\node[align=center,text=white!75] at ([yshift=-3.1cm]current page.center) {
+Prof. Dr. Rafael Camargo Rodrigues de Lima
+};
+\end{tikzpicture}
+\end{frame}
+}
+}
+
+\begin{document}
+
+\beautifulcover
+
+%=================================================
+\sectioncover{6.1 Introdução}
+
+%-------------------------------------------------
+\begin{frame}{O que é um dielétrico?}
+
+\begin{mybox}{Definição operacional}
+Um dielétrico é um meio que \textbf{não consegue excluir completamente} um campo
+elétrico estático macroscópico de seu interior.
+\end{mybox}
+
+\vspace{0.25cm}
+
+Em um condutor perfeito:
+\[
+\mathbf E_{\rm tot}=0
+\quad \text{no interior.}
+\]
+
+Em um dielétrico:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf E_{\rm tot}(\mathbf r)
+=
+\mathbf E_{\rm ext}(\mathbf r)
++
+\mathbf E_{\rm self}(\mathbf r)
+\neq 0.
+\tag{6.1}
+\label{eq:campo-total-dieletrico}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Origem física}
+Ligações químicas e efeitos quânticos restringem o rearranjo das cargas internas.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Condutor versus dielétrico}
+
+\begin{columns}
+\column{0.48\textwidth}
+\begin{mybox}{Condutor perfeito}
+\begin{itemize}
+\item Cargas livres se rearranjam sem barreira macroscópica.
+\item O campo interno estático é nulo.
+\item A carga excedente fica na superfície.
+\end{itemize}
+\end{mybox}
+
+\[
+\mathbf E_{\rm in}=0.
+\]
+
+\column{0.48\textwidth}
+\begin{mybox}{Dielétrico}
+\begin{itemize}
+\item Cargas deslocam-se apenas um pouco.
+\item O campo interno é reduzido, mas não eliminado.
+\item Surgem cargas de polarização.
+\end{itemize}
+\end{mybox}
+
+\[
+\mathbf E_{\rm in}\neq 0.
+\]
+\end{columns}
+
+\vspace{0.25cm}
+
+\begin{alertblock}{Ideia de continuidade}
+Aqui \(\kappa\equiv\epsilon/\epsilon_0\) é a \textbf{constante dielétrica}, ou
+permissividade relativa. O limite \(\kappa\to\infty\) de muitos resultados
+dielétricos reproduz o comportamento de condutores.
+\end{alertblock}
+
+\end{frame}
+
+%=================================================
+\sectioncover{6.2 Polarização}
+
+%-------------------------------------------------
+\begin{frame}{Carga livre e carga de polarização}
+
+\small
+
+O campo externo é produzido por cargas que não pertencem ao dielétrico. Chamamos essas cargas de
+\textbf{cargas livres}.
+
+\begin{mybox}{Densidade total de carga}
+A carga que entra nas equações de Maxwell é a soma:
+\end{mybox}
+
+\begin{eqbox}
+\begin{equation}
+\rho(\mathbf r)
+=
+\rho_f(\mathbf r)
++
+\rho_P(\mathbf r).
+\tag{6.2}
+\label{eq:carga-total-polarizacao}
+\end{equation}
+\end{eqbox}
+
+\begin{itemize}
+\item \(\rho_f\): carga livre, colocada ou controlada externamente.
+\item \(\rho_P\): carga de polarização, induzida dentro do material.
+\end{itemize}
+
+\begin{alertblock}{Leitura física}
+\(\rho_P\) é a carga macroscópica que aparece porque cargas positivas e negativas
+se deslocam levemente em sentidos opostos.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{A função polarização \(\mathbf P(\mathbf r)\)}
+
+\small
+
+Para uma amostra neutra de volume \(V\) e superfície \(S\), a carga de polarização
+total deve somar zero:
+
+\begin{eqbox}
+\begin{equation}
+\int_V d^3r\,\rho_P(\mathbf r)
++
+\int_S dS\,\sigma_P(\mathbf r_S)
+=0.
+\tag{6.3}
+\label{eq:neutralidade-polarizacao}
+\end{equation}
+\end{eqbox}
+
+Zangwill introduz \(\mathbf P(\mathbf r)\) por:
+
+\begin{eqbox}
+\begin{align}
+\rho_P(\mathbf r)
+&=
+-\nabla\cdot \mathbf P(\mathbf r),
+\qquad \mathbf r\in V,
+\tag{6.4}
+\\
+\sigma_P(\mathbf r_S)
+&=
+\mathbf P(\mathbf r_S)\cdot\hat{\mathbf n}(\mathbf r_S),
+\qquad \mathbf r_S\in S,
+\tag{6.5}
+\\
+\mathbf P(\mathbf r)&=0,
+\qquad \mathbf r\notin V.
+\tag{6.6}
+\end{align}
+\end{eqbox}
+
+\notas{pag.1-2}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Por que essas definições garantem neutralidade?}
+
+\footnotesize
+
+Substituindo \(\rho_P=-\nabla\cdot\mathbf P\) e
+\(\sigma_P=\mathbf P\cdot\hat{\mathbf n}\):
+
+\[
+Q_P
+=
+\int_V d^3r\,\rho_P
++
+\int_S dS\,\sigma_P.
+\]
+
+\[
+Q_P
+=
+-\int_V d^3r\,\nabla\cdot\mathbf P
++
+\int_S dS\,\mathbf P\cdot\hat{\mathbf n}.
+\]
+
+Pelo teorema da divergência,
+
+\[
+\int_V d^3r\,\nabla\cdot\mathbf P
+=
+\int_S dS\,\mathbf P\cdot\hat{\mathbf n}.
+\]
+
+\begin{eqbox}
+\begin{equation}
+Q_P=0.
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Moral}
+A polarização transforma uma redistribuição interna de carga em uma combinação
+consistente de carga de volume e carga de superfície.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Desenho: origem de \(\rho_P\) e \(\sigma_P\)}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+\draw[thick,myblue,fill=mygray] (-3,-1.2) rectangle (3,1.2);
+\node at (0,-1.55) {\small dielétrico polarizado};
+
+\foreach \x in {-2.4,-1.6,-0.8,0,0.8,1.6,2.4}{
+  \draw[->,thick,mygreen] (\x,-0.65) -- (\x+0.35,-0.65);
+  \draw[->,thick,mygreen] (\x,0) -- (\x+0.35,0);
+  \draw[->,thick,mygreen] (\x,0.65) -- (\x+0.35,0.65);
+}
+
+\foreach \y in {-0.8,-0.35,0.1,0.55,1.0}{
+  \node at (-3.22,\y) {\(-\)};
+  \node[myred] at (3.22,\y) {\(+\)};
+}
+
+\node[mygreen] at (0,1.55) {\(\mathbf P\)};
+\draw[->,very thick,mygreen] (-0.45,1.45) -- (0.45,1.45);
+\node at (-3.8,0) {\(\sigma_P<0\)};
+\node at (3.8,0) {\(\sigma_P>0\)};
+\end{tikzpicture}
+\end{center}
+
+\begin{mybox}{Interpretação}
+Se \(\mathbf P\) é uniforme, cargas internas vizinhas se compensam; sobra carga
+apenas onde a polarização termina, isto é, na superfície.
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Integral de volume de \(\mathbf P\)}
+
+\small
+
+Queremos mostrar que a integral de \(\mathbf P\) é o momento de dipolo total:
+
+\[
+\mathbf p=\int_V d^3r\,\mathbf P(\mathbf r).
+\]
+
+Para o componente cartesiano \(k\), use:
+
+\[
+\nabla\cdot(r_k\mathbf P)
+=
+\mathbf P\cdot\nabla r_k
++
+r_k\nabla\cdot\mathbf P.
+\]
+
+Como \(\nabla r_k=\hat{\mathbf e}_k\),
+
+\[
+\mathbf P\cdot\nabla r_k=P_k.
+\]
+
+Logo,
+
+\begin{eqbox}
+\begin{equation}
+P_k
+=
+\nabla\cdot(r_k\mathbf P)
+-
+r_k\nabla\cdot\mathbf P.
+\tag{6.7}
+\label{eq:Pk-identidade}
+\end{equation}
+\end{eqbox}
+\notas{pag. 3-4}
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Demonstração de \(\int \mathbf P=\mathbf p\)}
+
+\small
+
+Integre (6.7) no volume \(V\):
+
+\[
+\int_V d^3r\,P_k
+=
+\int_V d^3r\,\nabla\cdot(r_k\mathbf P)
+-
+\int_V d^3r\,r_k\nabla\cdot\mathbf P.
+\]
+
+Agora use:
+
+\[
+\int_V d^3r\,\nabla\cdot(r_k\mathbf P)
+=
+\int_S dS\,r_k\,\mathbf P\cdot\hat{\mathbf n}
+=
+\int_S dS\,r_k\sigma_P,
+\]
+
+e
+
+\[
+-\nabla\cdot\mathbf P=\rho_P.
+\]
+
+\begin{eqbox}
+\begin{equation}
+\int_V d^3r\,P_k
+=
+\int_S dS\,r_k\sigma_P
++
+\int_V d^3r\,r_k\rho_P.
+\tag{6.8}
+\label{eq:Pk-dipolo}
+\end{equation}
+\end{eqbox}
+
+O lado direito é exatamente o componente \(p_k\) do momento de dipolo.
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Resultado: polarização como densidade de dipolo}
+
+\begin{eqbox}
+\begin{equation}
+\int_V d^3r\,\mathbf P(\mathbf r)
+=
+\mathbf p.
+\tag{6.9}
+\label{eq:P-integral-dipolo}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Interpretação cuidadosa}
+É tentador dizer que \(\mathbf P\) é o ``momento de dipolo por unidade de
+volume''. Isso é útil, mas não é uma definição microscópica universal.
+\end{mybox}
+
+\begin{alertblock}{Aviso importante}
+Em sólidos reais, a polarização não é simplesmente a soma de dipolos moleculares
+localizados. Ela depende de correntes de polarização e da estrutura quântica do
+estado eletrônico.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Modelo de Lorentz}
+
+\small
+
+O modelo de Lorentz escolhe uma pequena célula microscópica \(\Omega\), centrada
+no ponto macroscópico \(\mathbf r\), e define:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf P(\mathbf r)
+=
+\frac{1}{\Omega}
+\int_{\Omega} d^3s\,
+\mathbf s\,\rho_{\rm micro}(\mathbf s)
+=
+\frac{\mathbf p(\mathbf r)}{\Omega}.
+\tag{6.10}
+\label{eq:lorentz-P}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Quando funciona bem?}
+Gases, líquidos não polares e sólidos moleculares fracamente ligados.
+\end{mybox}
+
+\begin{alertblock}{Quando falha?}
+Em dielétricos covalentes ou iônicos, a escolha da célula pode mudar o resultado
+e correntes entre células podem dominar a polarização real.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Teoria moderna da polarização}
+
+\small
+
+Zangwill enfatiza que, em sólidos, \(\mathbf P\) não é determinado apenas pela
+densidade de carga estática.
+
+\begin{mybox}{Ideia essencial}
+A polarização macroscópica pode ser calculada por uma média temporal de
+correntes de polarização:
+\end{mybox}
+
+\begin{eqbox}
+\begin{equation}
+\mathbf P(\mathbf R)
+=
+\frac{1}{\Omega}
+\int_{-\infty}^{t}dt'
+\int_{\Omega}d^3s\,
+\mathbf j_{P,\rm micro}(\mathbf s,t').
+\tag{6.11}
+\label{eq:P-corrente}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Mensagem}
+A polarização mede ``quanto carregamento atravessou'' uma célula ao ligar
+adiabaticamente o campo, não apenas onde a carga ficou no final.
+\end{alertblock}
+
+\end{frame}
+
+%=================================================
+\sectioncover{6.3 Campo produzido por matéria polarizada}
+
+%-------------------------------------------------
+\begin{frame}{Potencial da carga de polarização}
+
+\small
+
+Se \(\mathbf P(\mathbf r)\) é dado, então as fontes do campo produzido pela
+matéria polarizada são:
+
+\[
+\rho_P=-\nabla\cdot\mathbf P,
+\qquad
+\sigma_P=\mathbf P\cdot\hat{\mathbf n}.
+\]
+
+O potencial é:
+
+\begin{eqbox}
+\begin{equation}
+\varphi_P(\mathbf r)
+=
+\frac{1}{4\pi\epsilon_0}
+\int_V d^3r'\,
+\frac{-\nabla'\cdot\mathbf P(\mathbf r')}
+{|\mathbf r-\mathbf r'|}
++
+\frac{1}{4\pi\epsilon_0}
+\int_S dS'\,
+\frac{\mathbf P(\mathbf r')\cdot\hat{\mathbf n}'}
+{|\mathbf r-\mathbf r'|}.
+\tag{6.12}
+\label{eq:potencial-polarizacao}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Campo da matéria polarizada}
+
+\small
+
+O campo é \(\mathbf E_P=-\nabla\varphi_P\). Diferenciando em relação ao ponto de
+observação \(\mathbf r\):
+
+\begin{eqbox}
+\begin{equation}
+\mathbf E_P(\mathbf r)
+=
+\frac{1}{4\pi\epsilon_0}
+\int_V d^3r'\,
+\big[-\nabla'\cdot\mathbf P(\mathbf r')\big]
+\frac{\mathbf r-\mathbf r'}{|\mathbf r-\mathbf r'|^3}
++
+\frac{1}{4\pi\epsilon_0}
+\int_S dS'\,
+\big[\mathbf P(\mathbf r')\cdot\hat{\mathbf n}'\big]
+\frac{\mathbf r-\mathbf r'}{|\mathbf r-\mathbf r'|^3}.
+\tag{6.13}
+\label{eq:campo-polarizacao}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Ponto técnico}
+Essa forma é bem comportada mesmo para pontos de observação dentro do material.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Poisson: amostra uniformemente polarizada}
+
+\small
+
+Se \(\mathbf P\) é uniforme:
+
+\[
+\nabla\cdot\mathbf P=0.
+\]
+
+Então só resta a integral de superfície:
+
+\[
+\mathbf E_P(\mathbf r)
+=
+\frac{1}{4\pi\epsilon_0}
+\int_S dS'\,
+(\mathbf P\cdot\hat{\mathbf n}')
+\frac{\mathbf r-\mathbf r'}{|\mathbf r-\mathbf r'|^3}.
+\]
+
+Use o teorema da divergência em \(\mathbf r'\):
+
+\[
+\int_S dS'\,\hat n'_k F(\mathbf r')
+=
+\int_V d^3r'\,\nabla'_k F(\mathbf r').
+\]
+
+Com
+\[
+F(\mathbf r')=\frac{\mathbf r-\mathbf r'}{|\mathbf r-\mathbf r'|^3}.
+\]
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Fórmula de Poisson}
+
+\small
+
+Como \(\mathbf P\) é constante, podemos tirá-la da integral:
+
+\[
+\mathbf E_P(\mathbf r)
+=
+\mathbf P\cdot\nabla'
+\left[
+\frac{1}{4\pi\epsilon_0}
+\int_V d^3r'\,
+\frac{\mathbf r-\mathbf r'}{|\mathbf r-\mathbf r'|^3}
+\right].
+\]
+
+Mas
+
+\[
+\nabla' f(\mathbf r-\mathbf r')=-\nabla f(\mathbf r-\mathbf r').
+\]
+
+Defina \(\mathbf E_1(\mathbf r)\) como o campo do mesmo corpo preenchido por uma
+densidade uniforme \(\rho=1\). Então:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf E_P(\mathbf r)
+=
+-(\mathbf P\cdot\nabla)\mathbf E_1(\mathbf r).
+\tag{6.15}
+\label{eq:poisson-polarizacao}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Aplicação 6.1: esfera uniformemente polarizada}
+
+\small
+
+Para uma esfera de raio \(R\), primeiro calcule o campo de uma esfera com
+densidade uniforme \(\rho=1\):
+
+\begin{eqbox}
+\begin{equation}
+\mathbf E_1(\mathbf r)
+=
+\begin{cases}
+\dfrac{\mathbf r}{3\epsilon_0}, & r<R,\\[0.25cm]
+\dfrac{V}{4\pi\epsilon_0}\dfrac{\mathbf r}{r^3}, & r>R.
+\end{cases}
+\tag{6.16}
+\label{eq:campo-esfera-rho1}
+\end{equation}
+\end{eqbox}
+
+Agora aplique
+\[
+\mathbf E_P=-(\mathbf P\cdot\nabla)\mathbf E_1.
+\]
+
+\begin{mybox}{Interior}
+Como \(\nabla_i r_j=\delta_{ij}\),
+\[
+\mathbf E_P(r<R)=-\frac{\mathbf P}{3\epsilon_0}.
+\]
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Campo da esfera polarizada}
+
+\small
+
+O resultado completo é:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf E_P(\mathbf r)
+=
+\begin{cases}
+-\dfrac{\mathbf P}{3\epsilon_0},
+& r<R,\\[0.35cm]
+\dfrac{V}{4\pi\epsilon_0}
+\dfrac{3(\hat{\mathbf r}\cdot\mathbf P)\hat{\mathbf r}-\mathbf P}{r^3},
+& r>R.
+\end{cases}
+\tag{6.17}
+\label{eq:campo-esfera-polarizada}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Leitura}
+Fora da esfera, o campo é exatamente o de um dipolo pontual
+\[
+\mathbf p=V\mathbf P.
+\]
+Dentro, o campo é uniforme e antiparalelo a \(\mathbf P\).
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Método alternativo: carga superficial}
+
+\small
+
+Se \(\mathbf P=P\hat{\mathbf z}\), então:
+
+\[
+\sigma_P=\mathbf P\cdot\hat{\mathbf r}=P\cos\theta.
+\tag{6.18}
+\]
+
+Esse é o mesmo tipo de distribuição superficial que apareceu no capítulo de
+multipolos:
+
+\[
+\sigma(\theta)=\sigma_0\cos\theta.
+\]
+
+O potencial é:
+
+\begin{eqbox}
+\begin{equation}
+\varphi_P(r,\theta)
+=
+\frac{P}{3\epsilon_0}
+\begin{cases}
+z, & r<R,\\[0.2cm]
+\dfrac{R^3}{r^2}\cos\theta, & r>R.
+\end{cases}
+\tag{6.19}
+\label{eq:potencial-esfera-polarizada}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Matéria polarizada como coleção de dipolos}
+
+\small
+
+Queremos reescrever (6.12) sem uma integral de superfície explícita. Pelo teorema
+da divergência:
+
+\[
+\int_S dS'\,\frac{\mathbf P\cdot\hat{\mathbf n}'}{|\mathbf r-\mathbf r'|}
+=
+\int_V d^3r'\,
+\nabla'\cdot
+\left[
+\frac{\mathbf P(\mathbf r')}{|\mathbf r-\mathbf r'|}
+\right].
+\]
+
+Expanda a divergência:
+
+\[
+\nabla'\cdot
+\left(
+\frac{\mathbf P}{|\mathbf r-\mathbf r'|}
+\right)
+=
+\frac{\nabla'\cdot\mathbf P}{|\mathbf r-\mathbf r'|}
++
+\mathbf P\cdot\nabla'
+\frac{1}{|\mathbf r-\mathbf r'|}.
+\]
+
+O primeiro termo cancela o termo de volume original em (6.12).
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Resultado fundamental}
+
+\small
+
+Após a cancelamento, fica:
+
+\begin{eqbox}
+\begin{equation}
+\varphi_P(\mathbf r)
+=
+\frac{1}{4\pi\epsilon_0}
+\int_V d^3r'\,
+\mathbf P(\mathbf r')\cdot
+\nabla'
+\frac{1}{|\mathbf r-\mathbf r'|}.
+\tag{6.22}
+\label{eq:potencial-dipolos-continuos}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Comparação com um dipolo pontual}
+O potencial de um dipolo \(\mathbf p\) em \(\mathbf r'\) tem a forma
+\[
+\varphi_{\rm dip}
+=
+\frac{1}{4\pi\epsilon_0}
+\mathbf p\cdot\nabla'
+\frac{1}{|\mathbf r-\mathbf r'|}.
+\]
+\end{mybox}
+
+\begin{alertblock}{Conclusão}
+Matéria polarizada é eletrostaticamente equivalente a uma distribuição contínua
+de dipolos pontuais \(d\mathbf p=\mathbf P\,d^3r\).
+\end{alertblock}
+
+\end{frame}
+
+%=================================================
+\sectioncover{6.4 O campo total e o campo auxiliar \(\mathbf D\)}
+
+%-------------------------------------------------
+\begin{frame}{Lei de Gauss em matéria}
+
+\small
+
+A carga total é a soma de carga livre e carga de polarização:
+
+\[
+\rho=\rho_f+\rho_P.
+\]
+
+Como
+\[
+\rho_P=-\nabla\cdot\mathbf P,
+\]
+temos:
+
+\begin{eqbox}
+\begin{equation}
+\epsilon_0\nabla\cdot\mathbf E
+=
+\rho_f-\nabla\cdot\mathbf P.
+\tag{6.24}
+\label{eq:gauss-materia}
+\end{equation}
+\end{eqbox}
+
+Reorganizando:
+
+\[
+\nabla\cdot(\epsilon_0\mathbf E+\mathbf P)=\rho_f.
+\]
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Definição do campo auxiliar \(\mathbf D\)}
+
+\begin{eqbox}
+\begin{equation}
+\mathbf D
+=
+\epsilon_0\mathbf E+\mathbf P.
+\tag{6.25}
+\label{eq:D-def}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Equações eletrostáticas em matéria}
+\[
+\nabla\times\mathbf E=0,
+\tag{6.26}
+\]
+\[
+\nabla\cdot\mathbf D=\rho_f,
+\tag{6.27}
+\]
+\[
+\nabla\times\mathbf D=\nabla\times\mathbf P.
+\tag{6.28}
+\]
+\end{mybox}
+
+\begin{alertblock}{Cuidado}
+\(\mathbf D\) não é produzido apenas por carga livre. Variações espaciais de
+\(\mathbf P\) também entram em sua estrutura.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Forma integral de Gauss para \(\mathbf D\)}
+
+\begin{eqbox}
+\begin{equation}
+\oint_S d\mathbf S\cdot\mathbf D
+=
+Q_f.
+\tag{6.29}
+\label{eq:gauss-D-integral}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Utilidade}
+Quando a simetria é boa, essa equação calcula \(\mathbf D\) diretamente a partir
+da carga livre.
+\end{mybox}
+
+\begin{alertblock}{Mas não confundir}
+Ela não diz que a carga livre é a única causa física de \(\mathbf D\). O campo
+auxiliar é uma combinação de \(\epsilon_0\mathbf E\) e \(\mathbf P\).
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Condições de contorno para \(\mathbf D\)}
+
+\small
+
+Em uma interface entre dois meios, com densidade superficial de carga livre
+\(\sigma_f\):
+
+\begin{eqbox}
+\begin{align}
+\hat{\mathbf n}_2\cdot(\mathbf D_1-\mathbf D_2)
+&=
+\sigma_f,
+\tag{6.31}
+\label{eq:bc-D-normal}
+\\
+\hat{\mathbf n}_2\times(\mathbf D_1-\mathbf D_2)
+&=
+\hat{\mathbf n}_2\times(\mathbf P_1-\mathbf P_2).
+\tag{6.32}
+\label{eq:bc-D-tangencial}
+\end{align}
+\end{eqbox}
+
+Como \(\mathbf D=\epsilon_0\mathbf E+\mathbf P\), a segunda condição equivale à
+continuidade da componente tangencial de \(\mathbf E\):
+
+\begin{eqbox}
+\begin{equation}
+\hat{\mathbf n}_2\times(\mathbf E_1-\mathbf E_2)=0.
+\tag{6.33}
+\label{eq:bc-E-tangencial}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Relações constitutivas}
+
+\small
+
+As equações macroscópicas ainda não fecham o problema. Precisamos relacionar
+\(\mathbf P\) com \(\mathbf E\).
+
+\begin{mybox}{Expansão fenomenológica}
+\[
+P_i
+=
+\epsilon_0\chi_{ij}E_j
++
+\epsilon_0\chi^{(2)}_{ijk}E_jE_k+\cdots.
+\tag{6.34}
+\]
+\end{mybox}
+
+\begin{itemize}
+\item Termo linear: resposta usual em campos fracos.
+\item Tensores: permitem anisotropia.
+\item Termos de ordem superior: óptica não linear e campos intensos.
+\end{itemize}
+
+\begin{alertblock}{No restante}
+O caso mais importante será o dielétrico simples: linear, isotrópico e homogêneo
+por regiões.
+\end{alertblock}
+
+\end{frame}
+
+%=================================================
+\sectioncover{6.5 Matéria dielétrica simples}
+
+%-------------------------------------------------
+\begin{frame}{Dielétrico simples}
+
+\begin{mybox}{Constitutiva linear e isotrópica}
+\[
+\mathbf P=\epsilon_0\chi\,\mathbf E.
+\tag{6.35}
+\]
+\end{mybox}
+
+Definimos a permissividade \(\epsilon\) e a constante dielétrica \(\kappa\):
+
+\begin{eqbox}
+\begin{equation}
+\mathbf P
+=
+(\epsilon-\epsilon_0)\mathbf E
+=
+\epsilon_0(\kappa-1)\mathbf E.
+\tag{6.36}
+\label{eq:P-simple}
+\end{equation}
+\end{eqbox}
+
+Então:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf D
+=
+\epsilon\mathbf E
+=
+\kappa\epsilon_0\mathbf E.
+\tag{6.37}
+\label{eq:D-simple}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Equações em uma região de \(\epsilon\) constante}
+
+\footnotesize
+
+Use \(\mathbf D=\epsilon\mathbf E\) em \(\nabla\cdot\mathbf D=\rho_f\):
+
+\[
+\nabla\cdot(\epsilon\mathbf E)=\rho_f.
+\]
+
+Se \(\epsilon\) varia no espaço:
+
+\begin{eqbox}
+\begin{equation}
+\epsilon\nabla\cdot\mathbf E
++
+\mathbf E\cdot\nabla\epsilon
+=
+\rho_f.
+\tag{6.38}
+\end{equation}
+\end{eqbox}
+
+Se \(\epsilon\) é constante em cada região:
+
+\begin{eqbox}
+\begin{equation}
+\nabla\cdot\mathbf E
+=
+\frac{\rho_f}{\epsilon}.
+\tag{6.39}
+\end{equation}
+\end{eqbox}
+
+Como \(\mathbf E=-\nabla\varphi\):
+
+\begin{eqbox}
+\begin{equation}
+\nabla^2\varphi=-\frac{\rho_f}{\epsilon}.
+\tag{6.40}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Carga de polarização em dielétrico simples}
+
+\small
+
+De \(\mathbf P=\epsilon_0(\kappa-1)\mathbf E\):
+
+\[
+\rho_P=-\nabla\cdot\mathbf P
+=
+-\epsilon_0(\kappa-1)\nabla\cdot\mathbf E.
+\]
+
+Em região homogênea, \(\nabla\cdot\mathbf E=\rho_f/\epsilon=\rho_f/(\kappa\epsilon_0)\).
+
+\begin{eqbox}
+\begin{equation}
+\rho_P
+=
+\left(\frac{1}{\kappa}-1\right)\rho_f.
+\tag{6.43}
+\label{eq:rhoP-simple}
+\end{equation}
+\end{eqbox}
+
+Na superfície:
+
+\begin{eqbox}
+\begin{equation}
+\sigma_P
+=
+\mathbf P\cdot\hat{\mathbf n}
+=
+\epsilon_0(\kappa-1)\mathbf E\cdot\hat{\mathbf n}.
+\tag{6.44}
+\label{eq:sigmaP-simple}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Resposta a uma carga pontual livre}
+
+\small
+
+Para uma carga livre \(q_0\) em um meio simples infinito:
+
+\[
+\rho_f(\mathbf r)=q_0\delta(\mathbf r).
+\]
+
+Pela equação (6.43):
+
+\begin{eqbox}
+\begin{equation}
+\rho_P(\mathbf r)
+=
+-\left(1-\frac{1}{\kappa}\right)
+q_0\delta(\mathbf r).
+\tag{6.45}
+\label{eq:screening-carga-ponto}
+\end{equation}
+\end{eqbox}
+
+Logo, a carga efetiva macroscópica é:
+
+\[
+q_{\rm eff}
+=
+q_0+q_P
+=
+\frac{q_0}{\kappa}.
+\]
+
+\begin{alertblock}{Screening}
+O dielétrico reduz o campo de Coulomb por um fator \(\kappa\).
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Campo e potencial de uma carga em meio simples}
+
+\small
+
+Pela lei de Gauss para \(\mathbf D\):
+
+\[
+\oint d\mathbf S\cdot\mathbf D=q_0.
+\]
+
+Assim,
+
+\[
+\mathbf D(r)=\frac{q_0}{4\pi r^2}\hat{\mathbf r}.
+\]
+
+Como \(\mathbf D=\epsilon\mathbf E=\kappa\epsilon_0\mathbf E\):
+
+\begin{eqbox}
+\begin{equation}
+\mathbf E(r)
+=
+\frac{1}{4\pi\kappa\epsilon_0}
+\frac{q_0}{r^2}\hat{\mathbf r}.
+\tag{6.46}
+\end{equation}
+\end{eqbox}
+
+\begin{eqbox}
+\begin{equation}
+\varphi(r)
+=
+\frac{1}{4\pi\kappa\epsilon_0}
+\frac{q_0}{r}.
+\tag{6.47}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Capacitor: carga fixa}
+
+\footnotesize
+
+Considere placas paralelas com carga livre fixa \(\pm Q_f\), área \(A\) e
+separação \(d\). Então:
+
+\[
+D=\sigma_f=\frac{Q_f}{A}.
+\]
+
+Com dielétrico simples entre as placas:
+
+\[
+E=\frac{D}{\epsilon}=\frac{\sigma_f}{\kappa\epsilon_0}.
+\]
+
+Logo:
+
+\begin{eqbox}
+\begin{equation}
+\Delta\varphi
+=
+Ed
+=
+\frac{\sigma_f d}{\kappa\epsilon_0}.
+\tag{6.48}
+\end{equation}
+\end{eqbox}
+
+Como \(C=Q_f/\Delta\varphi\):
+
+\begin{eqbox}
+\begin{equation}
+C=\kappa C_0,
+\qquad
+C_0=\frac{\epsilon_0 A}{d}.
+\tag{6.52}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Interface simples: carga no centro de uma esfera}
+
+\small
+
+Uma carga \(q\) está no centro de uma esfera de raio \(R\) e permissividade
+\(\epsilon_1=\kappa_1\epsilon_0\). Fora dela há meio \(\epsilon_2=\kappa_2\epsilon_0\).
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\draw[thick,myblue,fill=mygray] (0,0) circle (1.3);
+\node[myred] at (0,0) {\Large \(q\)};
+\draw[->,thick] (0,0) -- (1.3,0) node[midway,above] {\(R\)};
+\node at (0,-1.75) {\(\kappa_1\)};
+\node at (2.15,1.2) {\(\kappa_2\)};
+\foreach \a in {0,45,...,315}{
+  \draw[->,thin] ({0.25*cos(\a)},{0.25*sin(\a)}) -- ({2.0*cos(\a)},{2.0*sin(\a)});
+}
+\end{tikzpicture}
+\end{center}
+
+Pela simetria esférica:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf D(r)
+=
+\frac{q}{4\pi r^2}\hat{\mathbf r},
+\qquad r>0.
+\tag{6.53}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Carga de polarização na interface esférica}
+
+\small
+
+Em cada lado da interface:
+
+\[
+\mathbf E_i=\frac{\mathbf D}{\epsilon_i},
+\qquad
+\mathbf P_i=(\epsilon_i-\epsilon_0)\mathbf E_i.
+\]
+
+Logo,
+
+\[
+\mathbf P_i
+=
+\left(1-\frac{1}{\kappa_i}\right)\mathbf D.
+\]
+
+A carga superficial de polarização recebe contribuição dos dois lados:
+
+\[
+\sigma_P
+=
+\hat{\mathbf r}\cdot(\mathbf P_1-\mathbf P_2).
+\]
+
+Assim:
+
+\begin{eqbox}
+\begin{equation}
+\sigma_P(R)
+=
+\frac{q}{4\pi R^2}
+\left(
+\frac{1}{\kappa_2}
+-
+\frac{1}{\kappa_1}
+\right).
+\tag{6.58}
+\label{eq:sigma-interface-esferica}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Exemplo 6.2: carga perto de uma interface plana}
+
+\small
+
+Uma carga \(q\) está em \(z=-d\). O meio à esquerda tem \(\kappa_L\) e o meio à
+direita tem \(\kappa_R\). A interface é o plano \(z=0\).
+
+\begin{center}
+\begin{tikzpicture}[scale=0.82]
+\fill[mygray] (0,-1.4) rectangle (3,1.4);
+\draw[thick,myblue] (0,-1.4) -- (0,1.4);
+\node at (-1.5,1.15) {\(\kappa_L\)};
+\node at (1.5,1.15) {\(\kappa_R\)};
+\node[myred] at (-1.35,0) {\Large \(q\)};
+\draw[dashed] (-1.35,0) -- (0,0);
+\node at (-0.65,-0.25) {\(d\)};
+\node at (0.55,-0.25) {\(\mathbf r_0=(x,y,0)\)};
+\end{tikzpicture}
+\end{center}
+
+\begin{mybox}{Resultado}
+A carga de polarização induzida na interface é
+\[
+\sigma_P(x,y)
+=
+\frac{1}{2\pi}
+\frac{\kappa_L-\kappa_R}{\kappa_L(\kappa_L+\kappa_R)}
+\frac{qd}{(x^2+y^2+d^2)^{3/2}}.
+\]
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Exemplo 6.2: de onde vem a fórmula?}
+
+\scriptsize
+
+No ponto \(\mathbf r_0=(x,y,0)\), escrevemos:
+
+\[
+\sigma_P=\hat{\mathbf z}\cdot(\mathbf P_L-\mathbf P_R)
+=
+\epsilon_0(\chi_L\mathbf E_L-\chi_R\mathbf E_R)\cdot\hat{\mathbf z}.
+\]
+
+Perto da superfície, o campo da própria folha de carga tem salto:
+
+\[
+\epsilon_0 E_{Lz}
+=
+\frac{1}{4\pi\kappa_L}\frac{qd}{r^3}
+-\frac{\sigma_P}{2},
+\qquad
+\epsilon_0 E_{Rz}
+=
+\frac{1}{4\pi\kappa_L}\frac{qd}{r^3}
++\frac{\sigma_P}{2},
+\]
+
+onde \(r^2=x^2+y^2+d^2\). Como não há carga livre na interface:
+
+\[
+\kappa_L E_{Lz}=\kappa_R E_{Rz}.
+\]
+
+Resolvendo a equação linear resultante para \(\sigma_P\), obtemos:
+
+\begin{eqbox}
+\[
+\sigma_P
+=
+\frac{1}{2\pi}
+\frac{\kappa_L-\kappa_R}{\kappa_L(\kappa_L+\kappa_R)}
+\frac{qd}{r^3}.
+\]
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Condições de contorno em potencial}
+
+\small
+
+Como \(\mathbf E=-\nabla\varphi\), a continuidade da componente tangencial de
+\(\mathbf E\) implica:
+
+\begin{eqbox}
+\begin{equation}
+\varphi_1=\varphi_2
+\qquad \text{na interface.}
+\tag{6.70}
+\label{eq:bc-potencial-continuo}
+\end{equation}
+\end{eqbox}
+
+Se há carga livre superficial \(\sigma_f\):
+
+\begin{eqbox}
+\begin{equation}
+\epsilon_1\frac{\partial\varphi_1}{\partial n}
+-
+\epsilon_2\frac{\partial\varphi_2}{\partial n}
+=
+-\sigma_f.
+\tag{6.71}
+\label{eq:bc-potencial-normal}
+\end{equation}
+\end{eqbox}
+
+Sem carga livre na interface:
+
+\begin{eqbox}
+\begin{equation}
+\epsilon_1\frac{\partial\varphi_1}{\partial n}
+=
+\epsilon_2\frac{\partial\varphi_2}{\partial n}.
+\tag{6.73}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Capacitor: potencial fixo}
+
+\small
+
+Agora a bateria mantém \(V\) fixo entre as placas. Portanto:
+
+\begin{eqbox}
+\begin{equation}
+V=\int_0^d d\ell\,E
+\quad\Rightarrow\quad
+E=\frac{V}{d}.
+\tag{6.62--6.63}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Diferença em relação à carga fixa}
+O campo \(E\) não é reduzido quando o dielétrico é inserido, porque a bateria
+fornece carga livre extra às placas.
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Capacitor a potencial fixo: carga livre}
+
+\small
+
+A carga livre na placa passa a ser:
+
+\[
+\sigma_f=D=\epsilon E=\kappa\epsilon_0\frac{V}{d}.
+\tag{6.65}
+\]
+
+Logo, novamente:
+
+\begin{eqbox}
+\[
+C=\frac{\sigma_f A}{V}
+=
+\kappa C_0.
+\tag{6.66}
+\]
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Teoria de potencial para dielétricos simples}
+
+\small
+
+Em uma região de permissividade constante:
+
+\begin{eqbox}
+\begin{equation}
+\epsilon_0\nabla^2\varphi
+=
+-\frac{\rho_f}{\kappa}.
+\tag{6.69}
+\end{equation}
+\end{eqbox}
+
+Se não há carga livre:
+
+\begin{eqbox}
+\begin{equation}
+\nabla^2\varphi=0.
+\tag{6.72}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Receita}
+Resolver problemas dielétricos simples é resolver Laplace/Poisson em cada
+região e aplicar:
+\[
+\varphi_1=\varphi_2,
+\qquad
+\epsilon_1\partial_n\varphi_1=\epsilon_2\partial_n\varphi_2
+\]
+quando não há carga livre na interface.
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Exemplo 6.3: cavidade esférica em campo uniforme}
+
+\small
+
+Uma cavidade esférica de raio \(R\) é escavada em um meio infinito de constante
+\(\kappa\). Um campo uniforme \(\mathbf E_0=E_0\hat{\mathbf z}\) é mantido por
+placas distantes.
+
+\begin{mybox}{Forma dos potenciais}
+Pela simetria axial e por \(\nabla^2\varphi=0\):
+\[
+\varphi_{\rm in}=Ar\cos\theta,
+\]
+\[
+\varphi_{\rm out}
+=
+\left(-E_0r+\frac{B}{r^2}\right)\cos\theta.
+\]
+\end{mybox}
+
+O termo \(-E_0r\cos\theta\) é o potencial do campo aplicado distante. O termo
+\(B\cos\theta/r^2\) é a resposta dipolar induzida pela cavidade.
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Exemplo 6.3: determinando \(A\) e \(B\)}
+
+\small
+
+Em \(r=R\), impomos continuidade do potencial:
+
+\[
+AR=-E_0R+\frac{B}{R^2}.
+\tag{1}
+\]
+
+Sem carga livre na interface:
+
+\[
+\epsilon_0
+\left.
+\frac{\partial\varphi_{\rm in}}{\partial r}
+\right|_{R}
+=
+\kappa\epsilon_0
+\left.
+\frac{\partial\varphi_{\rm out}}{\partial r}
+\right|_{R}.
+\tag{2}
+\]
+
+Como
+\[
+\partial_r\varphi_{\rm in}=A\cos\theta,
+\]
+\[
+\partial_r\varphi_{\rm out}
+=
+\left(-E_0-\frac{2B}{r^3}\right)\cos\theta,
+\]
+o sistema linear dá:
+
+\begin{eqbox}
+\[
+A=-\frac{3\kappa}{2\kappa+1}E_0,
+\qquad
+B=-\frac{\kappa-1}{2\kappa+1}E_0R^3.
+\]
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Exemplo 6.3: campo dentro da cavidade}
+
+\small
+
+No interior da cavidade:
+
+\[
+\varphi_{\rm in}=Ar\cos\theta=Az.
+\]
+
+Logo:
+
+\[
+\mathbf E_{\rm in}
+=
+-\nabla\varphi_{\rm in}
+=
+-A\hat{\mathbf z}.
+\]
+
+Usando o valor de \(A\):
+
+\begin{eqbox}
+\begin{equation}
+\mathbf E_{\rm in}
+=
+\frac{3\kappa}{2\kappa+1}
+E_0\hat{\mathbf z}.
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Interpretação}
+O campo dentro da cavidade é maior que \(E_0\) para \(\kappa>1\). A carga de
+polarização na parede da cavidade reforça o campo no interior vazio.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Refração de linhas de campo}
+
+\small
+
+Em uma interface plana sem carga livre:
+
+\[
+E_{1\parallel}=E_{2\parallel},
+\qquad
+\epsilon_1 E_{1\perp}=\epsilon_2 E_{2\perp}.
+\]
+
+Se \(\theta_i\) é o ângulo entre \(\mathbf E_i\) e a normal:
+
+\[
+\tan\theta_i=\frac{E_{i\parallel}}{E_{i\perp}}.
+\]
+
+Dividindo as duas relações:
+
+\begin{eqbox}
+\begin{equation}
+\frac{\tan\theta_1}{\tan\theta_2}
+=
+\frac{\epsilon_1}{\epsilon_2}
+=
+\frac{\kappa_1}{\kappa_2}.
+\tag{6.68}
+\label{eq:refracao-linhas-E}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Leitura}
+Linhas de \(\mathbf E\) dobram ao cruzar uma interface dielétrica.
+\end{alertblock}
+
+\end{frame}
+
+%=================================================
+\sectioncover{6.6 A física da constante dielétrica}
+
+%-------------------------------------------------
+\begin{frame}{Polarizabilidade elétrica}
+
+\small
+
+Para um objeto pequeno em um campo aproximadamente uniforme, definimos:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf p=\alpha\epsilon_0\mathbf E.
+\tag{6.75}
+\label{eq:polarizabilidade-micro}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Interpretação}
+\(\alpha\) mede o quão facilmente a nuvem eletrônica e os núcleos se deformam
+sob ação do campo.
+\end{mybox}
+
+Para uma esfera condutora, do capítulo 5:
+
+\[
+\alpha=4\pi R^3.
+\]
+
+Para átomos e moléculas, \(\alpha\) é uma propriedade microscópica medida ou
+calculada.
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Estimativa ingênua da constante dielétrica}
+
+\footnotesize
+
+Se há \(n\) moléculas por unidade de volume e cada uma adquire
+
+\[
+\mathbf p=\alpha\epsilon_0\mathbf E,
+\]
+
+então:
+
+\[
+\mathbf P=n\mathbf p
+=
+n\alpha\epsilon_0\mathbf E.
+\]
+
+Comparando com
+
+\[
+\mathbf P=\epsilon_0(\kappa-1)\mathbf E,
+\]
+
+obtemos:
+
+\begin{eqbox}
+\begin{equation}
+\kappa\simeq 1+n\alpha.
+\tag{6.79}
+\label{eq:kappa-ingenua}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Limitação}
+Essa fórmula ignora que cada molécula responde ao campo local, não exatamente ao
+campo macroscópico médio.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Campo local de Lorentz}
+
+\small
+
+O campo que polariza uma molécula é melhor aproximado por:
+
+\[
+\mathbf E_{\rm local}
+=
+\mathbf E
+-
+\mathbf E_{\rm self}.
+\]
+
+Para uma cavidade esférica dentro de um meio uniformemente polarizado:
+
+\[
+\mathbf E_{\rm self}
+=
+-\frac{\mathbf P}{3\epsilon_0}.
+\]
+
+Logo:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf E_{\rm local}
+=
+\mathbf E
++
+\frac{\mathbf P}{3\epsilon_0}.
+\tag{6.80--6.81}
+\label{eq:campo-local-lorentz}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Comentário}
+O termo \(\mathbf P/3\epsilon_0\) é a correção de Lorentz para o campo de cavidade.
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Clausius-Mossotti: dedução}
+
+\small
+
+Cada molécula tem:
+
+\[
+\mathbf p=\alpha\epsilon_0\mathbf E_{\rm local}.
+\]
+
+Como \(\mathbf P=n\mathbf p\):
+
+\[
+\mathbf P
+=
+n\alpha\epsilon_0
+\left(
+\mathbf E+\frac{\mathbf P}{3\epsilon_0}
+\right).
+\]
+
+Agrupando os termos em \(\mathbf P\):
+
+\[
+\left(1-\frac{n\alpha}{3}\right)\mathbf P
+=
+n\alpha\epsilon_0\mathbf E.
+\]
+
+\begin{eqbox}
+\begin{equation}
+\mathbf P
+=
+\frac{n\alpha\epsilon_0}{1-n\alpha/3}\mathbf E.
+\tag{6.82}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Fórmula de Clausius-Mossotti}
+
+\footnotesize
+
+Compare
+
+\[
+\mathbf P
+=
+\frac{n\alpha\epsilon_0}{1-n\alpha/3}\mathbf E
+\]
+
+com
+
+\[
+\mathbf P=\epsilon_0(\kappa-1)\mathbf E.
+\]
+
+Então:
+
+\[
+\kappa-1
+=
+\frac{n\alpha}{1-n\alpha/3}.
+\tag{6.83}
+\]
+
+Reorganizando:
+
+\begin{eqbox}
+\begin{equation}
+\frac{\kappa-1}{\kappa+2}
+=
+\frac{n\alpha}{3}.
+\tag{6.84}
+\label{eq:clausius-mossotti}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Validade}
+Boa para gases não polares e alguns líquidos simples; ruim para muitos sólidos
+e líquidos polares.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{O limite \(\kappa\to\infty\)}
+
+\small
+
+\begin{mybox}{Ideia}
+Quando \(\kappa\) cresce muito, o campo macroscópico no interior de um dielétrico
+simples tende a ser fortemente reduzido.
+\end{mybox}
+
+Em muitos problemas sem carga livre em contato direto com o dielétrico:
+
+\[
+\kappa\to\infty
+\quad \Longrightarrow \quad
+\mathbf E_{\rm in}\to 0.
+\]
+
+\begin{alertblock}{Conexão}
+Esse é o comportamento de um condutor perfeito.
+\end{alertblock}
+
+\begin{mybox}{Cuidado}
+Se há carga livre embutida no dielétrico, o limite pode ser singular e não
+equivaler simplesmente a um condutor.
+\end{mybox}
+
+\end{frame}
+
+%=================================================
+\sectioncover{6.7 Energia de matéria dielétrica}
+
+%-------------------------------------------------
+\begin{frame}{Trabalho para estabelecer o campo}
+
+\small
+
+Considere um condutor carregado dentro de um dielétrico. Ao trazer uma carga
+\(\delta Q\) do infinito até o condutor, fazemos trabalho:
+
+\[
+\delta U_E=\varphi\,\delta Q.
+\]
+
+Pela lei de Gauss:
+
+\[
+\delta Q=\int_S d\mathbf S\cdot\delta\mathbf D.
+\]
+
+Então:
+
+\[
+\delta U_E
+=
+\int_S d\mathbf S\cdot\delta\mathbf D\,\varphi.
+\]
+
+Aplicando o teorema da divergência no volume externo ao condutor:
+
+\[
+\delta U_E
+=
+-\int_V d^3r\,\nabla\cdot(\varphi\,\delta\mathbf D).
+\]
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Variação da energia}
+
+\small
+
+Expanda:
+
+\[
+\nabla\cdot(\varphi\,\delta\mathbf D)
+=
+\nabla\varphi\cdot\delta\mathbf D
++
+\varphi\,\nabla\cdot\delta\mathbf D.
+\]
+
+No dielétrico sem carga livre no volume:
+
+\[
+\nabla\cdot\delta\mathbf D=0.
+\]
+
+Como \(\mathbf E=-\nabla\varphi\):
+
+\begin{eqbox}
+\begin{equation}
+\delta U_E
+=
+\int d^3r\,\mathbf E\cdot\delta\mathbf D.
+\tag{6.87}
+\label{eq:delta-U-dieletrico}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Resultado chave}
+A energia é uma função natural de \(\mathbf D\), isto é, da carga livre que
+determina \(\nabla\cdot\mathbf D=\rho_f\).
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Energia total geral}
+
+\small
+
+Para construir o campo desde zero até o valor final \(\mathbf D\), integramos:
+
+\begin{eqbox}
+\begin{equation}
+U_E
+=
+\int d^3r
+\int_0^{\mathbf D}
+\mathbf E\cdot\delta\mathbf D.
+\tag{6.91}
+\label{eq:energia-geral-dieletrico}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Observação importante}
+Não podemos calcular essa integral sem uma relação constitutiva que diga como
+\(\mathbf E\) depende de \(\mathbf D\).
+\end{mybox}
+
+\begin{alertblock}{Analogia}
+Em condutores isolados, \(U_E\) é natural nas cargas \(Q_k\). Em dielétricos,
+\(U_E\) é natural em \(\mathbf D\), que é fixado pela carga livre.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Energia em dielétrico simples}
+
+\small
+
+Para um dielétrico simples:
+
+\[
+\mathbf D=\epsilon\mathbf E,
+\qquad
+\mathbf E=\frac{\mathbf D}{\epsilon}.
+\]
+
+Então:
+
+\[
+\int_0^{\mathbf D}\mathbf E\cdot\delta\mathbf D
+=
+\int_0^{\mathbf D}
+\frac{\mathbf D'}{\epsilon}\cdot\delta\mathbf D'
+=
+\frac{|\mathbf D|^2}{2\epsilon}.
+\]
+
+\begin{eqbox}
+\begin{equation}
+U_E[\mathbf D]
+=
+\frac{1}{2}
+\int d^3r\,\frac{|\mathbf D|^2}{\epsilon}
+=
+\frac{1}{2}\int d^3r\,\mathbf E\cdot\mathbf D.
+\tag{6.94}
+\label{eq:energia-simple}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Mudança de energia ao inserir um dielétrico}
+
+\small
+
+Se as cargas livres que produzem o campo são mantidas fixas, inserir um dielétrico
+muda:
+
+\[
+\mathbf E_0,\mathbf D_0
+\quad \longrightarrow \quad
+\mathbf E,\mathbf D.
+\]
+
+A mudança de energia é:
+
+\[
+\Delta U_E
+=
+\frac{1}{2}
+\int d^3r\,
+\left(
+\mathbf E\cdot\mathbf D
+-
+\mathbf E_0\cdot\mathbf D_0
+\right).
+\]
+
+Depois de rearranjar termos e usar que a carga livre foi mantida fixa, Zangwill
+obtém:
+
+\begin{eqbox}
+\begin{equation}
+\Delta U_E
+=
+-\frac{1}{2}
+\int d^3r\,\mathbf P\cdot\mathbf E_0.
+\tag{6.101}
+\label{eq:energia-insercao-dieletrico}
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{De onde vem o fator \(1/2\)?}
+
+\footnotesize
+
+Para um pequeno objeto linear:
+
+\[
+\mathbf p=\alpha\epsilon_0\mathbf E_0.
+\]
+
+Se o dipolo já estivesse pronto, sua energia de interação seria:
+
+\[
+U_{\rm ext}=-\mathbf p\cdot\mathbf E_0.
+\]
+
+Mas o dipolo precisa ser criado. Há um custo interno, que para resposta linear é
+quadrático em \(p\):
+
+\[
+\Delta U_E=-pE_0+\zeta p^2.
+\]
+
+Minimizando:
+
+\[
+\frac{d}{dp}(-pE_0+\zeta p^2)=0
+\quad\Rightarrow\quad
+p=\frac{E_0}{2\zeta}.
+\]
+
+Como \(p=\alpha\epsilon_0E_0\), o mínimo dá:
+
+\begin{eqbox}
+\[
+\Delta U_E=-\frac{1}{2}\mathbf p\cdot\mathbf E_0.
+\]
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Transformada de Legendre: potenciais fixos}
+
+\small
+
+Quando condutores estão ligados a baterias, os potenciais \(\varphi_k\) são
+mantidos fixos. Como em condutores, usamos uma energia transformada:
+
+\begin{eqbox}
+\begin{equation}
+\widehat U_E
+=
+U_E
+-
+\sum_k Q_k\varphi_k.
+\tag{6.109}
+\label{eq:Uhat-dieletrico}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Ideia}
+\(U_E\) é natural em cargas livres. \(\widehat U_E\) é natural em potenciais fixos.
+\end{mybox}
+
+Para dielétrico simples, essa função é usada para calcular forças quando a
+geometria muda mantendo \(\varphi_k\) constantes.
+
+\end{frame}
+
+%=================================================
+\sectioncover{6.8 Forças em matéria dielétrica}
+
+%-------------------------------------------------
+\begin{frame}{Força sobre um corpo dielétrico isolado}
+
+\small
+
+Para um dielétrico polarizado \(\mathbf P(\mathbf r)\) em campo externo
+\(\mathbf E_0(\mathbf r)\), a densidade de carga de polarização sente força:
+
+\[
+d\mathbf F=\rho_P\mathbf E_0\,d^3r+\sigma_P\mathbf E_0\,dS.
+\]
+
+Assim:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf F
+=
+\int_V d^3r\,\rho_P\mathbf E_0
++
+\int_S dS\,\sigma_P\mathbf E_0.
+\tag{6.115}
+\label{eq:forca-coulomb-dieletrico}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Importante}
+Essa fórmula vale para um corpo isolado em campo externo, não para um subvolume
+arbitrário dentro de um dielétrico contínuo.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Forma de dipolos}
+
+\small
+
+Como matéria polarizada é equivalente a dipolos com densidade \(\mathbf P\), a
+força também pode ser escrita como:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf F
+=
+\int_V d^3r\,
+(\mathbf P\cdot\nabla)\mathbf E_0.
+\tag{6.116}
+\label{eq:forca-dipolos-dieletrico}
+\end{equation}
+\end{eqbox}
+
+\begin{mybox}{Para campo quase uniforme}
+Se o corpo é pequeno:
+\[
+\mathbf F\simeq(\mathbf p\cdot\nabla)\mathbf E_0.
+\]
+\end{mybox}
+
+\begin{alertblock}{Dieletroforese}
+Um dielétrico neutro pode ser atraído para regiões de campo mais intenso.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Por que subvolumes são sutis?}
+
+\small
+
+Se cortamos mentalmente um subvolume de um dielétrico contínuo, aparecem forças
+microscópicas de curto alcance nas fronteiras artificiais.
+
+\begin{mybox}{Problema}
+A fórmula de Coulomb com \(\rho_P\) e \(\sigma_P\) não conta corretamente todas as
+forças internas quando a fronteira não é uma superfície física real.
+\end{mybox}
+
+Zangwill mostra que isso é crucial para interfaces dielétricas: uma fórmula
+ingênua pode errar até por um fator 2 no limite condutor.
+
+\begin{alertblock}{Estratégia correta}
+Para dielétricos simples, use variação de energia ou tensor de tensões.
+\end{alertblock}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Interface dielétrica: tentativa ingênua}
+
+\small
+
+Considere um capacitor de carga livre fixa \(\sigma_f\), com uma interface plana
+entre \(\kappa_1\) e \(\kappa_2\). Se usamos apenas a força sobre a carga de
+polarização da interface, obtemos:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf f_{\rm ing}
+=
+\frac{\sigma_f^2}{\epsilon_0}
+\left(
+\frac{1}{\kappa_2}
+-
+\frac{1}{\kappa_1}
+\right)\hat{\mathbf z}.
+\tag{6.121}
+\end{equation}
+\end{eqbox}
+
+\begin{alertblock}{Problema}
+No limite \(\kappa_1\to\infty\), o meio 1 deveria se comportar como condutor.
+Mas o resultado correto para a pressão entre placas teria um fator \(1/2\).
+\end{alertblock}
+
+\begin{mybox}{Diagnóstico}
+A força sobre um subvolume dielétrico não é apenas a força Coulombiana sobre
+\(\rho_P\) e \(\sigma_P\). Faltam forças microscópicas de curto alcance na fronteira
+do subvolume.
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Fórmula de Helmholtz}
+
+\small
+
+Para um dielétrico simples, a força total pode ser obtida variando a energia:
+
+\[
+U_E=\frac12\int d^3r\,\frac{|\mathbf D|^2}{\epsilon}.
+\]
+
+O resultado local é a fórmula de Helmholtz:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf F
+=
+\int d^3r
+\left[
+\rho_f\mathbf E
+-
+\frac{1}{2}E^2\nabla\epsilon
+\right].
+\tag{6.130}
+\label{eq:helmholtz-force}
+\end{equation}
+\end{eqbox}
+
+\begin{itemize}
+\item \(\rho_f\mathbf E\): força sobre carga livre.
+\item \(-\frac12 E^2\nabla\epsilon\): força onde a permissividade varia.
+\end{itemize}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Exemplo 6.6: força correta na interface}
+
+\small
+
+Pela fórmula de Helmholtz, perto de uma interface sem carga livre:
+
+\[
+\mathbf f
+=
+-\frac12\int dz\,E^2(z)\frac{d\epsilon}{dz}\,\hat{\mathbf z}.
+\]
+
+Como \(E_z\) salta na interface, essa forma é delicada. Mas \(D_z\) é contínuo:
+
+\[
+D_z=\sigma_f.
+\]
+
+Use \(E=D/\epsilon\):
+
+\[
+E^2\,d\epsilon
+=
+\frac{D^2}{\epsilon^2}d\epsilon
+=
+-D^2\,d\left(\frac{1}{\epsilon}\right).
+\]
+
+Então:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf f
+=
+\frac{\sigma_f^2}{2\epsilon_0}
+\left(
+\frac{1}{\kappa_2}
+-
+\frac{1}{\kappa_1}
+\right)\hat{\mathbf z}.
+\end{equation}
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Cheque: limite condutor}
+
+\footnotesize
+
+Se \(\kappa_1\to\infty\), a interface se comporta como uma placa condutora em
+contato com o meio 2:
+
+\[
+\mathbf f
+\to
+\frac{\sigma_f^2}{2\kappa_2\epsilon_0}\hat{\mathbf z}.
+\]
+
+\begin{mybox}{Comparação com capacitor}
+Para um capacitor preenchido pelo meio 2:
+\[
+C=\frac{\kappa_2\epsilon_0 A}{d}.
+\]
+Com carga fixa \(Q=\sigma_f A\), a energia é
+\[
+U_E=\frac{Q^2}{2C}.
+\]
+\end{mybox}
+
+A força por área é:
+
+\[
+\frac{F}{A}
+=
+\frac{\sigma_f^2}{2\kappa_2\epsilon_0},
+\]
+
+em acordo com a fórmula de Helmholtz.
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Tensor de tensões em dielétrico simples}
+
+\small
+
+A força também pode ser escrita como uma integral de superfície:
+
+\begin{eqbox}
+\begin{equation}
+\mathbf F
+=
+\oint_S dS\,
+\left[
+(\mathbf D\cdot\hat{\mathbf n})\mathbf E
+-
+\frac12
+(\mathbf D\cdot\mathbf E)\hat{\mathbf n}
+\right].
+\tag{6.132}
+\label{eq:forca-stress-superficie}
+\end{equation}
+\end{eqbox}
+
+Isso motiva o tensor:
+
+\begin{eqbox}
+\begin{equation}
+T_{ij}
+=
+D_iE_j
+-
+\frac12\delta_{ij}\,\mathbf D\cdot\mathbf E.
+\tag{6.133}
+\label{eq:tensor-stress-dieletrico}
+\end{equation}
+\end{eqbox}
+
+\[
+F_i=\oint_S dS\,T_{ij}\hat n_j.
+\tag{6.134}
+\]
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Exemplo: slab dielétrico em capacitor}
+
+\small
+
+Um slab dielétrico parcialmente inserido em um capacitor é puxado para dentro.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\draw[thick] (-3,1) -- (3,1);
+\draw[thick] (-3,-1) -- (3,-1);
+\node at (3.35,1) {\(+\)};
+\node at (3.35,-1) {\(-\)};
+\fill[mygray,draw=myblue,thick] (-3,-0.85) rectangle (-0.4,0.85);
+\node at (-1.7,0) {\(\epsilon\)};
+\draw[->,very thick,myred] (-0.35,0) -- (0.8,0) node[midway,above] {\(\mathbf F\)};
+\foreach \x in {-2.5,-1.7,-0.9,0.1,0.9,1.7,2.5}{
+  \draw[->,thin] (\x,0.75) -- (\x,-0.75);
+}
+\end{tikzpicture}
+\end{center}
+
+\begin{mybox}{Energia}
+O sistema reduz sua energia ao preencher mais da região de campo forte com
+material de maior \(\epsilon\).
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Slab no capacitor: cálculo da força}
+
+\small
+
+Para potencial fixo, a energia relevante é a transformada de Legendre
+\(\widehat U_E\). Se o slab avança uma distância \(s\), o volume adicional
+preenchido é \(Lds\).
+
+\[
+\Delta\widehat U_E
+=
+-\frac12\epsilon_0(\kappa-1)
+\left(\frac{V}{d}\right)^2(Lds).
+\]
+
+\begin{mybox}{Sinal}
+O sinal negativo diz que a energia diminui quando mais dielétrico entra na
+região entre as placas.
+\end{mybox}
+
+\begin{eqbox}
+\[
+\mathbf F
+=
+-\frac{\partial\Delta\widehat U_E}{\partial s}\hat{\mathbf x}
+=
+\frac{\epsilon_0(\kappa-1)LV^2}{2d}\hat{\mathbf x}.
+\]
+\end{eqbox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Slab no capacitor: interpretação}
+
+\small
+
+\begin{alertblock}{Mensagem prática}
+Dielétricos são atraídos para regiões onde o campo elétrico é mais intenso.
+\end{alertblock}
+
+\begin{mybox}{O que a fórmula está dizendo}
+\[
+F\propto(\kappa-1),
+\qquad
+F\propto V^2,
+\qquad
+F\propto \frac{L}{d}.
+\]
+O efeito cresce com a polarizabilidade do material, com o campo aplicado e com a
+área de borda que entra no capacitor.
+\end{mybox}
+
+\end{frame}
+
+%-------------------------------------------------
+\begin{frame}{Resumo do capítulo 6}
+
+\footnotesize
+
+\begin{mybox}{Fórmulas essenciais}
+\begin{itemize}
+\item \(\rho_P=-\nabla\cdot\mathbf P\), \(\sigma_P=\mathbf P\cdot\hat{\mathbf n}\).
+\item \(\displaystyle \int_V\mathbf P\,d^3r=\mathbf p\).
+\item \(\mathbf D=\epsilon_0\mathbf E+\mathbf P\), \(\nabla\cdot\mathbf D=\rho_f\).
+\item Dielétrico simples: \(\mathbf D=\epsilon\mathbf E=\kappa\epsilon_0\mathbf E\).
+\item Energia: \(\displaystyle U_E=\int d^3r\int_0^{\mathbf D}\mathbf E\cdot\delta\mathbf D\).
+\item Para dielétrico simples: \(\displaystyle U_E=\frac12\int d^3r\,\mathbf E\cdot\mathbf D\).
+\end{itemize}
+\end{mybox}
+
+\begin{alertblock}{Ideia unificadora}
+A resposta dielétrica é uma competição entre energia eletrostática, polarização
+induzida e forças microscópicas que mantêm a matéria coesa.
+\end{alertblock}
+
+\end{frame}
+
+\end{document}
