@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capítulo 10 - Magnetostática</title>
+  <meta name="description" content="Apresentação online sobre a introdução, lei de Biot-Savart e lei de Ampere em magnetostática.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0f14;
+      --ink: #f2f7fb;
+      --muted: #b7c4cf;
+      --dim: #8091a2;
+      --panel: #121922;
+      --panel-2: #192232;
+      --line: #2a3645;
+      --accent: #57c5ff;
+      --accent-2: #ffcc66;
+      --accent-3: #7ee787;
+      --danger: #ff8f80;
+      --shadow: rgba(0, 0, 0, .36);
+      --slide-w: 1280px;
+      --slide-h: 720px;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font: 20px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      overflow: hidden;
+    }
+    button,
+    a {
+      font: inherit;
+    }
+    .deck {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      background:
+        radial-gradient(circle at 18% 14%, rgba(87, 197, 255, .22), transparent 28%),
+        radial-gradient(circle at 80% 80%, rgba(255, 204, 102, .12), transparent 30%),
+        linear-gradient(135deg, #081019, #10151e 42%, #0b0f14);
+    }
+    .viewport {
+      display: grid;
+      place-items: center;
+      min-height: 0;
+      padding: 28px;
+    }
+    .slide {
+      display: none;
+      width: min(var(--slide-w), calc(100vw - 56px));
+      aspect-ratio: 16 / 9;
+      max-height: calc(100vh - 112px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(145deg, rgba(18, 25, 34, .98), rgba(9, 15, 22, .98));
+      box-shadow: 0 24px 90px var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    .slide.active {
+      display: grid;
+    }
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, .04);
+    }
+    .content {
+      padding: clamp(28px, 4vw, 54px);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 22px;
+      min-height: 0;
+    }
+    .hero {
+      grid-template-columns: 1.08fr .92fr;
+      background:
+        linear-gradient(90deg, rgba(6, 10, 15, .92), rgba(6, 10, 15, .34)),
+        url("assets/magnetostatics-hero.png") center / cover;
+    }
+    .hero .content {
+      width: min(760px, 62%);
+      align-content: center;
+      grid-template-rows: auto;
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent-2);
+      font-size: .86rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+      letter-spacing: 0;
+    }
+    h1 {
+      font-size: clamp(2.8rem, 6.6vw, 5.7rem);
+      line-height: .94;
+      max-width: 12ch;
+    }
+    h2 {
+      font-size: clamp(2rem, 4.4vw, 4rem);
+      line-height: 1.02;
+    }
+    h3 {
+      font-size: clamp(1.25rem, 2.2vw, 2rem);
+      line-height: 1.1;
+    }
+    .subtitle {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: center;
+      min-height: 0;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      min-height: 0;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .035);
+      padding: 20px;
+      min-width: 0;
+    }
+    .card strong {
+      color: var(--accent);
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 11px;
+      color: var(--muted);
+      font-size: .82rem;
+      white-space: nowrap;
+    }
+    .eq {
+      display: grid;
+      align-content: center;
+      min-height: 84px;
+      padding: 18px 20px;
+      border: 1px solid rgba(87, 197, 255, .33);
+      border-radius: 8px;
+      background: rgba(87, 197, 255, .08);
+      color: #f8fbff;
+      font-size: clamp(1.25rem, 2.45vw, 2.05rem);
+      line-height: 1.32;
+      overflow-wrap: anywhere;
+    }
+    .eq.small {
+      font-size: clamp(1rem, 1.8vw, 1.42rem);
+    }
+    ul {
+      margin: 0;
+      padding-left: 1.1em;
+      color: var(--muted);
+    }
+    li + li {
+      margin-top: 10px;
+    }
+    .note {
+      color: var(--dim);
+      font-size: .9rem;
+    }
+    .diagram {
+      width: 100%;
+      min-height: 0;
+      aspect-ratio: 4 / 3;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0d141d;
+      overflow: hidden;
+    }
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .portrait-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+    .portrait {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, .04);
+      min-height: 0;
+    }
+    .portrait img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      filter: saturate(.92) contrast(1.03);
+    }
+    .portrait figcaption {
+      padding: 10px;
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.25;
+    }
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+    .year {
+      color: var(--accent-2);
+      font-size: 1.6rem;
+      font-weight: 850;
+    }
+    .control-bar {
+      height: 58px;
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 14px;
+      padding: 0 22px;
+      border-top: 1px solid var(--line);
+      background: rgba(7, 12, 18, .92);
+      backdrop-filter: blur(14px);
+    }
+    .nav-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+    .icon-btn:hover {
+      border-color: var(--accent);
+    }
+    .progress {
+      height: 8px;
+      border-radius: 999px;
+      background: #1b2430;
+      overflow: hidden;
+    }
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3));
+      transition: width .18s ease;
+    }
+    .counter {
+      color: var(--muted);
+      font-size: .86rem;
+      min-width: 78px;
+      text-align: right;
+    }
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .toc button {
+      text-align: left;
+      min-height: 126px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: rgba(255, 255, 255, .04);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .toc button:hover {
+      border-color: var(--accent);
+    }
+    .toc span {
+      display: block;
+      color: var(--accent-2);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .source-list a {
+      color: var(--accent);
+    }
+    .two-eq {
+      display: grid;
+      gap: 14px;
+    }
+    .kbd {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+    @media (max-width: 820px) {
+      body {
+        overflow: auto;
+      }
+      .deck {
+        min-height: 100svh;
+      }
+      .viewport {
+        padding: 14px;
+      }
+      .slide {
+        width: calc(100vw - 28px);
+        min-height: calc(100svh - 86px);
+        max-height: none;
+        aspect-ratio: auto;
+      }
+      .content {
+        padding: 24px;
+      }
+      .hero .content {
+        width: 100%;
+      }
+      .grid-2,
+      .grid-3,
+      .timeline,
+      .toc,
+      .portrait-row {
+        grid-template-columns: 1fr;
+      }
+      .portrait-row {
+        max-height: none;
+      }
+      .portrait img {
+        aspect-ratio: 16 / 9;
+      }
+      .control-bar {
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+      }
+      .kbd {
+        display: none;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]] },
+      svg: { fontCache: "global" }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <main class="deck" aria-label="Apresentação Capítulo 10 Magnetostática">
+    <section class="viewport">
+      <article class="slide hero active" data-title="Capa">
+        <div class="content">
+          <div>
+            <p class="eyebrow">Zangwill, Capítulo 10</p>
+            <h1>Magnetostática</h1>
+            <p class="subtitle">Introdução, lei de Biot-Savart e lei de Ampere. Uma leitura visual para construir intuição antes do cálculo pesado.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Roteiro">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Mapa da aula</p>
+            <h2>O que vamos resolver</h2>
+          </header>
+          <div class="toc">
+            <button data-jump="2"><span>10.1</span>Campo, corrente estacionária e linhas fechadas</button>
+            <button data-jump="6"><span>10.2</span>Biot-Savart como superposição de elementos de corrente</button>
+            <button data-jump="10"><span>10.3</span>Lei de Ampere: simetria transformando integral em álgebra</button>
+            <button data-jump="15"><span>Aplicações</span>Fio infinito, folha de corrente e condições de contorno</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Contexto histórico">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Do experimento ao campo</p>
+            <h2>Quem aparece nessa história</h2>
+          </header>
+          <div class="portrait-row">
+            <figure class="portrait">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hans_Christian_%C3%98rsted.jpg" alt="Retrato de Hans Christian Oersted">
+              <figcaption>Oersted: corrente elétrica desvia uma agulha magnética.</figcaption>
+            </figure>
+            <figure class="portrait">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Jean_baptiste_biot.jpg/250px-Jean_baptiste_biot.jpg" alt="Retrato de Jean-Baptiste Biot">
+              <figcaption>Biot: mede forças magnéticas produzidas por correntes.</figcaption>
+            </figure>
+            <figure class="portrait">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Interior_of_Institut_de_France%2C_Paris_6th_013.jpg/250px-Interior_of_Institut_de_France%2C_Paris_6th_013.jpg" alt="Busto de Felix Savart">
+              <figcaption>Savart: coformula a lei integral para correntes.</figcaption>
+            </figure>
+            <figure class="portrait">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Andre-Marie_Ampere.jpg" alt="Retrato de Andre-Marie Ampere">
+              <figcaption>Ampere: organiza a interação entre correntes.</figcaption>
+            </figure>
+            <figure class="portrait">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/James_Clerk_Maxwell.png" alt="Retrato de James Clerk Maxwell">
+              <figcaption>Maxwell: coloca tudo no idioma dos campos.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Maxwell estático">
+        <div class="content">
+          <header>
+            <p class="eyebrow">10.1 Introdução</p>
+            <h2>O problema magnetostático</h2>
+          </header>
+          <div class="grid-2">
+            <div class="two-eq">
+              <div class="eq">\( \nabla \cdot \mathbf B = 0 \)</div>
+              <div class="eq">\( \nabla \times \mathbf B = \mu_0 \mathbf j \)</div>
+            </div>
+            <div class="card">
+              <h3>Leitura física</h3>
+              <ul>
+                <li>O campo magnético não tem fontes pontuais isoladas.</li>
+                <li>Correntes estacionárias são as fontes do rotacional de \( \mathbf B \).</li>
+                <li>A força aparece transversalmente: \( \mathbf j' \times \mathbf B \).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="E versus B">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Uma inversão importante</p>
+            <h2>Magnetostática não é eletrostática com nomes trocados</h2>
+          </header>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Eletrostática</h3>
+              <div class="eq small">\( \nabla \cdot \mathbf E = \rho/\epsilon_0 \)</div>
+              <div class="eq small">\( \nabla \times \mathbf E = 0 \)</div>
+              <p class="note">A carga cria divergência. O potencial escalar domina.</p>
+            </div>
+            <div class="card">
+              <h3>Magnetostática</h3>
+              <div class="eq small">\( \nabla \cdot \mathbf B = 0 \)</div>
+              <div class="eq small">\( \nabla \times \mathbf B = \mu_0\mathbf j \)</div>
+              <p class="note">A corrente cria rotacional. Linhas de campo circulam.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Correntes estacionárias">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Consistência local</p>
+            <h2>Campo magnetostático exige corrente estacionária</h2>
+          </header>
+          <div class="grid-2">
+            <div>
+              <div class="eq">\( \nabla \cdot \mathbf j = 0 \)</div>
+              <p class="subtitle">Vem de \( \nabla \cdot (\nabla \times \mathbf B)=0 \). Não há acúmulo local de carga: o que entra em qualquer volume também sai.</p>
+            </div>
+            <div class="diagram" aria-label="Linhas de corrente estacionária">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ee787"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <circle cx="260" cy="195" r="128" fill="none" stroke="#2a3645" stroke-width="2"/>
+                <path d="M120 195 C125 80 395 80 400 195 C395 310 125 310 120 195" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#arrow-green)"/>
+                <path d="M175 195 C180 120 340 120 345 195 C340 270 180 270 175 195" fill="none" stroke="#57c5ff" stroke-width="5" marker-end="url(#arrow-green)"/>
+                <text x="40" y="45" fill="#b7c4cf" font-size="24">linhas de j fechadas</text>
+                <text x="145" y="356" fill="#8091a2" font-size="18">sem começo, sem fim, sem acúmulo de carga</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Fluxo magnético">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Sem monopolos</p>
+            <h2>Linhas de \( \mathbf B \) não começam nem terminam</h2>
+          </header>
+          <div class="grid-2">
+            <div class="diagram" aria-label="Fluxo magnético nulo por superfície fechada">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <ellipse cx="260" cy="195" rx="112" ry="78" fill="rgba(87,197,255,.08)" stroke="#57c5ff" stroke-width="2"/>
+                <ellipse cx="260" cy="195" rx="112" ry="78" fill="none" stroke="#57c5ff" stroke-width="2" stroke-dasharray="8 8" transform="rotate(90 260 195)"/>
+                <path d="M80 300 C185 85 330 85 435 300" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#arrow-blue)"/>
+                <path d="M84 90 C185 306 332 306 438 90" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#arrow-blue)"/>
+                <text x="205" y="202" fill="#f2f7fb" font-size="28">V</text>
+                <text x="32" y="45" fill="#b7c4cf" font-size="22">entra = sai</text>
+              </svg>
+            </div>
+            <div>
+              <div class="eq">\( \Phi_B = \oint_S \mathbf B \cdot d\mathbf S = 0 \)</div>
+              <ul>
+                <li>Qualquer superfície fechada tem fluxo magnético líquido nulo.</li>
+                <li>Um polo norte isolado seria uma fonte de divergência.</li>
+                <li>Na magnetostática clássica: monopolos magnéticos não entram como fontes.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Força">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Por que \( \mathbf B \) importa?</p>
+            <h2>O campo mede força e torque sobre correntes</h2>
+          </header>
+          <div class="grid-2">
+            <div class="two-eq">
+              <div class="eq small">\( \mathbf F = \int d^3r\, \mathbf j'(\mathbf r)\times\mathbf B(\mathbf r) \)</div>
+              <div class="eq small">\( \mathbf N = \int d^3r\, \mathbf r \times [\mathbf j'(\mathbf r)\times\mathbf B(\mathbf r)] \)</div>
+            </div>
+            <div class="card">
+              <h3>A intuição operacional</h3>
+              <ul>
+                <li>Corrente paralela a \( \mathbf B \): sem força local.</li>
+                <li>Corrente perpendicular: força máxima.</li>
+                <li>O produto vetorial faz a geometria mandar no resultado.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Biot-Savart">
+        <div class="content">
+          <header>
+            <p class="eyebrow">10.2 Lei de Biot-Savart</p>
+            <h2>Superposição de elementos de corrente</h2>
+          </header>
+          <div class="grid-2">
+            <div>
+              <div class="eq small">\( \displaystyle \mathbf B(\mathbf r)=\frac{\mu_0}{4\pi}\int d^3r'\,\frac{\mathbf j(\mathbf r')\times(\mathbf r-\mathbf r')}{|\mathbf r-\mathbf r'|^3} \)</div>
+              <p class="subtitle">Cada elemento de corrente contribui com um campo perpendicular ao plano formado por corrente e vetor de separação.</p>
+            </div>
+            <div class="diagram" aria-label="Geometria da lei de Biot-Savart">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                  </marker>
+                  <marker id="arrow-gold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <line x1="90" y1="260" x2="350" y2="120" stroke="#7ee787" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow-cyan)"/>
+                <circle cx="390" cy="92" r="8" fill="#f2f7fb"/>
+                <line x1="212" y1="194" x2="390" y2="92" stroke="#ffcc66" stroke-width="4" marker-end="url(#arrow-gold)"/>
+                <circle cx="212" cy="194" r="8" fill="#7ee787"/>
+                <text x="98" y="290" fill="#7ee787" font-size="24">dℓ ou j d³r'</text>
+                <text x="342" y="78" fill="#f2f7fb" font-size="24">observação r</text>
+                <text x="240" y="132" fill="#ffcc66" font-size="24">R = r - r'</text>
+                <text x="360" y="260" fill="#57c5ff" font-size="22">dB sai/entra da tela</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Formas de fonte">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Mesma física, fontes diferentes</p>
+            <h2>Volume, superfície e fio fino</h2>
+          </header>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Volume</h3>
+              <div class="eq small">\( \mathbf j(\mathbf r')\,d^3r' \)</div>
+              <p class="note">Condutor espesso ou distribuição contínua.</p>
+            </div>
+            <div class="card">
+              <h3>Superfície</h3>
+              <div class="eq small">\( \mathbf K(\mathbf r_S)\,dS \)</div>
+              <p class="note">Folha de corrente ou limite de uma camada fina.</p>
+            </div>
+            <div class="card">
+              <h3>Filamento</h3>
+              <div class="eq small">\( I\,d\boldsymbol\ell \)</div>
+              <p class="note">Fio ideal quando a espessura não importa.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Loop circular">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Aplicação 10.2.1</p>
+            <h2>Campo no eixo de uma espira circular</h2>
+          </header>
+          <div class="grid-2">
+            <div class="diagram" aria-label="Espira circular com campo no eixo">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-loop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <ellipse cx="230" cy="220" rx="132" ry="66" fill="none" stroke="#ffcc66" stroke-width="8"/>
+                <path d="M116 220 C120 170 176 150 230 154" fill="none" stroke="#ffcc66" stroke-width="8" marker-end="url(#arrow-loop)"/>
+                <line x1="230" y1="220" x2="230" y2="44" stroke="#57c5ff" stroke-width="4"/>
+                <circle cx="230" cy="82" r="8" fill="#57c5ff"/>
+                <path d="M200 214 C205 160 216 120 230 82" fill="none" stroke="#7ee787" stroke-width="5" marker-end="url(#arrow-loop)"/>
+                <path d="M260 214 C255 160 244 120 230 82" fill="none" stroke="#7ee787" stroke-width="5" marker-end="url(#arrow-loop)"/>
+                <text x="252" y="82" fill="#b7c4cf" font-size="22">z</text>
+                <text x="102" y="315" fill="#b7c4cf" font-size="22">componentes transversais cancelam</text>
+              </svg>
+            </div>
+            <div>
+              <div class="eq small">\( \displaystyle \mathbf B(z)=\hat{\mathbf z}\frac{\mu_0 I R^2}{2(R^2+z^2)^{3/2}} \)</div>
+              <ul>
+                <li>No eixo, todos os elementos estão à mesma distância.</li>
+                <li>Componentes perpendiculares ao eixo se cancelam por simetria.</li>
+                <li>No centro: \( B(0)=\mu_0 I/(2R) \).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Solenoide infinito">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Aplicação 10.2.2</p>
+            <h2>Solenoide infinito: campo confinado</h2>
+          </header>
+          <div class="grid-2">
+            <div>
+              <div class="eq small">\( \displaystyle \mathbf B =
+                \begin{cases}
+                  \mu_0 K\,\hat{\mathbf z}, & \text{dentro}\\
+                  0, & \text{fora}
+                \end{cases} \)</div>
+              <p class="subtitle">A geometria infinita transforma a soma de Biot-Savart em um campo uniforme dentro e nulo fora.</p>
+            </div>
+            <div class="diagram" aria-label="Solenoide infinito">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-sol" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <rect x="150" y="64" width="220" height="260" rx="22" fill="rgba(255,204,102,.08)" stroke="#ffcc66" stroke-width="3"/>
+                <g stroke="#ffcc66" stroke-width="5" fill="none">
+                  <path d="M150 90 C205 45 315 45 370 90"/>
+                  <path d="M150 130 C205 85 315 85 370 130"/>
+                  <path d="M150 170 C205 125 315 125 370 170"/>
+                  <path d="M150 210 C205 165 315 165 370 210"/>
+                  <path d="M150 250 C205 205 315 205 370 250"/>
+                  <path d="M150 290 C205 245 315 245 370 290"/>
+                </g>
+                <g stroke="#57c5ff" stroke-width="5" marker-end="url(#arrow-sol)">
+                  <line x1="205" y1="296" x2="205" y2="94"/>
+                  <line x1="260" y1="296" x2="260" y2="94"/>
+                  <line x1="315" y1="296" x2="315" y2="94"/>
+                </g>
+                <text x="384" y="210" fill="#8091a2" font-size="22">fora: 0</text>
+                <text x="190" y="350" fill="#b7c4cf" font-size="22">dentro: uniforme</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Ampere integral">
+        <div class="content">
+          <header>
+            <p class="eyebrow">10.3 Lei de Ampere</p>
+            <h2>O rotacional vira circulação</h2>
+          </header>
+          <div class="grid-2">
+            <div class="two-eq">
+              <div class="eq">\( \nabla\times\mathbf B=\mu_0\mathbf j \)</div>
+              <div class="eq">\( \displaystyle \oint_C \mathbf B\cdot d\boldsymbol\ell=\mu_0 I_C \)</div>
+            </div>
+            <div class="card">
+              <h3>Como usar sem tropeçar</h3>
+              <ul>
+                <li>Escolha uma curva \( C \) adaptada à simetria.</li>
+                <li>Mostre quais componentes de \( \mathbf B \) sobrevivem.</li>
+                <li>Só então tire \( B \) da integral.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Fio infinito">
+        <div class="content">
+          <header>
+            <p class="eyebrow">10.3.1</p>
+            <h2>Fio retilíneo infinito</h2>
+          </header>
+          <div class="grid-2">
+            <div class="diagram" aria-label="Campo azimutal de fio infinito">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-wire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <line x1="260" y1="330" x2="260" y2="60" stroke="#ffcc66" stroke-width="10" stroke-linecap="round" marker-end="url(#arrow-wire)"/>
+                <circle cx="260" cy="195" r="70" fill="none" stroke="#57c5ff" stroke-width="5" stroke-dasharray="10 8"/>
+                <circle cx="260" cy="195" r="120" fill="none" stroke="#57c5ff" stroke-width="5" marker-end="url(#arrow-wire)"/>
+                <circle cx="260" cy="195" r="168" fill="none" stroke="#57c5ff" stroke-width="4" opacity=".55"/>
+                <text x="280" y="82" fill="#ffcc66" font-size="26">I</text>
+                <text x="333" y="147" fill="#b7c4cf" font-size="24">B = B(ρ) φ̂</text>
+              </svg>
+            </div>
+            <div>
+              <div class="eq small">\( \displaystyle B(2\pi\rho)=\mu_0 I \)</div>
+              <div class="eq small">\( \displaystyle \mathbf B(\rho)=\frac{\mu_0 I}{2\pi\rho}\,\hat{\boldsymbol\phi} \)</div>
+              <p class="note">Translação em \( z \), rotação em torno do fio e regra da mão direita fixam a forma do campo.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Vetor axial">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Detalhe conceitual</p>
+            <h2>\( \mathbf B \) é vetor axial</h2>
+          </header>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Reflexão muda o que?</h3>
+              <ul>
+                <li>Vetores polares, como posição e velocidade, refletem como setas comuns.</li>
+                <li>O campo magnético nasce de produto vetorial.</li>
+                <li>Por isso, sob reflexão, \( \mathbf B \) transforma como pseudovetor.</li>
+              </ul>
+            </div>
+            <div class="diagram" aria-label="Vetor axial e regra da mão direita">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <line x1="90" y1="300" x2="430" y2="300" stroke="#2a3645" stroke-width="4"/>
+                <line x1="260" y1="336" x2="260" y2="58" stroke="#57c5ff" stroke-width="6" marker-end="url(#arrow-ax)"/>
+                <path d="M180 200 C190 120 330 120 340 200" fill="none" stroke="#ffcc66" stroke-width="7" marker-end="url(#arrow-ax)"/>
+                <path d="M340 214 C328 292 192 292 180 214" fill="none" stroke="#ffcc66" stroke-width="7" opacity=".55"/>
+                <text x="285" y="86" fill="#57c5ff" font-size="26">corrente</text>
+                <text x="188" y="112" fill="#ffcc66" font-size="26">sentido de B</text>
+                <text x="86" y="355" fill="#8091a2" font-size="20">a simetria elimina componentes radial e longitudinal</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Folha de corrente">
+        <div class="content">
+          <header>
+            <p class="eyebrow">10.3.2</p>
+            <h2>Folha infinita de corrente</h2>
+          </header>
+          <div class="grid-2">
+            <div>
+              <div class="eq small">\( \displaystyle \mathbf B =
+                \begin{cases}
+                  \frac{1}{2}\mu_0 K\,\hat{\mathbf x}, & z>0\\
+                  -\frac{1}{2}\mu_0 K\,\hat{\mathbf x}, & z<0
+                \end{cases} \)</div>
+              <div class="eq small">\( \displaystyle \mathbf B=\frac{1}{2}\mu_0\,\mathbf K\times\hat{\mathbf s} \)</div>
+            </div>
+            <div class="diagram" aria-label="Folha de corrente com campo oposto nos dois lados">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-sheet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                  </marker>
+                  <marker id="arrow-k" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <polygon points="80,250 400,110 455,160 135,300" fill="rgba(255,204,102,.09)" stroke="#ffcc66" stroke-width="3"/>
+                <g stroke="#ffcc66" stroke-width="5" marker-end="url(#arrow-k)">
+                  <line x1="135" y1="246" x2="230" y2="204"/>
+                  <line x1="190" y1="270" x2="285" y2="228"/>
+                  <line x1="245" y1="294" x2="340" y2="252"/>
+                </g>
+                <g stroke="#57c5ff" stroke-width="7" marker-end="url(#arrow-sheet)">
+                  <line x1="155" y1="120" x2="275" y2="120"/>
+                  <line x1="230" y1="88" x2="350" y2="88"/>
+                  <line x1="338" y1="332" x2="218" y2="332"/>
+                  <line x1="285" y1="300" x2="165" y2="300"/>
+                </g>
+                <text x="350" y="130" fill="#57c5ff" font-size="24">B acima</text>
+                <text x="60" y="338" fill="#57c5ff" font-size="24">B abaixo</text>
+                <text x="350" y="238" fill="#ffcc66" font-size="24">K</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Condições de contorno">
+        <div class="content">
+          <header>
+            <p class="eyebrow">10.3.3</p>
+            <h2>Saltos de \( \mathbf B \) na superfície com corrente</h2>
+          </header>
+          <div class="grid-2">
+            <div class="diagram" aria-label="Condições de contorno em superfície com corrente">
+              <svg viewBox="0 0 520 390" role="img">
+                <defs>
+                  <marker id="arrow-bound" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ee787"/>
+                  </marker>
+                </defs>
+                <rect width="520" height="390" fill="#0d141d"/>
+                <path d="M70 235 C170 160 325 300 450 200" fill="none" stroke="#ffcc66" stroke-width="6"/>
+                <line x1="260" y1="220" x2="260" y2="95" stroke="#7ee787" stroke-width="5" marker-end="url(#arrow-bound)"/>
+                <line x1="160" y1="145" x2="340" y2="145" stroke="#57c5ff" stroke-width="6" marker-end="url(#arrow-bound)"/>
+                <line x1="340" y1="285" x2="160" y2="285" stroke="#57c5ff" stroke-width="6" marker-end="url(#arrow-bound)"/>
+                <circle cx="260" cy="220" r="11" fill="#ffcc66"/>
+                <text x="276" y="118" fill="#7ee787" font-size="24">n̂</text>
+                <text x="352" y="152" fill="#57c5ff" font-size="24">B₂</text>
+                <text x="122" y="292" fill="#57c5ff" font-size="24">B₁</text>
+                <text x="282" y="238" fill="#ffcc66" font-size="24">K</text>
+              </svg>
+            </div>
+            <div>
+              <div class="eq small">\( \hat{\mathbf n}\cdot(\mathbf B_2-\mathbf B_1)=0 \)</div>
+              <div class="eq small">\( \hat{\mathbf n}\times(\mathbf B_2-\mathbf B_1)=\mu_0\mathbf K \)</div>
+              <ul>
+                <li>Componente normal: contínua.</li>
+                <li>Componente tangencial: pode saltar se houver corrente superficial.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Força em uma folha">
+        <div class="content">
+          <header>
+            <p class="eyebrow">10.3.4</p>
+            <h2>Uma folha de corrente não empurra a si mesma</h2>
+          </header>
+          <div class="grid-2">
+            <div>
+              <div class="eq small">\( \displaystyle \mathbf f(\mathbf r_S)=\frac{1}{2}\mathbf K(\mathbf r_S)\times[\mathbf B_1(\mathbf r_S)+\mathbf B_2(\mathbf r_S)] \)</div>
+              <p class="subtitle">A força por área usa o campo médio dos dois lados, removendo a contribuição singular do próprio elemento de corrente.</p>
+            </div>
+            <div class="card">
+              <h3>Ideia útil para depois</h3>
+              <ul>
+                <li>Esse resultado reaparece em energia magnética e tensões.</li>
+                <li>Ele separa campo externo efetivo de auto-campo local.</li>
+                <li>É o análogo magnético de tomar limites simétricos em superfícies carregadas.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Quando usar cada lei">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Estratégia de cálculo</p>
+            <h2>Biot-Savart ou Ampere?</h2>
+          </header>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Biot-Savart</h3>
+              <ul>
+                <li>Geometria finita.</li>
+                <li>Ponto de observação específico.</li>
+                <li>Superposição explícita.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Ampere</h3>
+              <ul>
+                <li>Alta simetria.</li>
+                <li>Curva onde \( B \) é constante.</li>
+                <li>Resultado global imediato.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Cheque sempre</h3>
+              <ul>
+                <li>Direção pela mão direita.</li>
+                <li>Dimensão: tesla.</li>
+                <li>Limites: longe, perto, fora e dentro.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Resumo">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Fechamento</p>
+            <h2>O coração das seções 10.1 a 10.3</h2>
+          </header>
+          <div class="grid-2">
+            <div class="two-eq">
+              <div class="eq small">\( \nabla\cdot\mathbf B=0 \quad\Rightarrow\quad \) linhas fechadas</div>
+              <div class="eq small">\( \nabla\times\mathbf B=\mu_0\mathbf j \quad\Rightarrow\quad \) correntes geram circulação</div>
+              <div class="eq small">\( \oint\mathbf B\cdot d\boldsymbol\ell=\mu_0 I_C \quad\Rightarrow\quad \) simetria resolve</div>
+            </div>
+            <div class="card">
+              <h3>Mensagem para levar</h3>
+              <p class="subtitle">Magnetostática é uma teoria de circulação: sem fontes escalares de \( \mathbf B \), mas com correntes que enrolam o campo ao redor de si.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide" data-title="Créditos">
+        <div class="content">
+          <header>
+            <p class="eyebrow">Fontes e créditos</p>
+            <h2>Referências usadas</h2>
+          </header>
+          <div class="grid-2 source-list">
+            <div class="card">
+              <h3>Base conceitual</h3>
+              <ul>
+                <li>Zangwill, <em>Modern Electrodynamics</em>, Cap. 10, seções 10.1 a 10.3.</li>
+                <li>Texto dos slides escrito de forma autoral para aula.</li>
+                <li>Imagem de abertura: gerada por IA para este repositório.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Retratos históricos</h3>
+              <ul>
+                <li><a href="https://commons.wikimedia.org/wiki/Special:FilePath/Hans_Christian_%C3%98rsted.jpg">Oersted</a>, <a href="https://en.wikipedia.org/wiki/Jean-Baptiste_Biot">Biot</a>, <a href="https://en.wikipedia.org/wiki/F%C3%A9lix_Savart">Savart</a></li>
+                <li><a href="https://commons.wikimedia.org/wiki/Special:FilePath/Andre-Marie_Ampere.jpg">Ampere</a>, <a href="https://commons.wikimedia.org/wiki/Special:FilePath/James_Clerk_Maxwell.png">Maxwell</a></li>
+                <li>Arquivos servidos via Wikimedia Commons/Special:FilePath.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <nav class="control-bar" aria-label="Controles da apresentação">
+      <div class="nav-buttons">
+        <button class="icon-btn" id="prev" title="Slide anterior" aria-label="Slide anterior">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn" id="next" title="Próximo slide" aria-label="Próximo slide">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+      <div class="counter" id="counter">1 / 1</div>
+      <div class="kbd">← → navegam · F tela cheia</div>
+    </nav>
+  </main>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const progress = document.querySelector("#progress");
+    const counter = document.querySelector("#counter");
+    const prev = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+
+    let index = Number.parseInt(new URL(location.href).hash.replace("#", ""), 10) - 1;
+    if (!Number.isFinite(index) || index < 0 || index >= slides.length) index = 0;
+
+    function show(nextIndex) {
+      index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
+      counter.textContent = `${index + 1} / ${slides.length}`;
+      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+      prev.disabled = index === 0;
+      next.disabled = index === slides.length - 1;
+      history.replaceState(null, "", `#${index + 1}`);
+    }
+
+    prev.addEventListener("click", () => show(index - 1));
+    next.addEventListener("click", () => show(index + 1));
+
+    document.querySelectorAll("[data-jump]").forEach((button) => {
+      button.addEventListener("click", () => show(Number(button.dataset.jump)));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+        event.preventDefault();
+        show(index + 1);
+      }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
+        event.preventDefault();
+        show(index - 1);
+      }
+      if (event.key.toLowerCase() === "f") {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen?.();
+        } else {
+          document.exitFullscreen?.();
+        }
+      }
+      if (event.key === "Home") show(0);
+      if (event.key === "End") show(slides.length - 1);
+    });
+
+    show(index);
+  </script>
+</body>
+</html>
