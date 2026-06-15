@@ -1,1 +1,10 @@
 Andrew Zangwill-Modern electrodynamics-Cambridge University Press (2012).pdf
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
