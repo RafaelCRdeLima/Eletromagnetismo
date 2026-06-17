@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Capítulo 10 - Magnetostática</title>
-  <meta name="description" content="Apresentação online sobre a introdução, lei de Biot-Savart e lei de Ampere em magnetostática.">
+  <meta name="description" content="Apresentação completa sobre magnetostática: Biot-Savart, lei de Ampère, potencial escalar e vetorial, topologia de linhas de campo (Zangwill Cap. 10).">
   <style>
     :root {
       color-scheme: dark;
@@ -23,25 +23,16 @@
       --control-h: 58px;
       --stage-gap: 24px;
     }
-    * {
-      box-sizing: border-box;
-    }
-    html,
-    body {
+    * { box-sizing: border-box; }
+    html, body {
       margin: 0;
       min-height: 100%;
       background: var(--bg);
       color: var(--ink);
       font: 20px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    body {
-      overflow: hidden;
-      overflow-x: hidden;
-    }
-    button,
-    a {
-      font: inherit;
-    }
+    body { overflow: hidden; overflow-x: hidden; }
+    button, a { font: inherit; }
     .deck {
       height: 100vh;
       display: grid;
@@ -70,9 +61,7 @@
       overflow: hidden;
       position: relative;
     }
-    .slide.active {
-      display: grid;
-    }
+    .slide.active { display: grid; }
     .slide::after {
       content: "";
       position: absolute;
@@ -108,26 +97,14 @@
       text-transform: uppercase;
       font-weight: 800;
     }
-    h1,
-    h2,
-    h3,
-    p {
-      margin: 0;
-      letter-spacing: 0;
-    }
+    h1, h2, h3, p { margin: 0; letter-spacing: 0; }
     h1 {
       font-size: clamp(2.8rem, 6.6vw, 5.7rem);
       line-height: .94;
       max-width: 12ch;
     }
-    h2 {
-      font-size: clamp(2rem, 4.4vw, 4rem);
-      line-height: 1.02;
-    }
-    h3 {
-      font-size: clamp(1.25rem, 2.2vw, 2rem);
-      line-height: 1.1;
-    }
+    h2 { font-size: clamp(2rem, 4.4vw, 4rem); line-height: 1.02; }
+    h3 { font-size: clamp(1.25rem, 2.2vw, 2rem); line-height: 1.1; }
     .subtitle {
       max-width: 720px;
       color: var(--muted);
@@ -153,9 +130,7 @@
       padding: 20px;
       min-width: 0;
     }
-    .card strong {
-      color: var(--accent);
-    }
+    .card strong { color: var(--accent); }
     .pill {
       display: inline-flex;
       align-items: center;
@@ -180,26 +155,23 @@
       line-height: 1.32;
       overflow-wrap: anywhere;
     }
-    .eq.small {
-      font-size: clamp(1rem, 1.8vw, 1.42rem);
+    .eq.small { font-size: clamp(1rem, 1.8vw, 1.42rem); }
+    .eq.gold {
+      border-color: rgba(255, 204, 102, .4);
+      background: rgba(255, 204, 102, .08);
+    }
+    .eq.green {
+      border-color: rgba(126, 231, 135, .4);
+      background: rgba(126, 231, 135, .08);
     }
     ul {
       margin: 0;
       padding-left: 1.1em;
       color: var(--muted);
     }
-    li + li {
-      margin-top: 10px;
-    }
-    li,
-    .card,
-    .subtitle {
-      overflow-wrap: anywhere;
-    }
-    .note {
-      color: var(--dim);
-      font-size: .9rem;
-    }
+    li + li { margin-top: 10px; }
+    li, .card, .subtitle { overflow-wrap: anywhere; }
+    .note { color: var(--dim); font-size: .9rem; }
     .diagram {
       width: 100%;
       min-height: 0;
@@ -209,12 +181,7 @@
       background: #0d141d;
       overflow: hidden;
     }
-    .diagram > svg,
-    .icon-btn svg {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
+    .diagram > svg, .icon-btn svg { display: block; width: 100%; height: 100%; }
     .portrait-row {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -235,23 +202,14 @@
       display: block;
       filter: saturate(.92) contrast(1.03);
     }
-    .portrait figcaption {
-      padding: 10px;
-      color: var(--muted);
-      font-size: .78rem;
-      line-height: 1.25;
-    }
+    .portrait figcaption { padding: 10px; color: var(--muted); font-size: .78rem; line-height: 1.25; }
     .timeline {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
       align-items: stretch;
     }
-    .year {
-      color: var(--accent-2);
-      font-size: 1.6rem;
-      font-weight: 850;
-    }
+    .year { color: var(--accent-2); font-size: 1.6rem; font-weight: 850; }
     .control-bar {
       height: 58px;
       display: grid;
@@ -263,10 +221,7 @@
       background: rgba(7, 12, 18, .92);
       backdrop-filter: blur(14px);
     }
-    .nav-buttons {
-      display: flex;
-      gap: 8px;
-    }
+    .nav-buttons { display: flex; gap: 8px; }
     .icon-btn {
       width: 38px;
       height: 38px;
@@ -278,15 +233,8 @@
       display: grid;
       place-items: center;
     }
-    .icon-btn:hover {
-      border-color: var(--accent);
-    }
-    .progress {
-      height: 8px;
-      border-radius: 999px;
-      background: #1b2430;
-      overflow: hidden;
-    }
+    .icon-btn:hover { border-color: var(--accent); }
+    .progress { height: 8px; border-radius: 999px; background: #1b2430; overflow: hidden; }
     .progress span {
       display: block;
       height: 100%;
@@ -294,20 +242,15 @@
       background: linear-gradient(90deg, var(--accent), var(--accent-3));
       transition: width .18s ease;
     }
-    .counter {
-      color: var(--muted);
-      font-size: .86rem;
-      min-width: 78px;
-      text-align: right;
-    }
+    .counter { color: var(--muted); font-size: .86rem; min-width: 78px; text-align: right; }
     .toc {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
     }
     .toc button {
       text-align: left;
-      min-height: 126px;
+      min-height: 110px;
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 18px;
@@ -315,82 +258,61 @@
       color: var(--ink);
       cursor: pointer;
     }
-    .toc button:hover {
-      border-color: var(--accent);
-    }
-    .toc span {
-      display: block;
-      color: var(--accent-2);
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-    .source-list a {
-      color: var(--accent);
-    }
-    .two-eq {
+    .toc button:hover { border-color: var(--accent); }
+    .toc span { display: block; color: var(--accent-2); font-weight: 800; margin-bottom: 8px; }
+    .source-list a { color: var(--accent); }
+    .two-eq { display: grid; gap: 14px; }
+    .three-eq { display: grid; gap: 10px; }
+    .kbd { color: var(--muted); font-size: .82rem; }
+    .epigraph {
       display: grid;
-      gap: 14px;
+      place-items: center;
+      height: 100%;
+      text-align: center;
+      padding: clamp(28px, 6vw, 80px);
     }
-    .kbd {
-      color: var(--muted);
-      font-size: .82rem;
+    .epigraph blockquote {
+      margin: 0;
+      font-size: clamp(1.4rem, 3vw, 2.4rem);
+      line-height: 1.4;
+      color: var(--ink);
+      font-style: italic;
+      max-width: 800px;
     }
+    .epigraph cite {
+      display: block;
+      margin-top: 28px;
+      color: var(--accent-2);
+      font-size: clamp(1rem, 1.6vw, 1.3rem);
+      font-style: normal;
+      font-weight: 700;
+    }
+    .proof-box {
+      border: 1px solid rgba(126, 231, 135, .3);
+      border-radius: 8px;
+      background: rgba(126, 231, 135, .06);
+      padding: 18px 20px;
+    }
+    .proof-box h3 { color: var(--accent-3); margin-bottom: 10px; }
     @media (max-width: 820px) {
-      body {
-        overflow: auto;
-        overflow-x: hidden;
-      }
-      .deck {
-        min-height: 100svh;
-      }
-      .viewport {
-        place-items: start;
-        padding: 14px 0 14px 14px;
-      }
+      body { overflow: auto; overflow-x: hidden; }
+      .deck { min-height: 100svh; }
+      .viewport { place-items: start; padding: 14px 0 14px 14px; }
       .slide {
         width: min(340px, calc(100vw - 28px));
         min-height: calc(100svh - 86px);
         max-height: none;
         aspect-ratio: auto;
       }
-      .content {
-        padding: 24px;
-        overflow-x: hidden;
-      }
-      h1,
-      h2 {
-        font-size: 1.65rem;
-        line-height: 1.12;
-        max-width: 100%;
-        overflow-wrap: normal;
-        word-break: normal;
-      }
-      h3 {
-        font-size: 1.45rem;
-      }
-      .hero .content {
-        width: 100%;
-      }
-      .grid-2,
-      .grid-3,
-      .timeline,
-      .toc,
-      .portrait-row {
-        grid-template-columns: 1fr;
-      }
-      .portrait-row {
-        max-height: none;
-      }
-      .portrait img {
-        aspect-ratio: 16 / 9;
-      }
-      .control-bar {
-        grid-template-columns: auto 1fr auto;
-        gap: 10px;
-      }
-      .kbd {
-        display: none;
-      }
+      .content { padding: 24px; overflow-x: hidden; }
+      h1, h2 { font-size: 1.65rem; line-height: 1.12; max-width: 100%; overflow-wrap: normal; word-break: normal; }
+      h3 { font-size: 1.45rem; }
+      .hero .content { width: 100%; }
+      .grid-2, .grid-3, .timeline, .toc, .portrait-row { grid-template-columns: 1fr; }
+      .portrait-row { max-height: none; }
+      .portrait img { aspect-ratio: 16 / 9; }
+      .control-bar { grid-template-columns: auto 1fr auto; gap: 10px; }
+      .kbd { display: none; }
     }
   </style>
   <script>
@@ -402,687 +324,1663 @@
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-  <main class="deck" aria-label="Apresentação Capítulo 10 Magnetostática">
-    <section class="viewport">
-      <article class="slide hero active" data-title="Capa">
-        <div class="content">
-          <div>
-            <p class="eyebrow">Zangwill, Capítulo 10</p>
-            <h1>Magnetostática</h1>
-            <p class="subtitle">Introdução, lei de Biot-Savart e lei de Ampere. Uma leitura visual para construir intuição antes do cálculo pesado.</p>
-          </div>
-        </div>
-      </article>
+<main class="deck" aria-label="Apresentação Capítulo 10 Magnetostática">
+  <section class="viewport">
 
-      <article class="slide" data-title="Roteiro">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Mapa da aula</p>
-            <h2>O que vamos resolver</h2>
-          </header>
-          <div class="toc">
-            <button data-jump="2"><span>10.1</span>Campo, corrente estacionária e linhas fechadas</button>
-            <button data-jump="6"><span>10.2</span>Biot-Savart como superposição de elementos de corrente</button>
-            <button data-jump="10"><span>10.3</span>Lei de Ampere: simetria transformando integral em álgebra</button>
-            <button data-jump="15"><span>Aplicações</span>Fio infinito, folha de corrente e condições de contorno</button>
-          </div>
+    <!-- ═══════════════════════════════ SLIDE 1: CAPA ═══════════════════════════════ -->
+    <article class="slide hero active" data-title="Capa">
+      <div class="content">
+        <div>
+          <p class="eyebrow">Zangwill, Capítulo 10</p>
+          <h1>Magneto&shy;estática</h1>
+          <p class="subtitle">O campo magnético produzido por correntes estacionárias: da lei de Biot-Savart ao potencial vetor e à topologia das linhas de campo.</p>
         </div>
-      </article>
-
-      <article class="slide" data-title="Contexto histórico">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Do experimento ao campo</p>
-            <h2>Quem aparece nessa história</h2>
-          </header>
-          <div class="portrait-row">
-            <figure class="portrait">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hans_Christian_%C3%98rsted.jpg" alt="Retrato de Hans Christian Oersted">
-              <figcaption>Oersted: corrente elétrica desvia uma agulha magnética.</figcaption>
-            </figure>
-            <figure class="portrait">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Jean_baptiste_biot.jpg/250px-Jean_baptiste_biot.jpg" alt="Retrato de Jean-Baptiste Biot">
-              <figcaption>Biot: mede forças magnéticas produzidas por correntes.</figcaption>
-            </figure>
-            <figure class="portrait">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Interior_of_Institut_de_France%2C_Paris_6th_013.jpg/250px-Interior_of_Institut_de_France%2C_Paris_6th_013.jpg" alt="Busto de Felix Savart">
-              <figcaption>Savart: coformula a lei integral para correntes.</figcaption>
-            </figure>
-            <figure class="portrait">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Andre-Marie_Ampere.jpg" alt="Retrato de Andre-Marie Ampere">
-              <figcaption>Ampere: organiza a interação entre correntes.</figcaption>
-            </figure>
-            <figure class="portrait">
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/James_Clerk_Maxwell.png" alt="Retrato de James Clerk Maxwell">
-              <figcaption>Maxwell: coloca tudo no idioma dos campos.</figcaption>
-            </figure>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Maxwell estático">
-        <div class="content">
-          <header>
-            <p class="eyebrow">10.1 Introdução</p>
-            <h2>O problema magnetostático</h2>
-          </header>
-          <div class="grid-2">
-            <div class="two-eq">
-              <div class="eq">\( \nabla \cdot \mathbf B = 0 \)</div>
-              <div class="eq">\( \nabla \times \mathbf B = \mu_0 \mathbf j \)</div>
-            </div>
-            <div class="card">
-              <h3>Leitura física</h3>
-              <ul>
-                <li>O campo magnético não tem fontes pontuais isoladas.</li>
-                <li>Correntes estacionárias são as fontes do rotacional de \( \mathbf B \).</li>
-                <li>A força aparece transversalmente: \( \mathbf j' \times \mathbf B \).</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="E versus B">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Uma inversão importante</p>
-            <h2>Magnetostática não é eletrostática com nomes trocados</h2>
-          </header>
-          <div class="grid-2">
-            <div class="card">
-              <h3>Eletrostática</h3>
-              <div class="eq small">\( \nabla \cdot \mathbf E = \rho/\epsilon_0 \)</div>
-              <div class="eq small">\( \nabla \times \mathbf E = 0 \)</div>
-              <p class="note">A carga cria divergência. O potencial escalar domina.</p>
-            </div>
-            <div class="card">
-              <h3>Magnetostática</h3>
-              <div class="eq small">\( \nabla \cdot \mathbf B = 0 \)</div>
-              <div class="eq small">\( \nabla \times \mathbf B = \mu_0\mathbf j \)</div>
-              <p class="note">A corrente cria rotacional. Linhas de campo circulam.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Correntes estacionárias">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Consistência local</p>
-            <h2>Campo magnetostático exige corrente estacionária</h2>
-          </header>
-          <div class="grid-2">
-            <div>
-              <div class="eq">\( \nabla \cdot \mathbf j = 0 \)</div>
-              <p class="subtitle">Vem de \( \nabla \cdot (\nabla \times \mathbf B)=0 \). Não há acúmulo local de carga: o que entra em qualquer volume também sai.</p>
-            </div>
-            <div class="diagram" aria-label="Linhas de corrente estacionária">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ee787"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <circle cx="260" cy="195" r="128" fill="none" stroke="#2a3645" stroke-width="2"/>
-                <path d="M120 195 C125 80 395 80 400 195 C395 310 125 310 120 195" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#arrow-green)"/>
-                <path d="M175 195 C180 120 340 120 345 195 C340 270 180 270 175 195" fill="none" stroke="#57c5ff" stroke-width="5" marker-end="url(#arrow-green)"/>
-                <text x="40" y="45" fill="#b7c4cf" font-size="24">linhas de j fechadas</text>
-                <text x="145" y="356" fill="#8091a2" font-size="18">sem começo, sem fim, sem acúmulo de carga</text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Fluxo magnético">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Sem monopolos</p>
-            <h2>Linhas de \( \mathbf B \) não começam nem terminam</h2>
-          </header>
-          <div class="grid-2">
-            <div class="diagram" aria-label="Fluxo magnético nulo por superfície fechada">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <ellipse cx="260" cy="195" rx="112" ry="78" fill="rgba(87,197,255,.08)" stroke="#57c5ff" stroke-width="2"/>
-                <ellipse cx="260" cy="195" rx="112" ry="78" fill="none" stroke="#57c5ff" stroke-width="2" stroke-dasharray="8 8" transform="rotate(90 260 195)"/>
-                <path d="M80 300 C185 85 330 85 435 300" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#arrow-blue)"/>
-                <path d="M84 90 C185 306 332 306 438 90" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#arrow-blue)"/>
-                <text x="205" y="202" fill="#f2f7fb" font-size="28">V</text>
-                <text x="32" y="45" fill="#b7c4cf" font-size="22">entra = sai</text>
-              </svg>
-            </div>
-            <div>
-              <div class="eq">\( \Phi_B = \oint_S \mathbf B \cdot d\mathbf S = 0 \)</div>
-              <ul>
-                <li>Qualquer superfície fechada tem fluxo magnético líquido nulo.</li>
-                <li>Um polo norte isolado seria uma fonte de divergência.</li>
-                <li>Na magnetostática clássica: monopolos magnéticos não entram como fontes.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Força">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Por que \( \mathbf B \) importa?</p>
-            <h2>O campo mede força e torque sobre correntes</h2>
-          </header>
-          <div class="grid-2">
-            <div class="two-eq">
-              <div class="eq small">\( \mathbf F = \int d^3r\, \mathbf j'(\mathbf r)\times\mathbf B(\mathbf r) \)</div>
-              <div class="eq small">\( \mathbf N = \int d^3r\, \mathbf r \times [\mathbf j'(\mathbf r)\times\mathbf B(\mathbf r)] \)</div>
-            </div>
-            <div class="card">
-              <h3>A intuição operacional</h3>
-              <ul>
-                <li>Corrente paralela a \( \mathbf B \): sem força local.</li>
-                <li>Corrente perpendicular: força máxima.</li>
-                <li>O produto vetorial faz a geometria mandar no resultado.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Biot-Savart">
-        <div class="content">
-          <header>
-            <p class="eyebrow">10.2 Lei de Biot-Savart</p>
-            <h2>Superposição de elementos de corrente</h2>
-          </header>
-          <div class="grid-2">
-            <div>
-              <div class="eq small">\( \displaystyle \mathbf B(\mathbf r)=\frac{\mu_0}{4\pi}\int d^3r'\,\frac{\mathbf j(\mathbf r')\times(\mathbf r-\mathbf r')}{|\mathbf r-\mathbf r'|^3} \)</div>
-              <p class="subtitle">Cada elemento de corrente contribui com um campo perpendicular ao plano formado por corrente e vetor de separação.</p>
-            </div>
-            <div class="diagram" aria-label="Geometria da lei de Biot-Savart">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
-                  </marker>
-                  <marker id="arrow-gold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <line x1="90" y1="260" x2="350" y2="120" stroke="#7ee787" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow-cyan)"/>
-                <circle cx="390" cy="92" r="8" fill="#f2f7fb"/>
-                <line x1="212" y1="194" x2="390" y2="92" stroke="#ffcc66" stroke-width="4" marker-end="url(#arrow-gold)"/>
-                <circle cx="212" cy="194" r="8" fill="#7ee787"/>
-                <text x="98" y="290" fill="#7ee787" font-size="24">dℓ ou j d³r'</text>
-                <text x="342" y="78" fill="#f2f7fb" font-size="24">observação r</text>
-                <text x="240" y="132" fill="#ffcc66" font-size="24">R = r - r'</text>
-                <text x="360" y="260" fill="#57c5ff" font-size="22">dB sai/entra da tela</text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Formas de fonte">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Mesma física, fontes diferentes</p>
-            <h2>Volume, superfície e fio fino</h2>
-          </header>
-          <div class="grid-3">
-            <div class="card">
-              <h3>Volume</h3>
-              <div class="eq small">\( \mathbf j(\mathbf r')\,d^3r' \)</div>
-              <p class="note">Condutor espesso ou distribuição contínua.</p>
-            </div>
-            <div class="card">
-              <h3>Superfície</h3>
-              <div class="eq small">\( \mathbf K(\mathbf r_S)\,dS \)</div>
-              <p class="note">Folha de corrente ou limite de uma camada fina.</p>
-            </div>
-            <div class="card">
-              <h3>Filamento</h3>
-              <div class="eq small">\( I\,d\boldsymbol\ell \)</div>
-              <p class="note">Fio ideal quando a espessura não importa.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Loop circular">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Aplicação 10.2.1</p>
-            <h2>Campo no eixo de uma espira circular</h2>
-          </header>
-          <div class="grid-2">
-            <div class="diagram" aria-label="Espira circular com campo no eixo">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-loop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <ellipse cx="230" cy="220" rx="132" ry="66" fill="none" stroke="#ffcc66" stroke-width="8"/>
-                <path d="M116 220 C120 170 176 150 230 154" fill="none" stroke="#ffcc66" stroke-width="8" marker-end="url(#arrow-loop)"/>
-                <line x1="230" y1="220" x2="230" y2="44" stroke="#57c5ff" stroke-width="4"/>
-                <circle cx="230" cy="82" r="8" fill="#57c5ff"/>
-                <path d="M200 214 C205 160 216 120 230 82" fill="none" stroke="#7ee787" stroke-width="5" marker-end="url(#arrow-loop)"/>
-                <path d="M260 214 C255 160 244 120 230 82" fill="none" stroke="#7ee787" stroke-width="5" marker-end="url(#arrow-loop)"/>
-                <text x="252" y="82" fill="#b7c4cf" font-size="22">z</text>
-                <text x="102" y="315" fill="#b7c4cf" font-size="22">componentes transversais cancelam</text>
-              </svg>
-            </div>
-            <div>
-              <div class="eq small">\( \displaystyle \mathbf B(z)=\hat{\mathbf z}\frac{\mu_0 I R^2}{2(R^2+z^2)^{3/2}} \)</div>
-              <ul>
-                <li>No eixo, todos os elementos estão à mesma distância.</li>
-                <li>Componentes perpendiculares ao eixo se cancelam por simetria.</li>
-                <li>No centro: \( B(0)=\mu_0 I/(2R) \).</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Solenoide infinito">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Aplicação 10.2.2</p>
-            <h2>Solenoide infinito: campo confinado</h2>
-          </header>
-          <div class="grid-2">
-            <div>
-              <div class="eq small">\( \displaystyle \mathbf B =
-                \begin{cases}
-                  \mu_0 K\,\hat{\mathbf z}, & \text{dentro}\\
-                  0, & \text{fora}
-                \end{cases} \)</div>
-              <p class="subtitle">A geometria infinita transforma a soma de Biot-Savart em um campo uniforme dentro e nulo fora.</p>
-            </div>
-            <div class="diagram" aria-label="Solenoide infinito">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-sol" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <rect x="150" y="64" width="220" height="260" rx="22" fill="rgba(255,204,102,.08)" stroke="#ffcc66" stroke-width="3"/>
-                <g stroke="#ffcc66" stroke-width="5" fill="none">
-                  <path d="M150 90 C205 45 315 45 370 90"/>
-                  <path d="M150 130 C205 85 315 85 370 130"/>
-                  <path d="M150 170 C205 125 315 125 370 170"/>
-                  <path d="M150 210 C205 165 315 165 370 210"/>
-                  <path d="M150 250 C205 205 315 205 370 250"/>
-                  <path d="M150 290 C205 245 315 245 370 290"/>
-                </g>
-                <g stroke="#57c5ff" stroke-width="5" marker-end="url(#arrow-sol)">
-                  <line x1="205" y1="296" x2="205" y2="94"/>
-                  <line x1="260" y1="296" x2="260" y2="94"/>
-                  <line x1="315" y1="296" x2="315" y2="94"/>
-                </g>
-                <text x="384" y="210" fill="#8091a2" font-size="22">fora: 0</text>
-                <text x="190" y="350" fill="#b7c4cf" font-size="22">dentro: uniforme</text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Ampere integral">
-        <div class="content">
-          <header>
-            <p class="eyebrow">10.3 Lei de Ampere</p>
-            <h2>O rotacional vira circulação</h2>
-          </header>
-          <div class="grid-2">
-            <div class="two-eq">
-              <div class="eq">\( \nabla\times\mathbf B=\mu_0\mathbf j \)</div>
-              <div class="eq">\( \displaystyle \oint_C \mathbf B\cdot d\boldsymbol\ell=\mu_0 I_C \)</div>
-            </div>
-            <div class="card">
-              <h3>Como usar sem tropeçar</h3>
-              <ul>
-                <li>Escolha uma curva \( C \) adaptada à simetria.</li>
-                <li>Mostre quais componentes de \( \mathbf B \) sobrevivem.</li>
-                <li>Só então tire \( B \) da integral.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Fio infinito">
-        <div class="content">
-          <header>
-            <p class="eyebrow">10.3.1</p>
-            <h2>Fio retilíneo infinito</h2>
-          </header>
-          <div class="grid-2">
-            <div class="diagram" aria-label="Campo azimutal de fio infinito">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-wire" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <line x1="260" y1="330" x2="260" y2="60" stroke="#ffcc66" stroke-width="10" stroke-linecap="round" marker-end="url(#arrow-wire)"/>
-                <circle cx="260" cy="195" r="70" fill="none" stroke="#57c5ff" stroke-width="5" stroke-dasharray="10 8"/>
-                <circle cx="260" cy="195" r="120" fill="none" stroke="#57c5ff" stroke-width="5" marker-end="url(#arrow-wire)"/>
-                <circle cx="260" cy="195" r="168" fill="none" stroke="#57c5ff" stroke-width="4" opacity=".55"/>
-                <text x="280" y="82" fill="#ffcc66" font-size="26">I</text>
-                <text x="333" y="147" fill="#b7c4cf" font-size="24">B = B(ρ) φ̂</text>
-              </svg>
-            </div>
-            <div>
-              <div class="eq small">\( \displaystyle B(2\pi\rho)=\mu_0 I \)</div>
-              <div class="eq small">\( \displaystyle \mathbf B(\rho)=\frac{\mu_0 I}{2\pi\rho}\,\hat{\boldsymbol\phi} \)</div>
-              <p class="note">Translação em \( z \), rotação em torno do fio e regra da mão direita fixam a forma do campo.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Vetor axial">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Detalhe conceitual</p>
-            <h2>\( \mathbf B \) é vetor axial</h2>
-          </header>
-          <div class="grid-2">
-            <div class="card">
-              <h3>Reflexão muda o que?</h3>
-              <ul>
-                <li>Vetores polares, como posição e velocidade, refletem como setas comuns.</li>
-                <li>O campo magnético nasce de produto vetorial.</li>
-                <li>Por isso, sob reflexão, \( \mathbf B \) transforma como pseudovetor.</li>
-              </ul>
-            </div>
-            <div class="diagram" aria-label="Vetor axial e regra da mão direita">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <line x1="90" y1="300" x2="430" y2="300" stroke="#2a3645" stroke-width="4"/>
-                <line x1="260" y1="336" x2="260" y2="58" stroke="#57c5ff" stroke-width="6" marker-end="url(#arrow-ax)"/>
-                <path d="M180 200 C190 120 330 120 340 200" fill="none" stroke="#ffcc66" stroke-width="7" marker-end="url(#arrow-ax)"/>
-                <path d="M340 214 C328 292 192 292 180 214" fill="none" stroke="#ffcc66" stroke-width="7" opacity=".55"/>
-                <text x="285" y="86" fill="#57c5ff" font-size="26">corrente</text>
-                <text x="188" y="112" fill="#ffcc66" font-size="26">sentido de B</text>
-                <text x="86" y="355" fill="#8091a2" font-size="20">a simetria elimina componentes radial e longitudinal</text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Folha de corrente">
-        <div class="content">
-          <header>
-            <p class="eyebrow">10.3.2</p>
-            <h2>Folha infinita de corrente</h2>
-          </header>
-          <div class="grid-2">
-            <div>
-              <div class="eq small">\( \displaystyle \mathbf B =
-                \begin{cases}
-                  \frac{1}{2}\mu_0 K\,\hat{\mathbf x}, & z>0\\
-                  -\frac{1}{2}\mu_0 K\,\hat{\mathbf x}, & z<0
-                \end{cases} \)</div>
-              <div class="eq small">\( \displaystyle \mathbf B=\frac{1}{2}\mu_0\,\mathbf K\times\hat{\mathbf s} \)</div>
-            </div>
-            <div class="diagram" aria-label="Folha de corrente com campo oposto nos dois lados">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-sheet" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
-                  </marker>
-                  <marker id="arrow-k" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <polygon points="80,250 400,110 455,160 135,300" fill="rgba(255,204,102,.09)" stroke="#ffcc66" stroke-width="3"/>
-                <g stroke="#ffcc66" stroke-width="5" marker-end="url(#arrow-k)">
-                  <line x1="135" y1="246" x2="230" y2="204"/>
-                  <line x1="190" y1="270" x2="285" y2="228"/>
-                  <line x1="245" y1="294" x2="340" y2="252"/>
-                </g>
-                <g stroke="#57c5ff" stroke-width="7" marker-end="url(#arrow-sheet)">
-                  <line x1="155" y1="120" x2="275" y2="120"/>
-                  <line x1="230" y1="88" x2="350" y2="88"/>
-                  <line x1="338" y1="332" x2="218" y2="332"/>
-                  <line x1="285" y1="300" x2="165" y2="300"/>
-                </g>
-                <text x="350" y="130" fill="#57c5ff" font-size="24">B acima</text>
-                <text x="60" y="338" fill="#57c5ff" font-size="24">B abaixo</text>
-                <text x="350" y="238" fill="#ffcc66" font-size="24">K</text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Condições de contorno">
-        <div class="content">
-          <header>
-            <p class="eyebrow">10.3.3</p>
-            <h2>Saltos de \( \mathbf B \) na superfície com corrente</h2>
-          </header>
-          <div class="grid-2">
-            <div class="diagram" aria-label="Condições de contorno em superfície com corrente">
-              <svg viewBox="0 0 520 390" role="img">
-                <defs>
-                  <marker id="arrow-bound" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ee787"/>
-                  </marker>
-                </defs>
-                <rect width="520" height="390" fill="#0d141d"/>
-                <path d="M70 235 C170 160 325 300 450 200" fill="none" stroke="#ffcc66" stroke-width="6"/>
-                <line x1="260" y1="220" x2="260" y2="95" stroke="#7ee787" stroke-width="5" marker-end="url(#arrow-bound)"/>
-                <line x1="160" y1="145" x2="340" y2="145" stroke="#57c5ff" stroke-width="6" marker-end="url(#arrow-bound)"/>
-                <line x1="340" y1="285" x2="160" y2="285" stroke="#57c5ff" stroke-width="6" marker-end="url(#arrow-bound)"/>
-                <circle cx="260" cy="220" r="11" fill="#ffcc66"/>
-                <text x="276" y="118" fill="#7ee787" font-size="24">n̂</text>
-                <text x="352" y="152" fill="#57c5ff" font-size="24">B₂</text>
-                <text x="122" y="292" fill="#57c5ff" font-size="24">B₁</text>
-                <text x="282" y="238" fill="#ffcc66" font-size="24">K</text>
-              </svg>
-            </div>
-            <div>
-              <div class="eq small">\( \hat{\mathbf n}\cdot(\mathbf B_2-\mathbf B_1)=0 \)</div>
-              <div class="eq small">\( \hat{\mathbf n}\times(\mathbf B_2-\mathbf B_1)=\mu_0\mathbf K \)</div>
-              <ul>
-                <li>Componente normal: contínua.</li>
-                <li>Componente tangencial: pode saltar se houver corrente superficial.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Força em uma folha">
-        <div class="content">
-          <header>
-            <p class="eyebrow">10.3.4</p>
-            <h2>Uma folha de corrente não empurra a si mesma</h2>
-          </header>
-          <div class="grid-2">
-            <div>
-              <div class="eq small">\( \displaystyle \mathbf f(\mathbf r_S)=\frac{1}{2}\mathbf K(\mathbf r_S)\times[\mathbf B_1(\mathbf r_S)+\mathbf B_2(\mathbf r_S)] \)</div>
-              <p class="subtitle">A força por área usa o campo médio dos dois lados, removendo a contribuição singular do próprio elemento de corrente.</p>
-            </div>
-            <div class="card">
-              <h3>Ideia útil para depois</h3>
-              <ul>
-                <li>Esse resultado reaparece em energia magnética e tensões.</li>
-                <li>Ele separa campo externo efetivo de auto-campo local.</li>
-                <li>É o análogo magnético de tomar limites simétricos em superfícies carregadas.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Quando usar cada lei">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Estratégia de cálculo</p>
-            <h2>Biot-Savart ou Ampere?</h2>
-          </header>
-          <div class="grid-3">
-            <div class="card">
-              <h3>Biot-Savart</h3>
-              <ul>
-                <li>Geometria finita.</li>
-                <li>Ponto de observação específico.</li>
-                <li>Superposição explícita.</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h3>Ampere</h3>
-              <ul>
-                <li>Alta simetria.</li>
-                <li>Curva onde \( B \) é constante.</li>
-                <li>Resultado global imediato.</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h3>Cheque sempre</h3>
-              <ul>
-                <li>Direção pela mão direita.</li>
-                <li>Dimensão: tesla.</li>
-                <li>Limites: longe, perto, fora e dentro.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Resumo">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Fechamento</p>
-            <h2>O coração das seções 10.1 a 10.3</h2>
-          </header>
-          <div class="grid-2">
-            <div class="two-eq">
-              <div class="eq small">\( \nabla\cdot\mathbf B=0 \quad\Rightarrow\quad \) linhas fechadas</div>
-              <div class="eq small">\( \nabla\times\mathbf B=\mu_0\mathbf j \quad\Rightarrow\quad \) correntes geram circulação</div>
-              <div class="eq small">\( \oint\mathbf B\cdot d\boldsymbol\ell=\mu_0 I_C \quad\Rightarrow\quad \) simetria resolve</div>
-            </div>
-            <div class="card">
-              <h3>Mensagem para levar</h3>
-              <p class="subtitle">Magnetostática é uma teoria de circulação: sem fontes escalares de \( \mathbf B \), mas com correntes que enrolam o campo ao redor de si.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="slide" data-title="Créditos">
-        <div class="content">
-          <header>
-            <p class="eyebrow">Fontes e créditos</p>
-            <h2>Referências usadas</h2>
-          </header>
-          <div class="grid-2 source-list">
-            <div class="card">
-              <h3>Base conceitual</h3>
-              <ul>
-                <li>Zangwill, <em>Modern Electrodynamics</em>, Cap. 10, seções 10.1 a 10.3.</li>
-                <li>Texto dos slides escrito de forma autoral para aula.</li>
-                <li>Imagem de abertura: gerada por IA para este repositório.</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h3>Retratos históricos</h3>
-              <ul>
-                <li><a href="https://commons.wikimedia.org/wiki/Special:FilePath/Hans_Christian_%C3%98rsted.jpg">Oersted</a>, <a href="https://en.wikipedia.org/wiki/Jean-Baptiste_Biot">Biot</a>, <a href="https://en.wikipedia.org/wiki/F%C3%A9lix_Savart">Savart</a></li>
-                <li><a href="https://commons.wikimedia.org/wiki/Special:FilePath/Andre-Marie_Ampere.jpg">Ampere</a>, <a href="https://commons.wikimedia.org/wiki/Special:FilePath/James_Clerk_Maxwell.png">Maxwell</a></li>
-                <li>Arquivos servidos via Wikimedia Commons/Special:FilePath.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <nav class="control-bar" aria-label="Controles da apresentação">
-      <div class="nav-buttons">
-        <button class="icon-btn" id="prev" title="Slide anterior" aria-label="Slide anterior">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="icon-btn" id="next" title="Próximo slide" aria-label="Próximo slide">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
       </div>
-      <div class="progress" aria-hidden="true"><span id="progress"></span></div>
-      <div class="counter" id="counter">1 / 1</div>
-      <div class="kbd">← → navegam · F tela cheia</div>
-    </nav>
-  </main>
+    </article>
 
-  <script>
-    const slides = Array.from(document.querySelectorAll(".slide"));
-    const progress = document.querySelector("#progress");
-    const counter = document.querySelector("#counter");
-    const prev = document.querySelector("#prev");
-    const next = document.querySelector("#next");
+    <!-- ═══════════════════════════════ SLIDE 2: EPÍGRAFE ═══════════════════════════════ -->
+    <article class="slide" data-title="Epígrafe">
+      <div class="epigraph">
+        <div>
+          <blockquote>"At every point in space at which there is a finite magnetic force there is&nbsp;…&nbsp;a magnetic field."</blockquote>
+          <cite>William Thomson (Lord Kelvin), 1851</cite>
+          <p class="note" style="margin-top:28px;">Essa observação, aparentemente simples, é o ponto de partida: o campo existe onde quer que atue sobre correntes. A magnetostática pergunta: <em>o que o determina?</em></p>
+        </div>
+      </div>
+    </article>
 
-    let index = Number.parseInt(new URL(location.href).hash.replace("#", ""), 10) - 1;
-    if (!Number.isFinite(index) || index < 0 || index >= slides.length) index = 0;
+    <!-- ═══════════════════════════════ SLIDE 3: ROTEIRO ═══════════════════════════════ -->
+    <article class="slide" data-title="Roteiro">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Mapa do capítulo</p>
+          <h2>Seis seções, uma teoria completa</h2>
+        </header>
+        <div class="toc">
+          <button data-jump="4"><span>10.1</span>Introdução: equações de Maxwell estáticas, escopo e teorema de Thomson</button>
+          <button data-jump="12"><span>10.2</span>Lei de Biot-Savart: superposição de elementos de corrente</button>
+          <button data-jump="20"><span>10.3</span>Lei de Ampère: simetria transformando integral em álgebra</button>
+          <button data-jump="30"><span>10.4</span>Potencial escalar magnético e sua topologia</button>
+          <button data-jump="39"><span>10.5</span>Potencial vetor, calibres e equação de Poisson</button>
+          <button data-jump="46"><span>10.6</span>Topologia das linhas de campo e reconexão magnética</button>
+        </div>
+      </div>
+    </article>
 
-    function show(nextIndex) {
-      index = Math.max(0, Math.min(slides.length - 1, nextIndex));
-      slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
-      counter.textContent = `${index + 1} / ${slides.length}`;
-      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
-      prev.disabled = index === 0;
-      next.disabled = index === slides.length - 1;
-      history.replaceState(null, "", `#${index + 1}`);
+    <!-- ═══════════════════════════════ SLIDE 4: CONTEXTO HISTÓRICO ═══════════════════════════════ -->
+    <article class="slide" data-title="Contexto histórico">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Do experimento ao campo</p>
+          <h2>Quem construiu essa história</h2>
+        </header>
+        <div class="portrait-row">
+          <figure class="portrait">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hans_Christian_%C3%98rsted.jpg" alt="Oersted">
+            <figcaption><strong>Oersted (1820):</strong> corrente elétrica deflete agulha magnética — primeiro elo entre eletricidade e magnetismo.</figcaption>
+          </figure>
+          <figure class="portrait">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Jean_baptiste_biot.jpg/250px-Jean_baptiste_biot.jpg" alt="Biot">
+            <figcaption><strong>Biot &amp; Savart (1820):</strong> medem força magnética sobre polo isolado e deduzem a lei integral para correntes.</figcaption>
+          </figure>
+          <figure class="portrait">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Interior_of_Institut_de_France%2C_Paris_6th_013.jpg/250px-Interior_of_Institut_de_France%2C_Paris_6th_013.jpg" alt="Savart">
+            <figcaption><strong>Savart:</strong> coformula a lei integral para correntes lineares.</figcaption>
+          </figure>
+          <figure class="portrait">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Andre-Marie_Ampere.jpg" alt="Ampere">
+            <figcaption><strong>Ampère (1820–1827):</strong> organiza a interação entre correntes e formula a lei do rotacional.</figcaption>
+          </figure>
+          <figure class="portrait">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/James_Clerk_Maxwell.png" alt="Maxwell">
+            <figcaption><strong>Maxwell (1864):</strong> unifica tudo no idioma dos campos — \(\nabla\times\mathbf{B}=\mu_0\mathbf{j}\).</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 5: MAXWELL ESTÁTICO ═══════════════════════════════ -->
+    <article class="slide" data-title="10.1 Equações de Maxwell estáticas">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.1 Introdução</p>
+          <h2>O problema da magnetostática</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="eq">\( \nabla \cdot \mathbf{B} = 0 \)</div>
+            <div class="eq">\( \nabla \times \mathbf{B} = \mu_0\,\mathbf{j} \)</div>
+            <p class="note">Toda distribuição de corrente \(\mathbf{j}(\mathbf{r})\) estacionária é fonte de um campo \(\mathbf{B}(\mathbf{r})\) que satisfaz essas duas equações diferenciais. O campo \(\mathbf{B}\) é completamente determinado por elas (via Teorema de Helmholtz, Seção 1.9).</p>
+          </div>
+          <div class="card">
+            <h3>Leitura física das duas equações</h3>
+            <ul>
+              <li><strong>\(\nabla\cdot\mathbf{B}=0\):</strong> o campo magnético não tem fontes escalares — linhas de \(\mathbf{B}\) não começam nem terminam.</li>
+              <li><strong>\(\nabla\times\mathbf{B}=\mu_0\mathbf{j}\):</strong> correntes estacionárias são as fontes do rotacional — elas "enrolam" o campo ao redor de si.</li>
+              <li>A força exercida por \(\mathbf{B}\) sobre outra corrente \(\mathbf{j}'\) é \(\mathbf{F}=\int d^3r\,\mathbf{j}'\times\mathbf{B}\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 6: ESCOPO ═══════════════════════════════ -->
+    <article class="slide" data-title="10.1.1 Escopo da magnetostática">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.1.1 Escopo</p>
+          <h2>Por que magnetostática é mais sutil que eletrostática</h2>
+        </header>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Fonte vetorial</h3>
+            <p class="note" style="margin-top:8px;">A densidade de carga \(\rho\) é um escalar. A densidade de corrente \(\mathbf{j}\) é um vetor. Isso torna a equação \(\nabla\times\mathbf{B}=\mu_0\mathbf{j}\) intrinsecamente mais rica em estrutura.</p>
+          </div>
+          <div class="card">
+            <h3>Dois tipos de corrente</h3>
+            <p class="note" style="margin-top:8px;">Campos magnéticos são produzidos por: (1) corrente elétrica de cargas em movimento e (2) corrente de magnetização — spin quântico de partículas. Isso torna a matéria magnetizável muito mais variada que a polarizável.</p>
+          </div>
+          <div class="card">
+            <h3>E e B: distinção relativa</h3>
+            <p class="note" style="margin-top:8px;">A relatividade especial (Cap. 22) mostrará que a distinção entre \(\mathbf{E}\) e \(\mathbf{B}\) é apenas uma questão de referencial. Campos estáticos em um referencial tornam-se misturados em outro.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 7: E VS B ═══════════════════════════════ -->
+    <article class="slide" data-title="E versus B: inversão de papéis">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Uma inversão fundamental</p>
+          <h2>Magnetostática \(\neq\) eletrostática com nomes trocados</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Eletrostática</h3>
+            <div class="eq small" style="margin-top:12px;">\( \nabla \cdot \mathbf{E} = \rho/\epsilon_0 \)</div>
+            <div class="eq small" style="margin-top:10px;">\( \nabla \times \mathbf{E} = 0 \)</div>
+            <p class="note" style="margin-top:12px;">A carga cria <strong>divergência</strong>. O rotacional é nulo. Linhas de \(\mathbf{E}\) começam e terminam. Potencial escalar \(\varphi\) domina.</p>
+          </div>
+          <div class="card">
+            <h3>Magnetostática</h3>
+            <div class="eq small" style="margin-top:12px;">\( \nabla \cdot \mathbf{B} = 0 \)</div>
+            <div class="eq small" style="margin-top:10px;">\( \nabla \times \mathbf{B} = \mu_0\mathbf{j} \)</div>
+            <p class="note" style="margin-top:12px;">A corrente cria <strong>rotacional</strong>. A divergência é nula. Linhas de \(\mathbf{B}\) circulam. O potencial vetor \(\mathbf{A}\) emerge naturalmente.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 8: CORRENTES ESTACIONÁRIAS ═══════════════════════════════ -->
+    <article class="slide" data-title="10.1.2 Correntes estacionárias">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.1.2 Magnetostática implica corrente estacionária</p>
+          <h2>A consistência local de \(\nabla\cdot\mathbf{j}=0\)</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <div class="eq">\( \nabla \cdot \mathbf{j} = 0 \)</div>
+            <p class="subtitle" style="margin-top:18px;">Aplicando \(\nabla\cdot\) em ambos os lados de \(\nabla\times\mathbf{B}=\mu_0\mathbf{j}\) e usando a identidade \(\nabla\cdot(\nabla\times\mathbf{F})=0\), obtemos imediatamente \(\nabla\cdot\mathbf{j}=0\).</p>
+            <p class="note" style="margin-top:14px;">Fisicamente: nenhuma carga se acumula em nenhum volume. O que entra também sai. As linhas de corrente são sempre fechadas.</p>
+            <p class="note" style="margin-top:10px;">Esse é o mesmo diagrama que descreve possíveis linhas de \(\mathbf{B}\): sem começo, sem fim, sem acúmulo.</p>
+          </div>
+          <div class="diagram" aria-label="Linhas de corrente fechadas">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ee787"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <path d="M120 195 C125 80 395 80 400 195 C395 310 125 310 120 195" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#ag)"/>
+              <path d="M175 195 C180 120 340 120 345 195 C340 270 180 270 175 195" fill="none" stroke="#57c5ff" stroke-width="5" marker-end="url(#ag)"/>
+              <path d="M210 195 C212 148 308 148 310 195 C308 242 212 242 210 195" fill="none" stroke="#ffcc66" stroke-width="4" marker-end="url(#ag)"/>
+              <text x="40" y="45" fill="#b7c4cf" font-size="22">linhas de j fechadas — sem acúmulo</text>
+              <text x="145" y="370" fill="#8091a2" font-size="16">∇·j = 0 em todo ponto do espaço</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 9: MONOPOLOS ═══════════════════════════════ -->
+    <article class="slide" data-title="10.1.3 Monopolos magnéticos não existem">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.1.3 Monopolos magnéticos</p>
+          <h2>Por que \(\nabla\cdot\mathbf{B}=0\) é tão profundo</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>O que seria um monopolo?</h3>
+            <ul>
+              <li>O análogo magnético de uma carga elétrica: uma fonte pontual de divergência para \(\mathbf{B}\).</li>
+              <li>Nenhum experimento reprodutível jamais detectou um monopolo magnético.</li>
+              <li>\(\nabla\cdot\mathbf{B}=0\) é o conteúdo matemático desta ausência.</li>
+            </ul>
+            <div class="eq small" style="margin-top:14px;">\( \oint_S \mathbf{B}\cdot d\mathbf{S} = 0 \quad \text{para qualquer } S \)</div>
+          </div>
+          <div class="card">
+            <h3>Consequências</h3>
+            <ul>
+              <li><strong>Assimetria de Maxwell:</strong> \(\nabla\cdot\mathbf{E}=\rho/\epsilon_0\) mas \(\nabla\cdot\mathbf{B}=0\). Polos não são fontes.</li>
+              <li><strong>Linhas de \(\mathbf{B}\):</strong> fecham sobre si mesmas, vão ao infinito em ambas direções, ou têm topologia mais complexa (Seção 10.6).</li>
+              <li><strong>Dirac (1931):</strong> se monopolos existissem, a carga elétrica seria naturalmente quantizada — uma das consequências mais elegantes da física teórica.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 10: FLUXO MAGNÉTICO ═══════════════════════════════ -->
+    <article class="slide" data-title="Fluxo magnético">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Sem monopolos</p>
+          <h2>Fluxo magnético líquido é sempre zero</h2>
+        </header>
+        <div class="grid-2">
+          <div class="diagram" aria-label="Fluxo magnético nulo por superfície fechada">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <ellipse cx="260" cy="195" rx="112" ry="78" fill="rgba(87,197,255,.08)" stroke="#57c5ff" stroke-width="2"/>
+              <path d="M80 300 C185 85 330 85 435 300" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#ab)"/>
+              <path d="M84 90 C185 306 332 306 438 90" fill="none" stroke="#7ee787" stroke-width="6" marker-end="url(#ab)"/>
+              <text x="205" y="205" fill="#f2f7fb" font-size="28">V</text>
+              <text x="32" y="45" fill="#b7c4cf" font-size="22">entra = sai: \(\Phi_B = 0\)</text>
+              <text x="110" y="370" fill="#8091a2" font-size="16">O teorema da divergência converte \(\nabla\cdot\mathbf{B}=0\) nesta lei de fluxo</text>
+            </svg>
+          </div>
+          <div>
+            <div class="eq">\( \Phi_B = \oint_S \mathbf{B}\cdot d\mathbf{S} = 0 \)</div>
+            <div class="eq small" style="margin-top:14px;">\( \Phi_B = \int_V d^3r\,\nabla\cdot\mathbf{B} = 0 \quad \checkmark \)</div>
+            <ul style="margin-top:18px;">
+              <li>Válido para qualquer superfície fechada \(S\), arbitrariamente pequena.</li>
+              <li>Como \(V\) pode ser infinitesimal: linhas de \(\mathbf{B}\) não podem começar nem terminar em nenhum ponto isolado.</li>
+              <li>Contraste: \(\oint_S \mathbf{E}\cdot d\mathbf{S} = Q_{\text{int}}/\epsilon_0\) — pode ser não-nulo se houver carga dentro.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 11: TEOREMA DE THOMSON ═══════════════════════════════ -->
+    <article class="slide" data-title="10.1.4 Teorema de Thomson">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.1.4 Análogo ao teorema de Earnshaw</p>
+          <h2>Teorema de Thomson da magnetostática</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <div class="card" style="border-color: rgba(126,231,135,.3); background: rgba(126,231,135,.06);">
+              <h3 style="color:var(--accent-3);">Teorema</h3>
+              <p class="subtitle" style="margin-top:10px;">\(|\mathbf{B}(\mathbf{r})|\) pode ter um <strong>mínimo local</strong>, mas nunca um <strong>máximo local</strong> em um volume \(V\) livre de correntes.</p>
+            </div>
+            <div style="margin-top:18px;" class="note">
+              <strong>Prova:</strong> Supõe-se um máximo em \(P\), onde \(\nabla\cdot\mathbf{B}=0\) e \(\nabla\times\mathbf{B}=0\). Então sobre uma pequena esfera \(S\) centrada em \(P\):
+              \[ \oint_S \nabla(\mathbf{B}\cdot\mathbf{B})\cdot d\mathbf{S} < 0 \]
+              Pelo teorema da divergência e identidades vetoriais:
+              \[ \oint_S \nabla(B^2)\cdot d\mathbf{S} = 2\int_V (\nabla_i B_j)^2\,d^3r \geq 0 \quad \text{(contradição!)} \]
+            </div>
+          </div>
+          <div class="card">
+            <h3>Implicações práticas</h3>
+            <ul>
+              <li>Não é possível confinar partículas carregadas em um <em>máximo</em> de \(|\mathbf{B}|\) estático.</li>
+              <li>Confinamento em <em>mínimo</em> de \(|\mathbf{B}|\) é possível (armadilhas magnéticas).</li>
+              <li>Contrasta com o teorema de Earnshaw para \(\mathbf{E}\): nem máximo nem mínimo de \(\varphi\) existem em região sem cargas.</li>
+              <li>Aplicado em fusão nuclear (tokamaks) e armadilhas de átomos frios.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 12: FORÇA E TORQUE ═══════════════════════════════ -->
+    <article class="slide" data-title="Força e torque sobre correntes">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Por que \(\mathbf{B}\) importa na prática</p>
+          <h2>Força e torque sobre distribuições de corrente</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="eq small">\( \displaystyle \mathbf{F} = \int d^3r\;\mathbf{j}'(\mathbf{r})\times\mathbf{B}(\mathbf{r}) \)</div>
+            <div class="eq small">\( \displaystyle \mathbf{N} = \int d^3r\;\mathbf{r}\times[\mathbf{j}'(\mathbf{r})\times\mathbf{B}(\mathbf{r})] \)</div>
+            <p class="note">Essas são as expressões gerais. Quando \(\mathbf{B}\) é uniforme e a distribuição \(\mathbf{j}'\) é localizada, a força total se anula e o torque reduz a \(\mathbf{N}=\mathbf{m}\times\mathbf{B}\) (Cap. 11).</p>
+          </div>
+          <div class="card">
+            <h3>A intuição operacional</h3>
+            <ul>
+              <li>Corrente paralela a \(\mathbf{B}\): força local nula (\(\mathbf{j}\times\mathbf{B}=0\)).</li>
+              <li>Corrente perpendicular: força máxima.</li>
+              <li>O produto vetorial faz a geometria mandar no resultado — a força é <em>sempre</em> transversal.</li>
+              <li>Aplicação imediata: motores elétricos, railguns, plasma confinado.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 13: BIOT-SAVART VIA HELMHOLTZ ═══════════════════════════════ -->
+    <article class="slide" data-title="10.2 Biot-Savart: derivação via Helmholtz">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.2 Lei de Biot-Savart</p>
+          <h2>Por que ela existe: o teorema de Helmholtz</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">O teorema de Helmholtz (Seção 1.9) garante: dados \(\nabla\cdot\mathbf{B}\) e \(\nabla\times\mathbf{B}\), o campo \(\mathbf{B}\) é unicamente determinado. Com \(\nabla\cdot\mathbf{B}=0\) e \(\nabla\times\mathbf{B}=\mu_0\mathbf{j}\):</p>
+            <div class="eq small">\( \displaystyle \mathbf{B}(\mathbf{r}) = \nabla\times\!\left[\frac{\mu_0}{4\pi}\int d^3r'\,\frac{\mathbf{j}(\mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|}\right] \)</div>
+            <p class="note">Trazer \(\nabla\) para dentro do integral (pois \(\mathbf{j}(\mathbf{r}')\) não depende de \(\mathbf{r}\)) e usar \(\nabla(1/|\mathbf{r}-\mathbf{r}'|)=-(\mathbf{r}-\mathbf{r}')/|\mathbf{r}-\mathbf{r}'|^3\):</p>
+            <div class="eq small">\( \displaystyle \mathbf{B}(\mathbf{r})=\frac{\mu_0}{4\pi}\int d^3r'\,\frac{\mathbf{j}(\mathbf{r}')\times(\mathbf{r}-\mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|^3} \)</div>
+          </div>
+          <div class="diagram" aria-label="Geometria de Biot-Savart">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="ac" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+                <marker id="ad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <line x1="90" y1="260" x2="350" y2="120" stroke="#7ee787" stroke-width="8" stroke-linecap="round" marker-end="url(#ac)"/>
+              <circle cx="390" cy="92" r="8" fill="#f2f7fb"/>
+              <line x1="212" y1="194" x2="390" y2="92" stroke="#ffcc66" stroke-width="4" marker-end="url(#ad)"/>
+              <circle cx="212" cy="194" r="8" fill="#7ee787"/>
+              <text x="98" y="290" fill="#7ee787" font-size="22">j(r') d³r'</text>
+              <text x="335" y="78" fill="#f2f7fb" font-size="22">r (obs.)</text>
+              <text x="240" y="132" fill="#ffcc66" font-size="22">r − r'</text>
+              <text x="340" y="270" fill="#57c5ff" font-size="18">dB ⊥ plano(j, r−r')</text>
+              <line x1="212" y1="194" x2="240" y2="90" stroke="#57c5ff" stroke-width="5" stroke-dasharray="6 4" marker-end="url(#ac)"/>
+              <text x="243" y="82" fill="#57c5ff" font-size="18">dB</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 14: TRÊS FORMAS DA LEI ═══════════════════════════════ -->
+    <article class="slide" data-title="10.2 As três formas de Biot-Savart">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Mesma física, fontes diferentes</p>
+          <h2>Lei de Biot-Savart para volume, superfície e filamento</h2>
+        </header>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Corrente de volume</h3>
+            <div class="eq small" style="margin-top:10px;">\( \displaystyle \mathbf{B}=\frac{\mu_0}{4\pi}\int d^3r'\,\frac{\mathbf{j}\times\hat{\mathbf{R}}}{R^2} \)</div>
+            <p class="note" style="margin-top:10px;">Onde \(\mathbf{R}=\mathbf{r}-\mathbf{r}'\). Condutor espesso ou plasma.</p>
+          </div>
+          <div class="card">
+            <h3>Corrente superficial</h3>
+            <div class="eq small" style="margin-top:10px;">\( \displaystyle \mathbf{B}=\frac{\mu_0}{4\pi}\int dS\,\frac{\mathbf{K}(\mathbf{r}_S)\times\hat{\mathbf{R}}}{R^2} \)</div>
+            <p class="note" style="margin-top:10px;">\(\mathbf{K}\) [A/m]: folha de corrente ou limite de camada fina.</p>
+          </div>
+          <div class="card">
+            <h3>Filamento \(I\,d\boldsymbol{\ell}\)</h3>
+            <div class="eq small" style="margin-top:10px;">\( \displaystyle \mathbf{B}=\frac{\mu_0 I}{4\pi}\int\frac{d\boldsymbol{\ell}\times\hat{\mathbf{R}}}{R^2} \)</div>
+            <p class="note" style="margin-top:10px;">Substituição \(\mathbf{j}\,d^3r'\to I\,d\boldsymbol{\ell}\). Fio ideal (espessura irrelevante).</p>
+          </div>
+        </div>
+        <div class="note" style="margin-top:14px;">Denominador alternativo: usa-se tanto \(R^2\hat{\mathbf{R}}/R^2 = \hat{\mathbf{R}}/R^2\) quanto \((\mathbf{r}-\mathbf{r}')/|\mathbf{r}-\mathbf{r}'|^3\). Ambas as notações são equivalentes.</div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 15: SEGMENTO DE FIO (EX 10.1) ═══════════════════════════════ -->
+    <article class="slide" data-title="Ex. 10.1: segmento de fio reto">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 10.1 do Zangwill</p>
+          <h2>Campo de um segmento de fio reto com corrente \(I\)</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Fio finito com corrente \(I\), descrito pelos vetores \(\mathbf{b}\) e \(\mathbf{c}\) (do ponto de observação \(P\) às extremidades). Vetor unitário \(\mathbf{a}=\hat{\ell}\) ao longo do fio. Distância perpendicular: \(r = |\mathbf{c}\times\mathbf{a}|/a\).</p>
+            <div class="eq small" style="margin-top:16px;">\( \displaystyle \mathbf{B} = \frac{\mu_0 I}{4\pi}\,\frac{\mathbf{c}\times\mathbf{a}}{|\mathbf{c}\times\mathbf{a}|^2}\left(\frac{\mathbf{a}\cdot\mathbf{c}}{c} - \frac{\mathbf{a}\cdot\mathbf{b}}{b}\right) \)</div>
+            <p class="note" style="margin-top:14px;"><strong>Fio infinito:</strong> \(b\to+\infty\), \(c\to+\infty\) com extremos em sentidos opostos:</p>
+            <div class="eq small">\( \displaystyle \mathbf{B} = \frac{\mu_0 I}{2\pi r}\,\hat{\boldsymbol{\phi}} \)</div>
+          </div>
+          <div class="card">
+            <h3>Passos do cálculo</h3>
+            <ul>
+              <li>Escolher origem na projeção de \(P\) sobre o fio.</li>
+              <li>\(|\mathbf{r}-\boldsymbol{\ell}| = \sqrt{r^2+\ell^2}\); \(\,d\boldsymbol{\ell}\times(\mathbf{r}-\boldsymbol{\ell})\) é perpendicular ao plano e constante em direção.</li>
+              <li>\(\int_{\ell_b}^{\ell_c}\frac{d\ell}{(r^2+\ell^2)^{3/2}} = \frac{1}{r^2}\left[\frac{\ell}{\sqrt{r^2+\ell^2}}\right]_{\ell_b}^{\ell_c}\)</li>
+              <li>Limite infinito: \(\ell/\sqrt{r^2+\ell^2}\to\pm 1\), soma \(= 2/r^2\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 16: ESPIRA CIRCULAR CÁLCULO ═══════════════════════════════ -->
+    <article class="slide" data-title="10.2.1 Espira circular: o cálculo">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.2.1 Espira circular de corrente</p>
+          <h2>Campo no eixo de simetria</h2>
+        </header>
+        <div class="grid-2">
+          <div class="diagram" aria-label="Espira circular com contribuições de Biot-Savart">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
+                </marker>
+                <marker id="af" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <ellipse cx="230" cy="230" rx="132" ry="55" fill="none" stroke="#ffcc66" stroke-width="6"/>
+              <path d="M102 230 C106 192 164 176 230 180" fill="none" stroke="#ffcc66" stroke-width="6" marker-end="url(#ae)"/>
+              <line x1="230" y1="230" x2="230" y2="60" stroke="#2a3645" stroke-width="2" stroke-dasharray="6 4"/>
+              <line x1="230" y1="160" x2="230" y2="60" stroke="#57c5ff" stroke-width="5" marker-end="url(#af)"/>
+              <line x1="230" y1="230" x2="362" y2="230" stroke="#8091a2" stroke-width="3"/>
+              <text x="290" y="222" fill="#b7c4cf" font-size="18">R</text>
+              <circle cx="230" cy="90" r="7" fill="#57c5ff"/>
+              <text x="244" y="88" fill="#57c5ff" font-size="20">B(z)</text>
+              <path d="M195 224 C198 175 215 130 230 90" fill="none" stroke="#7ee787" stroke-width="4" stroke-dasharray="5 3"/>
+              <text x="155" y="158" fill="#7ee787" font-size="16">comp. ⊥ cancela</text>
+              <text x="90" y="350" fill="#8091a2" font-size="16">Por simetria: somente a componente axial sobrevive</text>
+            </svg>
+          </div>
+          <div>
+            <p class="subtitle">No eixo \(z\), cada elemento \(Id\boldsymbol{\ell}\) contribui com \(d\mathbf{B}\) inclinado. Pela simetria azimutal, as componentes transversais de lados opostos se cancelam. Só resta a componente \(\hat{\mathbf{z}}\).</p>
+            <div class="eq small" style="margin-top:14px;">\( \displaystyle B_z = \frac{\mu_0 I}{4\pi}\frac{\cos\theta}{R^2+z^2}\oint d\ell = \frac{\mu_0 I}{2}\frac{R^2}{(R^2+z^2)^{3/2}} \)</div>
+            <p class="note" style="margin-top:12px;">Onde \(\cos\theta = R/\sqrt{R^2+z^2}\) e \(\oint d\ell = 2\pi R\).</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 17: ESPIRA RESULTADO ═══════════════════════════════ -->
+    <article class="slide" data-title="Espira circular: resultado">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.2.1 Resultado final</p>
+          <h2>Campo no eixo de uma espira circular</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="eq">\( \displaystyle \mathbf{B}(z)=\hat{\mathbf{z}}\;\frac{\mu_0 I R^2}{2(R^2+z^2)^{3/2}} \)</div>
+            <div class="eq small">\( B(0) = \dfrac{\mu_0 I}{2R} \quad (\text{centro da espira}) \)</div>
+            <div class="eq small">\( B(z)\xrightarrow{z\gg R} \frac{\mu_0 I R^2}{2z^3} \quad (\text{far field: dipolo}) \)</div>
+          </div>
+          <div class="card">
+            <h3>Pontos importantes</h3>
+            <ul>
+              <li>Resultado análogo ao campo elétrico no eixo de um anel carregado — mas diferente: aqui há um produto vetorial extra, por isso \(B\neq 0\) no centro enquanto \(E=0\) para o anel.</li>
+              <li>Limite \(z\gg R\): campo de dipolo \(\sim 1/z^3\). O momento de dipolo magnético é \(m=I\pi R^2\).</li>
+              <li>Esse resultado é a base para o cálculo do potencial escalar em 10.4.1.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 18: SOLENOIDE DERIVAÇÃO ═══════════════════════════════ -->
+    <article class="slide" data-title="10.2.2 Solenoide infinito: derivação">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.2.2 Solenoide infinito</p>
+          <h2>Integrando Biot-Savart sobre um solenoide</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Solenoide de seção arbitrária com corrente superficial azimutal \(\mathbf{K}=K\,d\boldsymbol{\ell}'\). Usando Biot-Savart para superfície (10.16) e separando a integral em \(z\) e no contorno \(C\):</p>
+            <div class="eq small" style="margin-top:12px;">\( \displaystyle \mathbf{B}(P)=\frac{\mu_0 K}{2\pi}\oint_C\frac{\mathbf{R}'\times d\mathbf{R}'}{R'^2} \)</div>
+            <p class="note" style="margin-top:12px;">O ângulo sólido plano varrido pelo vetor \(\mathbf{R}'\) ao longo de \(C\) é:</p>
+            <ul style="margin-top:10px;">
+              <li><strong>\(P\) dentro:</strong> \(\mathbf{R}'\) percorre ângulo \(2\pi\) → \(\mathbf{B}=\mu_0 K\,\hat{\mathbf{z}}\)</li>
+              <li><strong>\(P\) fora:</strong> ângulo líquido \(= 0\) → \(\mathbf{B}=0\)</li>
+            </ul>
+          </div>
+          <div class="diagram" aria-label="Solenoide infinito">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="asol" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <rect x="150" y="64" width="220" height="260" rx="22" fill="rgba(255,204,102,.08)" stroke="#ffcc66" stroke-width="3"/>
+              <g stroke="#ffcc66" stroke-width="4" fill="none">
+                <path d="M150 90 C205 52 315 52 370 90"/>
+                <path d="M150 128 C205 90 315 90 370 128"/>
+                <path d="M150 166 C205 128 315 128 370 166"/>
+                <path d="M150 204 C205 166 315 166 370 204"/>
+                <path d="M150 242 C205 204 315 204 370 242"/>
+                <path d="M150 280 C205 242 315 242 370 280"/>
+                <path d="M150 310 C205 272 315 272 370 310"/>
+              </g>
+              <g stroke="#57c5ff" stroke-width="5" marker-end="url(#asol)">
+                <line x1="205" y1="296" x2="205" y2="96"/>
+                <line x1="260" y1="296" x2="260" y2="96"/>
+                <line x1="315" y1="296" x2="315" y2="96"/>
+              </g>
+              <text x="384" y="210" fill="#8091a2" font-size="20">fora: 0</text>
+              <text x="168" y="356" fill="#b7c4cf" font-size="20">dentro: B = μ₀K ẑ (uniforme)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 19: SOLENOIDE RESULTADO ═══════════════════════════════ -->
+    <article class="slide" data-title="Solenoide: campo confinado">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.2.2 Resultado e implicações</p>
+          <h2>Campo do solenoide infinito: confinamento perfeito</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="eq">\( \displaystyle \mathbf{B} = \begin{cases} \mu_0 K\,\hat{\mathbf{z}}, & P \text{ dentro}\\ 0, & P \text{ fora}\end{cases} \)</div>
+            <div class="eq small">\( K = nI \quad \Rightarrow \quad \mathbf{B} = \mu_0 nI\,\hat{\mathbf{z}} \)</div>
+            <p class="note">\(n\) = número de espiras por unidade de comprimento, \(I\) = corrente por espira.</p>
+          </div>
+          <div class="card">
+            <h3>O que é notável aqui</h3>
+            <ul>
+              <li>O campo externo é <em>exatamente zero</em> para solenoide infinito — não apenas pequeno.</li>
+              <li>O campo interno é <em>exatamente uniforme</em>, independente da seção transversal.</li>
+              <li>Isso segue do ângulo líquido: quando \(P\) está fora, as contribuições de todos os elementos de \(C\) se cancelam.</li>
+              <li>Importante para o efeito Aharonov-Bohm (Seção 10.5): mesmo sem campo, o potencial vetor \(\mathbf{A}\) fora é não-nulo!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 20: APPLICATION 10.1 ═══════════════════════════════ -->
+    <article class="slide" data-title="Appl. 10.1: fontes irrotacionais">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Aplicação 10.1 — resultado surpreendente</p>
+          <h2>Correntes irrotacionais não produzem campo magnético</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <div class="card" style="border-color:rgba(255,204,102,.3); background:rgba(255,204,102,.06);">
+              <h3 style="color:var(--accent-2);">Enunciado</h3>
+              <p class="subtitle" style="margin-top:8px;">Se \(\nabla\times\mathbf{j}(\mathbf{r}')=0\) em todo o espaço e \(\mathbf{j}\) é localizada, então \(\mathbf{B}(\mathbf{r})=0\) em todo o espaço.</p>
+            </div>
+            <div class="note" style="margin-top:18px;">
+              <strong>Esboço da prova:</strong> Reescreve-se a lei de Biot-Savart como
+              \(\mathbf{B}(\mathbf{r}) = \frac{\mu_0}{4\pi}\int d^3r'\,\mathbf{j}(\mathbf{r}')\cdot\nabla'\frac{1}{|\mathbf{r}-\mathbf{r}'|} \).
+              Integração por partes produz dois termos: um proporcional a \(\nabla'\cdot\mathbf{j}=0\) e outro com integral de superfície que vai a zero (pois \(\mathbf{j}\) é localizada). Portanto \(\mathbf{B}=0\).
+            </div>
+          </div>
+          <div class="card">
+            <h3>Moral física</h3>
+            <ul>
+              <li>A "rotacionalidade" de \(\mathbf{j}\) é o que cria o campo magnético.</li>
+              <li>Uma corrente que "circula" (rotacional não-nulo) produz \(\mathbf{B}\neq 0\).</li>
+              <li>Uma corrente que "flui para dentro ou para fora" sem circular não produz campo magnético externo.</li>
+              <li>Isso é o análogo magnético do teorema de Gauss: é o <em>caráter do fluxo</em> que importa.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 21: AMPÈRE VIA STOKES ═══════════════════════════════ -->
+    <article class="slide" data-title="10.3 Lei de Ampère: derivação">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.3 Lei de Ampère</p>
+          <h2>Do rotacional à circulação: teorema de Stokes</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Integrar \(\nabla\times\mathbf{B}=\mu_0\mathbf{j}\) sobre uma superfície \(S\) com bordo \(C\):</p>
+            <div class="eq small">\( \int_S (\nabla\times\mathbf{B})\cdot d\mathbf{S} = \mu_0\int_S \mathbf{j}\cdot d\mathbf{S} = \mu_0 I_C \)</div>
+            <p class="note">Pelo teorema de Stokes (Seção 1.4.4):</p>
+            <div class="eq small">\( \int_S (\nabla\times\mathbf{B})\cdot d\mathbf{S} = \oint_C \mathbf{B}\cdot d\boldsymbol{\ell} \)</div>
+            <div class="eq gold">\( \displaystyle \oint_C \mathbf{B}\cdot d\boldsymbol{\ell} = \mu_0\,I_C \)</div>
+            <p class="note">\(I_C = \int_S \mathbf{j}\cdot d\mathbf{S}\): corrente atravessando qualquer superfície que tenha \(C\) como bordo. O sinal segue a regra da mão direita.</p>
+          </div>
+          <div class="card">
+            <h3>Liberdade de escolha da superfície</h3>
+            <ul>
+              <li>Qualquer superfície \(S\) com bordo \(C\) dará o mesmo \(I_C\) — desde que \(\nabla\cdot\mathbf{j}=0\).</li>
+              <li>Isso é garantido pela consistência da magnetostática (Seção 10.1.2).</li>
+              <li>Na eletrodinâmica, a corrente de deslocamento \(\epsilon_0\partial\mathbf{E}/\partial t\) deve ser adicionada (Cap. 14).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 22: ESTRATÉGIA DE SIMETRIA ═══════════════════════════════ -->
+    <article class="slide" data-title="Estratégia: simetria em três passos">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Como usar a lei de Ampère</p>
+          <h2>A simetria é a chave: três passos obrigatórios</h2>
+        </header>
+        <div class="grid-3">
+          <div class="card" style="border-color:rgba(87,197,255,.4);">
+            <h3 style="color:var(--accent);">1. Identificar simetria</h3>
+            <p class="note" style="margin-top:10px;">Antes de integrar qualquer coisa: use argumentos de simetria (translação, rotação, reflexão) para determinar <em>quais componentes</em> de \(\mathbf{B}\) são não-nulas e <em>de quais variáveis</em> elas dependem.</p>
+          </div>
+          <div class="card" style="border-color:rgba(255,204,102,.4);">
+            <h3 style="color:var(--accent-2);">2. Escolher caminho ampèreano</h3>
+            <p class="note" style="margin-top:10px;">Escolher curva \(C\) onde \(|\mathbf{B}|\) é constante e \(\mathbf{B}\parallel d\boldsymbol{\ell}\) — então \(\oint\mathbf{B}\cdot d\boldsymbol{\ell} = B \cdot L_C\). O cálculo vira álgebra.</p>
+          </div>
+          <div class="card" style="border-color:rgba(126,231,135,.4);">
+            <h3 style="color:var(--accent-3);">3. Calcular \(I_C\)</h3>
+            <p class="note" style="margin-top:10px;">Determinar a corrente total que atravessa a superfície delimitada por \(C\). Então isolar \(B\): \(B = \mu_0 I_C / L_C\).</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:18px;">
+          <p class="note"><strong>Atenção:</strong> Pular o passo 1 é o erro mais comum. A forma de \(\mathbf{B}\) deve ser justificada por simetria <em>antes</em> de usar Ampère — caso contrário, a integral não simplifica e nenhuma informação útil é extraída.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 23: FIO INFINITO SIMETRIA ═══════════════════════════════ -->
+    <article class="slide" data-title="10.3.1 Fio infinito: argumento de simetria">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.3.1 Fio retilíneo infinito</p>
+          <h2>Três simetrias determinam \(\mathbf{B}=B(\rho)\hat{\boldsymbol{\phi}}\)</h2>
+        </header>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Translação em \(z\) e rotação em \(\phi\)</h3>
+            <p class="note" style="margin-top:8px;">Invariância translacional em \(z\) e rotacional em \(\phi\): \(\mathbf{B}=\mathbf{B}(\rho)\). O campo depende apenas da distância radial \(\rho\).</p>
+          </div>
+          <div class="card">
+            <h3>Reflexão \(z\to -z\) (B é pseudovetor)</h3>
+            <p class="note" style="margin-top:8px;">Sob reflexão no plano \(z=0\): \(I\to -I\), portanto \(\mathbf{B}\to-\mathbf{B}\). A componente \(B_z\) deve satisfazer \(B_z=-B_z\), logo \(B_z=0\).</p>
+          </div>
+          <div class="card">
+            <h3>Radial: proibida por \(\nabla\cdot\mathbf{B}=0\)</h3>
+            <p class="note" style="margin-top:8px;">Componente radial \(B_\rho\neq 0\) criaria divergência: \(\nabla\cdot\mathbf{B}=(1/\rho)\partial(\rho B_\rho)/\partial\rho\neq 0\). Logo \(B_\rho=0\).</p>
+          </div>
+        </div>
+        <div style="margin-top:18px;" class="two-eq">
+          <div class="eq">\( \mathbf{B}(\mathbf{r}) = B(\rho)\,\hat{\boldsymbol{\phi}} \)</div>
+          <p class="note">Conclusão: o campo só pode ter componente azimutal, que depende apenas de \(\rho\). Agora aplica-se Ampère com círculo de raio \(\rho\): \(B(2\pi\rho) = \mu_0 I\).</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 24: B COMO PSEUDOVETOR ═══════════════════════════════ -->
+    <article class="slide" data-title="B é vetor axial (pseudovetor)">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Propriedade fundamental de \(\mathbf{B}\)</p>
+          <h2>\(\mathbf{B}\) é um pseudovetor: como a reflexão age</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Vetores polares vs. axiais</h3>
+            <ul>
+              <li><strong>Vetores polares</strong> (posição, velocidade, força): sob reflexão espacial \(\mathbf{r}\to-\mathbf{r}\), transformam como \(\mathbf{v}\to-\mathbf{v}\).</li>
+              <li><strong>Pseudovetores (axiais)</strong>: nascem de produto vetorial \(\mathbf{a}\times\mathbf{b}\). Sob reflexão, não mudam de sinal da mesma forma.</li>
+              <li>Reflexão em \(z=0\): \(\mathbf{r}'=x\hat{\mathbf{x}}+y\hat{\mathbf{y}}-z\hat{\mathbf{z}}\). A corrente \(\mathbf{j}=\rho\mathbf{v}\) é polar — suas componentes \(x,y\) ficam iguais, a \(z\) inverte.</li>
+              <li>Como \(\mathbf{B}\) satisfaz \(\nabla'\times\mathbf{B}'=\mu_0\mathbf{j}'\): as componentes \(B_x, B_y\) invertem; \(B_z\) permanece.</li>
+            </ul>
+          </div>
+          <div class="diagram" aria-label="Pseudovetor B">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
+                </marker>
+                <marker id="ax2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <line x1="90" y1="300" x2="430" y2="300" stroke="#2a3645" stroke-width="4"/>
+              <text x="170" y="325" fill="#8091a2" font-size="18">plano de reflexão \(z=0\)</text>
+              <line x1="260" y1="330" x2="260" y2="80" stroke="#57c5ff" stroke-width="6" marker-end="url(#ax2)"/>
+              <text x="275" y="78" fill="#57c5ff" font-size="20">I</text>
+              <path d="M180 200 C190 130 330 130 340 200" fill="none" stroke="#ffcc66" stroke-width="7" marker-end="url(#ax)"/>
+              <path d="M340 210 C328 278 192 278 180 210" fill="none" stroke="#ffcc66" stroke-width="7" opacity=".55"/>
+              <text x="172" y="122" fill="#ffcc66" font-size="20">B (acima)</text>
+              <text x="172" y="296" fill="#ffcc66" font-size="20" opacity=".7">B (abaixo)</text>
+              <text x="55" y="360" fill="#8091a2" font-size="16">simetria elimina componentes radial e axial</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 25: CONDUTOR SÓLIDO ═══════════════════════════════ -->
+    <article class="slide" data-title="Condutor cilíndrico sólido">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Aplicação de Ampère</p>
+          <h2>Campo dentro e fora de um condutor sólido de raio \(a\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Corrente total \(I\) distribuída uniformemente: \(j = I/(\pi a^2)\). Caminho ampèreano: círculo de raio \(\rho\).</p>
+            <div class="eq small">\( \rho &lt; a:\quad I_{\rm enc} = I\frac{\rho^2}{a^2} \Rightarrow \mathbf{B} = \frac{\mu_0 I\rho}{2\pi a^2}\,\hat{\boldsymbol{\phi}} \)</div>
+            <div class="eq small">\( \rho &gt; a:\quad I_{\rm enc} = I \Rightarrow \mathbf{B} = \frac{\mu_0 I}{2\pi\rho}\,\hat{\boldsymbol{\phi}} \)</div>
+            <p class="note">O campo cresce linearmente dentro do fio e cai como \(1/\rho\) fora. Ambos são contínuos em \(\rho=a\) (não há corrente superficial).</p>
+          </div>
+          <div class="diagram" aria-label="B vs ρ para condutor sólido">
+            <svg viewBox="0 0 520 390" role="img">
+              <rect width="520" height="390" fill="#0d141d"/>
+              <line x1="60" y1="330" x2="480" y2="330" stroke="#2a3645" stroke-width="2"/>
+              <line x1="60" y1="330" x2="60" y2="50" stroke="#2a3645" stroke-width="2"/>
+              <text x="490" y="335" fill="#b7c4cf" font-size="18">ρ</text>
+              <text x="30" y="55" fill="#b7c4cf" font-size="18">B</text>
+              <line x1="210" y1="330" x2="210" y2="50" stroke="#2a3645" stroke-width="1" stroke-dasharray="6 4"/>
+              <text x="200" y="350" fill="#ffcc66" font-size="18">a</text>
+              <line x1="60" y1="330" x2="210" y2="120" stroke="#57c5ff" stroke-width="5"/>
+              <path d="M210 120 C280 165 360 195 480 225" fill="none" stroke="#57c5ff" stroke-width="5"/>
+              <text x="100" y="200" fill="#57c5ff" font-size="18">B ∝ ρ (dentro)</text>
+              <text x="280" y="180" fill="#57c5ff" font-size="18">B ∝ 1/ρ (fora)</text>
+              <circle cx="210" cy="120" r="7" fill="#ffcc66"/>
+              <text x="65" y="115" fill="#ffcc66" font-size="16">B(a) = μ₀I/2πa</text>
+              <line x1="60" y1="120" x2="208" y2="120" stroke="#ffcc66" stroke-width="1" stroke-dasharray="4 3" opacity=".5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 26: TOROIDE ═══════════════════════════════ -->
+    <article class="slide" data-title="Toroide (Exemplo 10.2)">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 10.2 — Ampère</p>
+          <h2>Toroide: campo completamente confinado</h2>
+        </header>
+        <div class="grid-2">
+          <div class="diagram" aria-label="Toroide com caminho ampèreano">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="ator" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <ellipse cx="260" cy="195" rx="160" ry="80" fill="rgba(255,204,102,.07)" stroke="#ffcc66" stroke-width="3"/>
+              <ellipse cx="260" cy="195" rx="90" ry="45" fill="#0d141d" stroke="#ffcc66" stroke-width="3"/>
+              <circle cx="260" cy="195" r="45" fill="none" stroke="#57c5ff" stroke-width="4" stroke-dasharray="10 6" marker-end="url(#ator)"/>
+              <circle cx="260" cy="195" r="130" fill="none" stroke="#57c5ff" stroke-width="3" opacity=".3" stroke-dasharray="8 5"/>
+              <g stroke="#7ee787" stroke-width="4" fill="none">
+                <ellipse cx="260" cy="195" rx="120" ry="20" transform="rotate(-15 260 195)"/>
+                <ellipse cx="260" cy="195" rx="120" ry="20" transform="rotate(30 260 195)"/>
+                <ellipse cx="260" cy="195" rx="120" ry="20" transform="rotate(75 260 195)"/>
+              </g>
+              <text x="232" y="200" fill="#57c5ff" font-size="18">ρ</text>
+              <text x="92" y="100" fill="#ffcc66" font-size="16">N espiras de corrente I</text>
+              <text x="88" y="360" fill="#8091a2" font-size="15">campo B existe apenas dentro do volume toroidal</text>
+            </svg>
+          </div>
+          <div class="two-eq">
+            <p class="subtitle">\(N\) espiras enroladas em forma de torus. Caminho circular de raio \(\rho\) concêntrico ao eixo:</p>
+            <div class="eq small">\( \text{dentro: }B(2\pi\rho)=\mu_0 NI \Rightarrow \mathbf{B}=\frac{\mu_0 NI}{2\pi\rho}\,\hat{\boldsymbol{\phi}} \)</div>
+            <div class="eq small">\( \text{fora: }I_{\rm enc}=0 \Rightarrow \mathbf{B}=0 \)</div>
+            <p class="note" style="margin-top:12px;">O campo está completamente confinado dentro do volume toroidal. Essa geometria é a base dos tokamaks para fusão nuclear — o campo toroidal confina o plasma.</p>
+            <p class="note">Note que \(B\propto 1/\rho\): o campo não é uniforme dentro do toroide (contraste com solenoide linear).</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 27: FOLHA DE CORRENTE ═══════════════════════════════ -->
+    <article class="slide" data-title="10.3.2 Folha de corrente">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.3.2 Folha uniforme</p>
+          <h2>Campo de uma folha infinita de corrente \(\mathbf{K}=K\hat{\mathbf{y}}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Duas simetrias: (1) invariância translacional em \(x\) e \(y\) → \(\mathbf{B}=\mathbf{B}(z)\); (2) rotação de \(180°\) em torno do eixo \(y\) e reflexão em \(z=0\) eliminam \(B_y\) e \(B_z\).</p>
+            <div class="eq small" style="margin-top:14px;">\( \mathbf{B}(x,y,z) = \begin{cases} +\tfrac{1}{2}\mu_0 K\,\hat{\mathbf{x}}, & z>0\\ -\tfrac{1}{2}\mu_0 K\,\hat{\mathbf{x}}, & z&lt;0 \end{cases} \)</div>
+            <div class="eq small" style="margin-top:10px;">\( \mathbf{B} = \tfrac{1}{2}\mu_0\,\mathbf{K}\times\hat{\mathbf{s}} \)</div>
+            <p class="note" style="margin-top:10px;">Onde \(\hat{\mathbf{s}}\) aponta da folha para o ponto de observação. Derivado via caminho retangular ampèreano.</p>
+          </div>
+          <div class="diagram" aria-label="Folha de corrente com campo nos dois lados">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="ash" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+                <marker id="ask" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffcc66"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <polygon points="80,250 400,110 455,160 135,300" fill="rgba(255,204,102,.09)" stroke="#ffcc66" stroke-width="3"/>
+              <g stroke="#ffcc66" stroke-width="5" marker-end="url(#ask)">
+                <line x1="140" y1="246" x2="230" y2="206"/>
+                <line x1="195" y1="270" x2="285" y2="230"/>
+                <line x1="250" y1="294" x2="340" y2="254"/>
+              </g>
+              <g stroke="#57c5ff" stroke-width="6" marker-end="url(#ash)">
+                <line x1="150" y1="128" x2="270" y2="128"/>
+                <line x1="225" y1="96" x2="345" y2="96"/>
+                <line x1="340" y1="332" x2="220" y2="332"/>
+                <line x1="290" y1="300" x2="170" y2="300"/>
+              </g>
+              <text x="355" y="128" fill="#57c5ff" font-size="22">B acima</text>
+              <text x="55" y="338" fill="#57c5ff" font-size="22">B abaixo</text>
+              <text x="360" y="238" fill="#ffcc66" font-size="22">K</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 28: CONDIÇÕES DE CONTORNO ═══════════════════════════════ -->
+    <article class="slide" data-title="10.3.3 Condições de contorno">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.3.3 Condições de contorno para \(\mathbf{B}\)</p>
+          <h2>Saltos na superfície com corrente</h2>
+        </header>
+        <div class="grid-2">
+          <div class="diagram" aria-label="Condições de contorno magnéticas">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="abnd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ee787"/>
+                </marker>
+                <marker id="abnd2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <path d="M70 235 C170 160 325 300 450 200" fill="none" stroke="#ffcc66" stroke-width="6"/>
+              <line x1="260" y1="220" x2="260" y2="95" stroke="#7ee787" stroke-width="5" marker-end="url(#abnd)"/>
+              <line x1="160" y1="145" x2="340" y2="145" stroke="#57c5ff" stroke-width="6" marker-end="url(#abnd2)"/>
+              <line x1="345" y1="285" x2="165" y2="285" stroke="#57c5ff" stroke-width="6" marker-end="url(#abnd2)"/>
+              <circle cx="260" cy="220" r="11" fill="#ffcc66"/>
+              <text x="276" y="118" fill="#7ee787" font-size="24">n̂</text>
+              <text x="350" y="152" fill="#57c5ff" font-size="24">B₂</text>
+              <text x="115" y="292" fill="#57c5ff" font-size="24">B₁</text>
+              <text x="274" y="238" fill="#ffcc66" font-size="24">K</text>
+              <text x="80" y="365" fill="#8091a2" font-size="16">superfície S com corrente K(rS)</text>
+            </svg>
+          </div>
+          <div>
+            <div class="two-eq">
+              <div class="eq small">\( \hat{\mathbf{n}}\cdot(\mathbf{B}_2-\mathbf{B}_1)=0 \)</div>
+              <div class="eq small">\( \hat{\mathbf{n}}\times(\mathbf{B}_2-\mathbf{B}_1)=\mu_0\,\mathbf{K} \)</div>
+            </div>
+            <ul style="margin-top:18px;">
+              <li><strong>Normal:</strong> componente \(B_n\) é contínua — segue de \(\nabla\cdot\mathbf{B}=0\) por caixa de Gauss infinitesimal.</li>
+              <li><strong>Tangencial:</strong> componente \(B_t\) sofre salto \(\mu_0 K\) — segue de Ampère com retângulo infinitesimal.</li>
+              <li>Derivação: \(\mathbf{B}_1 = \mathbf{B}_S + \tfrac{1}{2}\mu_0\mathbf{K}\times\hat{\mathbf{n}}_2\) e \(\mathbf{B}_2 = \mathbf{B}_S - \tfrac{1}{2}\mu_0\mathbf{K}\times\hat{\mathbf{n}}_2\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 29: CONDUTOR PERFEITO ═══════════════════════════════ -->
+    <article class="slide" data-title="Condutor perfeito: condição especial">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Caso especial importante</p>
+          <h2>Campo externo de um condutor perfeito</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Dentro de um condutor perfeito em equilíbrio estático, \(\mathbf{B}_{\rm in}=0\) (Seção 13.x). A condição de contorno tangencial (10.38) com \(\mathbf{B}_1=\mathbf{B}_{\rm in}=0\) dá:</p>
+            <div class="eq" style="margin-top:18px;">\( \mu_0\,\mathbf{K} = \hat{\mathbf{n}}\times\mathbf{B}_{\rm out} \)</div>
+            <p class="subtitle" style="margin-top:18px;">O campo externo imediatamente fora do condutor está relacionado à corrente superficial que flui na superfície. Essa corrente é exatamente a que "blinda" o interior.</p>
+          </div>
+          <div class="card">
+            <h3>Analogia com eletrostática</h3>
+            <ul>
+              <li>Em eletrostática: \(\sigma = \epsilon_0\hat{\mathbf{n}}\cdot\mathbf{E}_{\rm out}\) (carga superficial relacionada ao campo externo normal).</li>
+              <li>Em magnetostática: \(\mu_0\mathbf{K} = \hat{\mathbf{n}}\times\mathbf{B}_{\rm out}\) (corrente superficial relacionada ao campo externo tangencial).</li>
+              <li>Profunda simetria: ambas as condições expressam que o campo fora é sustentado pela distribuição de fonte na superfície.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 30: FORÇA EM FOLHA ═══════════════════════════════ -->
+    <article class="slide" data-title="10.3.4 Força em folha de corrente">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.3.4 Auto-força</p>
+          <h2>Uma folha de corrente não empurra a si mesma</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <div class="eq small">\( \mathbf{f}(\mathbf{r}_S)=\tfrac{1}{2}\,\mathbf{K}(\mathbf{r}_S)\times[\mathbf{B}_1(\mathbf{r}_S)+\mathbf{B}_2(\mathbf{r}_S)] \)</div>
+            <p class="subtitle" style="margin-top:14px;">A força por área usa o <strong>campo médio</strong> dos dois lados — não o campo da própria folha. Isso remove a contribuição singular do elemento que exerce a força sobre si mesmo.</p>
+            <div class="eq small" style="margin-top:12px;">\( \mathbf{B}_S = \tfrac{1}{2}(\mathbf{B}_1 + \mathbf{B}_2) \quad \Rightarrow \quad \mathbf{f} = \mathbf{K}\times\mathbf{B}_S \)</div>
+          </div>
+          <div class="card">
+            <h3>Por que o campo médio?</h3>
+            <ul>
+              <li>O elemento de corrente em \(\mathbf{r}_S\) é produzido pelo campo de todos os outros elementos.</li>
+              <li>O campo da própria folha local é \(\pm\tfrac{1}{2}\mu_0\mathbf{K}\times\hat{\mathbf{n}}\) (diverge se tomado no limite de folha infinitesimal).</li>
+              <li>O campo externo \(\mathbf{B}_S\) (de tudo exceto o disco local) é contínuo através da superfície.</li>
+              <li>Esse resultado reaparece em energia magnética e tensões (Cap. 12).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 31: 10.4 POTENCIAL ESCALAR ═══════════════════════════════ -->
+    <article class="slide" data-title="10.4 Potencial escalar magnético">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.4 Potencial escalar magnético \(\psi(\mathbf{r})\)</p>
+          <h2>Onde a corrente é nula, vale \(\mathbf{B}=-\nabla\psi\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Em qualquer volume \(V\) onde \(\mathbf{j}(\mathbf{r})=0\), a lei de Ampère diz \(\nabla\times\mathbf{B}=0\). Logo \(\mathbf{B}\) é derivável de um potencial escalar:</p>
+            <div class="eq">\( \mathbf{B}(\mathbf{r}) = -\nabla\psi(\mathbf{r}) \quad \mathbf{r}\in V \)</div>
+            <p class="note">Combinando com \(\nabla\cdot\mathbf{B}=0\):</p>
+            <div class="eq gold">\( \nabla^2\psi(\mathbf{r}) = 0 \quad \mathbf{r}\in V \)</div>
+            <p class="note"><strong>Resultado poderoso:</strong> todos os métodos do Capítulo 7 (Laplace) se aplicam! Separação de variáveis, expansão em polinômios de Legendre, funções de Bessel, funções de Green.</p>
+          </div>
+          <div class="card">
+            <h3>Estratégia com \(\psi\)</h3>
+            <ul>
+              <li>Funciona quando as correntes estão confinadas a superfícies separando sub-volumes sem corrente.</li>
+              <li>Resolver \(\nabla^2\psi=0\) em cada sub-volume.</li>
+              <li>Usar as condições de contorno (10.37) e (10.38) para "costurar" as soluções.</li>
+              <li><strong>Limitação:</strong> \(\psi\) pode ser multi-valorado — ver Seção 10.4.3!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 32: LAPLACE PARA ψ ═══════════════════════════════ -->
+    <article class="slide" data-title="Equação de Laplace para ψ">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Conexão com Cap. 7</p>
+          <h2>Laplace para \(\psi\): toda a maquinaria do Cap. 7 se aplica</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Condições de contorno em termos de \(\psi\)</h3>
+            <ul>
+              <li><strong>Normal contínua:</strong> \(\hat{\mathbf{n}}\cdot(\mathbf{B}_2-\mathbf{B}_1)=0\) torna-se \(\hat{\mathbf{n}}\cdot(\nabla\psi_2-\nabla\psi_1)=0\) → continuidade de \(\partial\psi/\partial n\).</li>
+              <li><strong>Tangencial com salto:</strong> \(\hat{\mathbf{n}}\times(\mathbf{B}_2-\mathbf{B}_1)=\mu_0\mathbf{K}\) torna-se condição no gradiente tangencial de \(\psi\).</li>
+              <li>Análogo exato do problema eletrostático com distribuição de carga superficial \(\sigma\).</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Diferença fundamental com eletrostática</h3>
+            <ul>
+              <li>O potencial elétrico \(\varphi\) é sempre contínuo (de \(\hat{\mathbf{n}}\times[\mathbf{E}_2-\mathbf{E}_1]=0\)).</li>
+              <li>O potencial magnético \(\psi\) <strong>não precisa ser contínuo</strong>: a condição tangencial de \(\mathbf{B}\) envolve \(\mathbf{K}\neq 0\).</li>
+              <li>Exemplo: espira circular — \(\psi\) é descontínuo em \(r=R\) mesmo que \(\mathbf{B}\) seja bem-definido.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 33: ESPIRA VIA ψ ═══════════════════════════════ -->
+    <article class="slide" data-title="10.4.1 Espira via potencial escalar">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.4.1 Espira circular de raio \(R\)</p>
+          <h2>Potencial escalar via expansão em \(P_\ell(\cos\theta)\)</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Espira no plano \(z=0\). A superfície esférica \(r=R\) divide o espaço em duas regiões sem corrente. A simetria azimutal e regularidade fixam:</p>
+            <div class="eq small" style="margin-top:12px;">\( \psi(r,\theta)=\begin{cases}\displaystyle\sum_{\ell=1}^{\infty}A_\ell\!\left(\tfrac{r}{R}\right)^{\!\ell}\!P_\ell(\cos\theta),&r&lt;R\\[8pt]\displaystyle\sum_{\ell=1}^{\infty}B_\ell\!\left(\tfrac{R}{r}\right)^{\!\ell+1}\!P_\ell(\cos\theta),&r&gt;R\end{cases} \)</div>
+            <p class="note" style="margin-top:10px;">Note: somas começam em \(\ell=1\) (não \(\ell=0\)), pois a continuidade de \(\hat{\mathbf{r}}\cdot\nabla\psi\) em \(r=R\) dá \(B_0=0\).</p>
+          </div>
+          <div class="card">
+            <h3>Como determinar os coeficientes</h3>
+            <ul>
+              <li>A relação \(B_\ell = -\frac{\ell}{\ell+1}A_\ell\) vem da condição normal.</li>
+              <li>Os \(A_\ell\) vêm da condição tangencial, que envolve funções de Legendre associadas — complicado!</li>
+              <li><strong>Truque de Zangwill:</strong> calcular \(B_z(z)\) no eixo (mais fácil) e expandir em série de Legendre:</li>
+            </ul>
+            <div class="eq small" style="margin-top:10px;">\( \psi(z) = -\frac{\mu_0 I}{2}\frac{z}{\sqrt{R^2+z^2}} \xrightarrow{\text{expand}} -\frac{\mu_0 I}{2}\sum_{\ell=1}^{\infty}\left(\frac{z}{R}\right)^\ell P_{\ell-1}(0) \)</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 34: ESPIRA LINHAS DE CAMPO ═══════════════════════════════ -->
+    <article class="slide" data-title="Espira: linhas de campo completo">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.4.1 Campo completo da espira</p>
+          <h2>Linhas de \(\mathbf{B}\) e o campo de dipolo no limite distante</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <div class="eq small">\( \mathbf{B}(r,\theta)=-\frac{\partial\psi}{\partial r}\hat{\mathbf{r}}-\frac{1}{r}\frac{\partial\psi}{\partial\theta}\hat{\boldsymbol{\theta}} \)</div>
+            <div class="eq small" style="margin-top:10px;">\( \psi(r,\theta)\xrightarrow{r\gg R}\frac{\mu_0 I\pi R^2}{4\pi}\frac{\cos\theta}{r^2} \)</div>
+            <p class="note" style="margin-top:12px;">Para \(r\gg R\), o termo \(\ell=1\) domina, e o potencial escalar assume a forma <strong>idêntica ao de um dipolo elétrico</strong>. O momento de dipolo magnético é:</p>
+            <div class="eq small">\( m = I\pi R^2 \quad \Rightarrow \quad \psi\simeq\frac{\mu_0}{4\pi}\frac{m\cos\theta}{r^2} \)</div>
+          </div>
+          <div class="card">
+            <h3>Estrutura das linhas de campo</h3>
+            <ul>
+              <li>Perto da espira: linhas circulam em torno do fio (campo quase de "fio reto").</li>
+              <li>Na região intermediária: expansão assimétrica em elipses.</li>
+              <li>Longe da espira (\(r\gg R\)): linhas idênticas às de um dipolo elétrico puntual — essa é a razão profunda pela qual a estrutura dipolar é universal em campos estáticos.</li>
+              <li>\(\psi\) é descontínuo em \(r=R\) — mas \(\mathbf{B}=-\nabla\psi\) é contínuo exceto na componente tangencial (que tem o salto \(\mu_0 K\)).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 35: BOBINA DE HELMHOLTZ ═══════════════════════════════ -->
+    <article class="slide" data-title="10.4.2 Bobina de Helmholtz">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.4.2 Aplicação: campo uniforme</p>
+          <h2>Bobina de Helmholtz: máxima uniformidade num ponto</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Duas espiras de raio \(R\), coaxiais, separadas por distância \(R\) (uma em \(z=0\), outra em \(z=R\)). Ponto médio em \(z=R/2\).</p>
+            <div class="eq small" style="margin-top:12px;">\( B_z(z=R/2): \quad B_z''(R/2)=0 \)</div>
+            <p class="note" style="margin-top:10px;">Em \(z=R/2\): ponto de inflexão de cada espira separadamente (pois \(B_z''(R/2)=0\) para espira em \(z=0\)).</p>
+            <p class="note" style="margin-top:8px;">Pela simetria de reflexão em \(z=R/2\): todas as derivadas ímpares se anulam no ponto médio. A primeira derivada não-nula é \(B_z^{(4)}\).</p>
+            <div class="eq small" style="margin-top:10px;">\( \mathbf{B}(R/2) = \frac{8\mu_0 NI}{5\sqrt{5}\,R}\,\hat{\mathbf{z}} \)</div>
+          </div>
+          <div class="card">
+            <h3>Por que é tão uniforme?</h3>
+            <ul>
+              <li>Cada espira já tem \(B''(R/2)=0\) sozinha (ponto de inflexão de \(B_z(z)\)).</li>
+              <li>A simetria da configuração elimina todas as derivadas ímpares.</li>
+              <li>A primeira correção ao campo uniforme é de ordem \((z-R/2)^4\).</li>
+              <li>Gaugain descobriu o princípio em 1853; Helmholtz soube e publicou. A prioridade foi disputada — Zangwill conta a história!</li>
+              <li>Aplicações: IRM histórico, espectroscopia RMN, calibração de gaussmetros.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 36: ψ MULTI-VALUED ═══════════════════════════════ -->
+    <article class="slide" data-title="10.4.3 ψ não é univaluado">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.4.3 Topologia de \(\psi(\mathbf{r})\)</p>
+          <h2>O potencial escalar magnético pode ser multi-valorado</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Se o caminho de integração de \(A\) a \(B\) encircla uma corrente \(I\), a lei de Ampère impõe:</p>
+            <div class="eq" style="margin-top:12px;">\( \psi(A)-\psi(B) = \oint_C \mathbf{B}\cdot d\boldsymbol{\ell} = \pm\mu_0 I \)</div>
+            <p class="note" style="margin-top:12px;">O sinal depende se a corrente flui paralela ou anti-paralela ao polegar quando a regra da mão direita é aplicada a \(C\).</p>
+            <p class="subtitle" style="margin-top:12px;">Para \(A\) e \(B\) infinitesimalmente próximos (mas em lados opostos do circuito): \(\psi(A)-\psi(B)=\pm\mu_0 I\). Portanto \(\psi\) <strong>não é função bem-definida</strong> da posição — depende do caminho!</p>
+          </div>
+          <div class="card">
+            <h3>Quando \(\psi\) é aceitável</h3>
+            <ul>
+              <li>\(\psi\) é univaluado quando o espaço \(V\) é simplesmente conexo — nenhum caminho pode encirclar uma corrente.</li>
+              <li>Mas o espaço ao redor de uma espira de corrente é <strong>duplamente conexo</strong>: caminhos existem que enlaçam a corrente.</li>
+              <li>Solução: inserir "superfícies barreira" que tornam \(V\) simplesmente conexo, impedindo caminhos de enlace.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 37: SUPERFÍCIES BARREIRA ═══════════════════════════════ -->
+    <article class="slide" data-title="Superfícies barreira para ψ">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.4.3 Continuado</p>
+          <h2>Superfícies barreira: tornando \(V\) simplesmente conexo</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>A ideia geométrica</h3>
+            <p class="note" style="margin-top:10px;">Insere-se uma superfície aberta \(S\) (a "barreira") que é delimitada pela espira de corrente \(C\). A barreira impede que caminhos de integração em \(V\) encirclem \(C\).</p>
+            <p class="note" style="margin-top:10px;">Exemplos de superfície barreira:</p>
+            <ul>
+              <li>Disco plano finito dentro da espira.</li>
+              <li>Plano que se estende ao infinito através da espira.</li>
+              <li>Superfície "de windsock" (comprida e curvada).</li>
+            </ul>
+            <p class="note" style="margin-top:10px;">Com a barreira, \(\nabla^2\psi=0\) em \(V\setminus S\) e a condição de salto (10.59) funciona como condição de contorno em \(S\).</p>
+          </div>
+          <div class="card">
+            <h3>A condição de salto na barreira</h3>
+            <div class="eq small" style="margin-top:10px;">\( \psi(A)-\psi(B) = \pm\mu_0 I \)</div>
+            <p class="note" style="margin-top:12px;">Os dois lados \(A\) e \(B\) infinitesimalmente acima e abaixo da barreira têm potenciais que diferem de \(\mu_0 I\). Essa descontinuidade é uma <em>condição de contorno</em> — análoga à carga dupla em dielétricos.</p>
+            <p class="note" style="margin-top:10px;">Para o caso da espira circular com a superfície barreira plana, isso reproduz a descontinuidade já vista em \(\psi(r=R)\) na Seção 10.4.1.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 38: ÂNGULO SÓLIDO ═══════════════════════════════ -->
+    <article class="slide" data-title="10.4.4 Representação por ângulo sólido">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.4.4 Resultado elegante</p>
+          <h2>O potencial escalar via ângulo sólido</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Usando a identidade vetorial (1.85) e identificando com a lei de Biot-Savart:</p>
+            <div class="eq small" style="margin-top:12px;">\( \mathbf{B}(\mathbf{r}) = \frac{\mu_0 I}{4\pi}\nabla\Omega_S(\mathbf{r}) \)</div>
+            <p class="note" style="margin-top:10px;">Onde \(\Omega_S(\mathbf{r})\) é o ângulo sólido subtendido pela superfície \(S\) (qualquer superfície que tenha \(C\) como bordo) no ponto de observação \(\mathbf{r}\).</p>
+            <div class="eq gold" style="margin-top:12px;">\( \psi(\mathbf{r}) = -\frac{\mu_0 I}{4\pi}\,\Omega_S(\mathbf{r}) \)</div>
+            <p class="note" style="margin-top:10px;">O ângulo sólido \(\Omega_S\) é multi-valorado: ao atravessar \(S\), ele muda de \(4\pi\) (ciclo completo), reproduzindo o salto \(\psi\to\psi\pm\mu_0 I\).</p>
+          </div>
+          <div class="diagram" aria-label="Ângulo sólido da espira">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="aas" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <ellipse cx="260" cy="280" rx="130" ry="30" fill="rgba(87,197,255,.1)" stroke="#57c5ff" stroke-width="4"/>
+              <circle cx="260" cy="280" r="12" fill="#ffcc66"/>
+              <text x="274" y="285" fill="#ffcc66" font-size="18">C (espira)</text>
+              <polygon points="260,280 170,180 350,180" fill="rgba(87,197,255,.08)" stroke="none"/>
+              <line x1="260" y1="280" x2="170" y2="180" stroke="#2a3645" stroke-width="1"/>
+              <line x1="260" y1="280" x2="350" y2="180" stroke="#2a3645" stroke-width="1"/>
+              <circle cx="260" cy="115" r="8" fill="#7ee787"/>
+              <line x1="260" y1="180" x2="260" y2="123" stroke="#7ee787" stroke-width="3" marker-end="url(#aas)"/>
+              <text x="268" y="112" fill="#7ee787" font-size="20">r (obs.)</text>
+              <text x="150" y="210" fill="#57c5ff" font-size="16">S (superfície barreira)</text>
+              <text x="170" y="250" fill="#b7c4cf" font-size="18">Ω_S(r)</text>
+              <text x="80" y="355" fill="#8091a2" font-size="14">ψ = −μ₀I/(4π) × (ângulo sólido subtendido por S)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 39: APPLICATION 10.2 MRI ═══════════════════════════════ -->
+    <article class="slide" data-title="Appl. 10.2: IRM e blindagem ativa">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Aplicação 10.2 — Relevância tecnológica</p>
+          <h2>Blindagem ativa em tomógrafos de ressonância magnética</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>O problema</h3>
+            <p class="note" style="margin-top:8px;">Tomógrafos de IRM usam ímãs supercondutores que geram campos \(\mathbf{B}\) fortes. A ressonância magnética nuclear excita prótons no corpo humano. O contraste de imagem vem de diferenças na densidade e relaxação dos prótons em tecidos diferentes.</p>
+            <p class="note" style="margin-top:8px;"><strong>Problema:</strong> o campo de gradiente, produzido por bobinas auxiliares, deve ser zero fora do aparelho (não interferir com outros equipamentos).</p>
+            <p class="note" style="margin-top:8px;"><strong>Solução:</strong> blindagem ativa — um segundo cilindro externo com corrente \(\mathbf{K}_2\) escolhida para cancelar o campo fora.</p>
+          </div>
+          <div>
+            <div class="eq small">\( \hat{\boldsymbol{\rho}}\cdot(\mathbf{B}^{\rm out}-\mathbf{B}^{\rm in})=0 \)</div>
+            <div class="eq small" style="margin-top:8px;">\( \hat{\boldsymbol{\rho}}\times(\mathbf{B}^{\rm out}-\mathbf{B}^{\rm in})=\mu_0\mathcal{K} \)</div>
+            <p class="note" style="margin-top:12px;">A condição de campo zero para \(\rho>R_2\) fixa a relação entre as componentes de Fourier das duas correntes:</p>
+            <div class="eq small" style="margin-top:8px;">\( \mathcal{K}_{2\phi}^m = -\frac{R_1 I_m'(|\kappa|R_1)}{R_2 I_m'(|\kappa|R_2)}\,\mathcal{K}_{1\phi}^m \)</div>
+            <p class="note" style="margin-top:8px;">\(I_m\) = funções de Bessel modificadas. Essa relação é usada em <strong>todos os scanners de IRM comerciais</strong> modernos.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 40: 10.5 POTENCIAL VETOR ═══════════════════════════════ -->
+    <article class="slide" data-title="10.5 Potencial vetor: existência">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.5 Potencial vetor \(\mathbf{A}(\mathbf{r})\)</p>
+          <h2>Existência garantida por \(\nabla\cdot\mathbf{B}=0\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Como \(\nabla\cdot\mathbf{B}=0\) em todo o espaço, o teorema de Helmholtz garante que existe \(\mathbf{A}(\mathbf{r})\) tal que:</p>
+            <div class="eq gold">\( \mathbf{B}(\mathbf{r}) = \nabla\times\mathbf{A}(\mathbf{r}) \)</div>
+            <p class="note"><strong>Prova direta (Zangwill):</strong> Defina</p>
+            <div class="eq small">\( A_x = \int dz\,B_y, \quad A_y = -\int dz\,B_x \)</div>
+            <p class="note">Então \(\nabla\times\mathbf{A} = (B_x, B_y, \partial A_y/\partial x - \partial A_x/\partial y)\). O terceiro componente:</p>
+            <div class="eq small">\( \hat{\mathbf{z}}\cdot\nabla\times\mathbf{A} = -\int dz\,\frac{\partial B_x}{\partial x}-\int dz\,\frac{\partial B_y}{\partial y} = \int dz\,\frac{\partial B_z}{\partial z} = B_z\;\checkmark \)</div>
+          </div>
+          <div class="card">
+            <h3>Por que \(\mathbf{A}\) é importante</h3>
+            <ul>
+              <li>\(\mathbf{A}\) é mais geral que \(\psi\): funciona onde quer que haja corrente (não requer \(\mathbf{j}=0\)).</li>
+              <li>Papel quântico: o efeito Aharonov-Bohm (1959) mostra que \(\mathbf{A}\) tem realidade física — partículas quantum detectam \(\mathbf{A}\) mesmo onde \(\mathbf{B}=0\).</li>
+              <li>O fluxo magnético se escreve elegantemente via \(\mathbf{A}\) (próximo slide).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 41: FLUXO VIA A ═══════════════════════════════ -->
+    <article class="slide" data-title="Fluxo magnético via A: efeito Aharonov-Bohm">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Consequência imediata</p>
+          <h2>Fluxo magnético como circulação de \(\mathbf{A}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="eq">\( \displaystyle \Phi_B = \int_S \mathbf{B}\cdot d\mathbf{S} = \int_S (\nabla\times\mathbf{A})\cdot d\mathbf{S} \)</div>
+            <div class="eq gold">\( \displaystyle \Phi_B = \oint_C \mathbf{A}\cdot d\boldsymbol{\ell} \)</div>
+            <p class="note">Pelo teorema de Stokes. \(C\) é qualquer curva fechada com bordo \(S\).</p>
+          </div>
+          <div class="card">
+            <h3>Efeito Aharonov-Bohm (1959)</h3>
+            <ul>
+              <li>No solenoide infinito: \(\mathbf{B}=0\) fora, mas \(\mathbf{A}\neq 0\) fora.</li>
+              <li>Um elétron que orbita o solenoide (sem entrar no campo \(\mathbf{B}\)) detecta o fluxo \(\Phi_B = \oint\mathbf{A}\cdot d\boldsymbol{\ell}\) por interferência quântica.</li>
+              <li>Demonstrado experimentalmente por Chambers (1960) e confirmado definitivamente por Tonomura et al. (1986).</li>
+              <li>Mostra que \(\mathbf{A}\) — não \(\mathbf{B}\) — é o objeto fundamental da eletrodinâmica quântica.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 42: LIBERDADE DE CALIBRE ═══════════════════════════════ -->
+    <article class="slide" data-title="10.5.1 Liberdade de calibre">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.5.1 Não-unicidade de \(\mathbf{A}\)</p>
+          <h2>Transformação de calibre: \(\mathbf{A}\) não é único</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Se \(\mathbf{B}=\nabla\times\mathbf{A}\) e \(\chi(\mathbf{r})\) é qualquer função escalar diferenciável, então:</p>
+            <div class="eq">\( \mathbf{A}'(\mathbf{r}) = \mathbf{A}(\mathbf{r}) + \nabla\chi(\mathbf{r}) \)</div>
+            <p class="note">produz o mesmo campo:</p>
+            <div class="eq small">\( \nabla\times\mathbf{A}' = \nabla\times\mathbf{A} + \underbrace{\nabla\times\nabla\chi}_{=0} = \mathbf{B} \quad\checkmark \)</div>
+            <p class="note">\(\chi\) é a "função de calibre". A liberdade de escolher \(\chi\) é a <strong>invariância de calibre</strong> — uma das simetrias mais profundas da física.</p>
+          </div>
+          <div class="card">
+            <h3>Implicações práticas</h3>
+            <ul>
+              <li>Diferentes calibres podem facilitar diferentes cálculos.</li>
+              <li>Qualquer resultado físico (força, energia, \(\mathbf{B}\)) é independente de calibre.</li>
+              <li>Em eletrodinâmica quântica: a invariância de calibre impõe a estrutura das interações eletromagnéticas.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 43: CALIBRE DE COULOMB ═══════════════════════════════ -->
+    <article class="slide" data-title="Calibre de Coulomb">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Escolha conveniente</p>
+          <h2>Calibre de Coulomb: \(\nabla\cdot\mathbf{A}=0\)</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <div class="eq">\( \nabla\cdot\mathbf{A} = 0 \)</div>
+            <p class="subtitle" style="margin-top:14px;">Se temos \(\mathbf{A}\) com \(\nabla\cdot\mathbf{A}=f\neq 0\), escolhe-se \(\chi\) tal que:</p>
+            <div class="eq small" style="margin-top:10px;">\( \nabla^2\chi = -\nabla\cdot\mathbf{A} = -f \)</div>
+            <p class="note" style="margin-top:10px;">Isso é equação de Poisson para \(\chi\) — sempre tem solução! Então \(\mathbf{A}'=\mathbf{A}+\nabla\chi\) satisfaz \(\nabla\cdot\mathbf{A}'=0\).</p>
+            <p class="note" style="margin-top:10px;">A solução da equação de Helmholtz (10.14) já é implicitamente no calibre de Coulomb, pois:</p>
+            <div class="eq small">\( \nabla\cdot\left[\int d^3r'\,\frac{\mathbf{j}(\mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|}\right] = \int d^3r'\,\mathbf{j}\cdot\nabla\frac{1}{|\mathbf{r}-\mathbf{r}'|} = 0 \)</div>
+          </div>
+          <div class="card">
+            <h3>Outros calibres úteis</h3>
+            <ul>
+              <li><strong>Calibre de Lorenz:</strong> \(\nabla\cdot\mathbf{A}+\mu_0\epsilon_0\partial_t\varphi=0\). Relativisticamente covariante, fundamental em eletrodinâmica dinâmica (Cap. 20).</li>
+              <li><strong>Calibre temporal:</strong> \(\varphi=0\). Usado em eletrodinâmica quântica.</li>
+              <li><strong>Calibre radial:</strong> \(\mathbf{r}\cdot\mathbf{A}=0\). Útil em certos problemas de simetria esférica.</li>
+              <li>Em magnetostática estática: Coulomb é a escolha padrão.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 44: EQUAÇÃO DE POISSON VETORIAL ═══════════════════════════════ -->
+    <article class="slide" data-title="10.5.2 Equação de Poisson vetorial">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.5.2 Equação de Poisson vetorial</p>
+          <h2>No calibre de Coulomb: \(\nabla^2\mathbf{A}=-\mu_0\mathbf{j}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Substituindo \(\mathbf{B}=\nabla\times\mathbf{A}\) em \(\nabla\times\mathbf{B}=\mu_0\mathbf{j}\):</p>
+            <div class="eq small">\( \nabla\times(\nabla\times\mathbf{A}) = \mu_0\mathbf{j} \)</div>
+            <p class="note">Usando \(\nabla\times(\nabla\times\mathbf{F})=\nabla(\nabla\cdot\mathbf{F})-\nabla^2\mathbf{F}\) e \(\nabla\cdot\mathbf{A}=0\):</p>
+            <div class="eq gold">\( \nabla^2\mathbf{A} = -\mu_0\,\mathbf{j} \)</div>
+            <p class="note">Três equações de Poisson independentes (uma por componente cartesiana). A experiência com eletrostática se aplica diretamente!</p>
+            <div class="eq small">\( \mathbf{A}(\mathbf{r}) = \frac{\mu_0}{4\pi}\int d^3r'\,\frac{\mathbf{j}(\mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|} \)</div>
+          </div>
+          <div class="card">
+            <h3>Analogia com eletrostática</h3>
+            <ul>
+              <li>\(\nabla^2\varphi = -\rho/\epsilon_0\) \(\leftrightarrow\) \(\nabla^2\mathbf{A} = -\mu_0\mathbf{j}\)</li>
+              <li>Cada componente cartesiana \(A_k\) satisfaz Poisson com fonte \(\mu_0 j_k\).</li>
+              <li>Solução: integral de convolução com função de Green \(1/(4\pi|\mathbf{r}-\mathbf{r}'|)\).</li>
+              <li>Para corrente superficial: \(\mathbf{A}(\mathbf{r}) = \frac{\mu_0}{4\pi}\int dS\,\frac{\mathbf{K}(\mathbf{r}_S)}{|\mathbf{r}-\mathbf{r}_S|}\)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 45: FIO INFINITO VIA A ═══════════════════════════════ -->
+    <article class="slide" data-title="10.5.3 Fio infinito via A">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.5.3 Exemplo instrutivo</p>
+          <h2>Calculando \(\mathbf{A}\) e \(\mathbf{B}\) do fio infinito via potencial vetor</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Fio ao longo de \(z\): por simetria, \(\mathbf{A}=A_z(\rho)\,\hat{\mathbf{z}}\).</p>
+            <div class="eq small" style="margin-top:12px;">\( A_z(\rho) = \frac{\mu_0 I}{4\pi}\int_{-\infty}^{+\infty}\frac{dz'}{\sqrt{z'^2+\rho^2}} \)</div>
+            <p class="note" style="margin-top:10px;">A integral diverge logaritmicamente. Limitamos a fio de comprimento \(2L\) e tomamos \(L\to\infty\):</p>
+            <div class="eq small" style="margin-top:8px;">\( A_z(\rho) \approx -\frac{\mu_0 I}{2\pi}\ln\rho + \text{const} \)</div>
+            <p class="note" style="margin-top:10px;">A constante diverge com \(L\), mas desaparece ao calcular \(\mathbf{B}\):</p>
+            <div class="eq small">\( \mathbf{B} = \nabla\times\mathbf{A} = -\frac{\partial A_z}{\partial\rho}\,\hat{\boldsymbol{\phi}} = \frac{\mu_0 I}{2\pi\rho}\,\hat{\boldsymbol{\phi}} \quad\checkmark \)</div>
+          </div>
+          <div class="card">
+            <h3>O que aprendemos</h3>
+            <ul>
+              <li>O potencial vetor diverge logaritmicamente para fontes de extensão infinita — mas o campo físico \(\mathbf{B}\) converge.</li>
+              <li>Quando \(\mathbf{j}\) aponta na direção \(\hat{\mathbf{z}}\) (Cartesiana), então \(\mathbf{A}\) aponta em \(\hat{\mathbf{z}}\) — relação direta entre as direções de \(\mathbf{j}\) e \(\mathbf{A}\).</li>
+              <li>Para correntes em \(\hat{\boldsymbol{\phi}}\) (azimutais): \(\mathbf{A}\) também aponta em \(\hat{\boldsymbol{\phi}}\) (Ex. 10.6).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 46: EQUAÇÃO DE DUPLO ROTACIONAL ═══════════════════════════════ -->
+    <article class="slide" data-title="10.5.4 Equação de duplo rotacional">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.5.4 Método alternativo</p>
+          <h2>Equação de duplo rotacional: \(\nabla\times(\nabla\times\mathbf{A})=\mu_0\mathbf{j}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <div class="eq small">\( \nabla\times(\nabla\times\mathbf{A}) = \mu_0\,\mathbf{j} \)</div>
+            <p class="subtitle" style="margin-top:14px;">Antes de escolher calibre, esta é a equação fundamental. Com alta simetria, \(\mathbf{A}\) tem um único componente e ela reduz a uma EDP escalar.</p>
+            <p class="note" style="margin-top:12px;"><strong>Exemplo:</strong> fio cilíndrico com \(\mathbf{j}=j\hat{\mathbf{z}}\) → \(\mathbf{A}=A_z(\rho)\hat{\mathbf{z}}\):</p>
+            <div class="eq small">\( \frac{1}{\rho}\frac{d}{d\rho}\!\left(\rho\frac{dA_z}{d\rho}\right)=-\mu_0 j \)</div>
+            <p class="note" style="margin-top:10px;"><strong>Espira de corrente:</strong> \(\mathbf{j}=I\delta(\rho-R)\delta(z)\hat{\boldsymbol{\phi}}\) → \(\mathbf{A}=A_\phi(\rho,z)\hat{\boldsymbol{\phi}}\) satisfaz equação de Bessel em \(\rho\) com solução em \(J_1(k\rho)\).</p>
+          </div>
+          <div class="card">
+            <h3>Vantagem do duplo rotacional</h3>
+            <ul>
+              <li>Quando a simetria fixa que \(\mathbf{A}\) tem um único componente, a equação do duplo rotacional pode ser mais fácil que a integral de Poisson.</li>
+              <li>Evita calcular a integral divergente \(\int dz'/\sqrt{z'^2+\rho^2}\).</li>
+              <li>Condições de contorno na superfície de corrente \(z=0\): salto de \(\partial A/\partial z\) determina os coeficientes da expansão em Bessel.</li>
+              <li>Resultado para espira (Ex. 10.6): \(\mathbf{A}(\rho,z)=\hat{\boldsymbol{\phi}}\frac{1}{2}\mu_0 IR\int_0^\infty dk\,J_1(k\rho)J_1(kR)e^{-k|z|}\)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 47: 10.6 TOPOLOGIA ═══════════════════════════════ -->
+    <article class="slide" data-title="10.6 Topologia das linhas de campo">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.6 Topologia</p>
+          <h2>Linhas de \(\mathbf{B}\): geralmente não fecham em si mesmas</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">A condição \(\nabla\cdot\mathbf{B}=0\) implica que linhas de campo não começam nem terminam — mas <strong>não implica que fecham</strong>!</p>
+            <p class="note" style="margin-top:14px;"><strong>Exemplo:</strong> Espira circular de corrente + fio retilíneo perpendicular (Fig. 10.19).</p>
+            <ul style="margin-top:12px;">
+              <li>A espira produz campo \(\mathbf{B}_1\): linhas circulam em torno da espira — fechadas em círculos no plano da espira.</li>
+              <li>O fio produz \(\mathbf{B}_2\): linhas azimutais em torno do fio.</li>
+              <li>Linhas de \(\mathbf{B}_1+\mathbf{B}_2\): tangentes ao torus formado pela espira, mas com componente axial → espirais helicoidais.</li>
+              <li>Essas linhas fecham somente para razões racionais \(I_{\rm fio}/I_{\rm espira}\). Genericamente, nunca fecham!</li>
+            </ul>
+          </div>
+          <div class="diagram" aria-label="Linhas de campo helicoidal">
+            <svg viewBox="0 0 520 390" role="img">
+              <defs>
+                <marker id="atop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <ellipse cx="260" cy="230" rx="140" ry="55" fill="rgba(255,204,102,.06)" stroke="#ffcc66" stroke-width="3"/>
+              <ellipse cx="260" cy="230" rx="70" ry="27" fill="#0d141d" stroke="#ffcc66" stroke-width="2"/>
+              <path d="M260 175 Q330 175 400 230 Q330 285 260 285 Q190 285 120 230 Q190 175 260 175" fill="none" stroke="#57c5ff" stroke-width="4" stroke-dasharray="8 4" opacity=".7"/>
+              <path d="M280 178 Q360 185 400 230 Q360 275 280 283" fill="none" stroke="#7ee787" stroke-width="5"/>
+              <text x="82" y="100" fill="#b7c4cf" font-size="18">espiral helicoidal no torus</text>
+              <text x="82" y="126" fill="#8091a2" font-size="16">fecha ⟺ I_fio/I_espira racional</text>
+              <line x1="260" y1="100" x2="260" y2="168" stroke="#ffcc66" stroke-width="5" marker-end="url(#atop)"/>
+              <text x="268" y="130" fill="#ffcc66" font-size="18">I_fio</text>
+              <text x="76" y="365" fill="#8091a2" font-size="14">Adaptado de Fig. 10.19 (McDonald 1954)</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 48: RECONEXÃO MAGNÉTICA ═══════════════════════════════ -->
+    <article class="slide" data-title="10.6.1 Reconexão magnética">
+      <div class="content">
+        <header>
+          <p class="eyebrow">10.6.1 Mudança de topologia</p>
+          <h2>Reconexão magnética: topologia muda no ponto nulo</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>O que é reconexão?</h3>
+            <p class="note" style="margin-top:8px;">A topologia de linhas de \(\mathbf{B}\) estáticas é fixada para sempre — em um campo estático, as linhas não podem se romper e reconectar.</p>
+            <p class="note" style="margin-top:8px;">Em situações quase-estáticas (as fontes mudam lentamente): a topologia muda quando as fontes se movem para uma configuração onde \(\mathbf{B}=0\) em algum ponto — o <strong>ponto nulo</strong>.</p>
+            <p class="note" style="margin-top:8px;">Nesse ponto, a <em>conectividade</em> das linhas de campo pode mudar abruptamente — duas linhas previamente desconectadas podem se juntar, e duas conectadas podem se separar.</p>
+          </div>
+          <div class="card">
+            <h3>Onde reconexão ocorre na natureza</h3>
+            <ul>
+              <li><strong>Ímãs em ferradura:</strong> a separação crítica entre dois ímãs cria um ponto nulo onde \(\mathbf{B}=0\) — a topologia muda de duas regiões independentes para uma conectada.</li>
+              <li><strong>Campo magnético interplanetário (IMF):</strong> reconexão ocorre quando o vento solar interage com o campo da Terra — causa tempestades geomagnéticas e auroras.</li>
+              <li><strong>Tokamaks e fusão nuclear:</strong> instabilidades de reconexão (modos de tearing) são uma causa de perda de confinamento do plasma.</li>
+              <li><strong>Prominências e flares solares:</strong> liberação catastrófica de energia quando linhas de campo reconectam.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 49: LINHAS CAÓTICAS ═══════════════════════════════ -->
+    <article class="slide" data-title="Appl. 10.3: Linhas caóticas de B">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Aplicação 10.3 — Caos magnético</p>
+          <h2>Linhas de campo como trajetórias hamiltonianas</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Considere o campo (Zangwill eq. 10.86):</p>
+            <div class="eq small" style="margin-top:10px;">\( \mathbf{B}(\mathbf{r}) = B_0\hat{\mathbf{z}} + \hat{\mathbf{z}}\times\nabla f(\mathbf{r}) \)</div>
+            <p class="note" style="margin-top:8px;">Satisfaz \(\nabla\cdot\mathbf{B}=0\) por construção. As equações das linhas de campo \(ds\,\lambda = d\mathbf{s}\) se escrevem:</p>
+            <div class="eq small" style="margin-top:8px;">\( \frac{dx}{dz} = \frac{1}{B_0}\frac{\partial f}{\partial y}, \quad \frac{dy}{dz} = -\frac{1}{B_0}\frac{\partial f}{\partial x} \)</div>
+            <p class="note" style="margin-top:8px;">Identificando \(x=q\), \(y=p\), \(z=t\) e \(H=-f/B_0\):</p>
+            <div class="eq small">\( \dot{q}=\partial H/\partial p, \quad \dot{p}=-\partial H/\partial q \)</div>
+            <p class="note" style="margin-top:6px;">Equações de Hamilton! As linhas de campo são as trajetórias de um sistema dinâmico.</p>
+          </div>
+          <div class="card">
+            <h3>Consequência: caos magnético</h3>
+            <ul>
+              <li>A maioria dos Hamiltonianos é não-integrável (teorema KAM).</li>
+              <li>Para \(f(\mathbf{r})\) genérico: as linhas de campo preenchem ergodicamente regiões do espaço — são caóticas.</li>
+              <li>O espaço de fase \((x,y)\) da trajetória é o espaço real da linha de campo.</li>
+              <li>Seções de Poincaré: ferramenta para visualizar o caos das linhas de campo.</li>
+              <li>Relevante para: confinamento em tokamaks, campos magnéticos no núcleo da Terra, campo solar.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 50: HELICIDADE ═══════════════════════════════ -->
+    <article class="slide" data-title="Ex. 10.7: Helicidade magnética">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 10.7 — Medida topológica</p>
+          <h2>Helicidade magnética: \(h=\int d^3r\,\mathbf{A}\cdot\mathbf{B}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <div class="eq">\( h = \int_V d^3r\;\mathbf{A}(\mathbf{r})\cdot\mathbf{B}(\mathbf{r}) \)</div>
+            <p class="subtitle" style="margin-top:14px;">A helicidade é uma medida topológica do <strong>entrelaçamento</strong> entre tubos de fluxo magnético.</p>
+            <p class="note" style="margin-top:10px;"><strong>Tubo de fluxo:</strong> conjunto de linhas de campo com o mesmo fluxo \(\Phi = \int\mathbf{B}\cdot d\mathbf{S}\) passando por qualquer seção transversal.</p>
+            <div class="eq small" style="margin-top:10px;">Dois tubos não entrelaçados: \(h = 0\)</div>
+            <div class="eq small" style="margin-top:8px;">Dois tubos entrelaçados \(n\) vezes: \(h = \pm 2n\Phi_1\Phi_2\)</div>
+          </div>
+          <div class="card">
+            <h3>Por que helicidade importa</h3>
+            <ul>
+              <li><strong>Conservação:</strong> em MHD ideal (condutividade perfeita), \(h\) é rigorosamente conservada — as linhas de campo não podem se reconectar.</li>
+              <li><strong>Física solar:</strong> helicidade é injetada no campo solar pela rotação diferencial. Quando suficiente helicidade se acumula, ejeções de massa coronal (CMEs) expulsam o campo para conservar \(h\).</li>
+              <li><strong>Dínamos:</strong> o mecanismo de dínamo que sustenta o campo da Terra envolve geração de helicidade.</li>
+              <li>Análogo em hidrodinâmica: helicidade de vórtice \(\int\mathbf{v}\cdot(\nabla\times\mathbf{v})\,d^3r\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 51: ESTRATÉGIA ═══════════════════════════════ -->
+    <article class="slide" data-title="Estratégia de cálculo">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Síntese operacional</p>
+          <h2>Quatro ferramentas para encontrar \(\mathbf{B}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="card">
+              <h3>1. Biot-Savart</h3>
+              <p class="note">Geometria arbitrária, sem simetria especial. Cálculo direto por integral. Use quando: geometria finita, ponto específico, superposição explícita.</p>
+            </div>
+            <div class="card">
+              <h3>2. Lei de Ampère</h3>
+              <p class="note">Alta simetria (cilíndrica, planar, toroidal). Escolhe curva onde \(B\) é constante → vira álgebra. Use quando: muito mais eficiente que Biot-Savart.</p>
+            </div>
+          </div>
+          <div class="two-eq">
+            <div class="card">
+              <h3>3. Potencial vetor \(\mathbf{A}\)</h3>
+              <p class="note">Mais geral. Resolve \(\nabla^2\mathbf{A}=-\mu_0\mathbf{j}\) (Poisson vetorial) no calibre de Coulomb. Use quando: correntes em volume, resultado preciso.</p>
+            </div>
+            <div class="card">
+              <h3>4. Potencial escalar \(\psi\)</h3>
+              <p class="note">Onde \(\mathbf{j}=0\): resolve \(\nabla^2\psi=0\) (Laplace). Toda a maquinaria do Cap. 7 disponível. Use quando: correntes confinadas a superfícies.</p>
+            </div>
+          </div>
+        </div>
+        <p class="note" style="margin-top:14px;"><strong>Verificação sempre:</strong> direção pela regra da mão direita · unidade: tesla · limites: \(\rho\to 0\), \(\rho\to\infty\), dentro, fora.</p>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 52: RESUMO ═══════════════════════════════ -->
+    <article class="slide" data-title="Resumo do capítulo 10">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Fechamento</p>
+          <h2>O coração do Capítulo 10 em seis equações</h2>
+        </header>
+        <div class="grid-2">
+          <div class="three-eq">
+            <div class="eq small">\( \nabla\cdot\mathbf{B}=0 \;\Rightarrow\; \text{sem monopolos, linhas fechadas} \)</div>
+            <div class="eq small">\( \nabla\times\mathbf{B}=\mu_0\mathbf{j} \;\Rightarrow\; \text{correntes enrolam o campo} \)</div>
+            <div class="eq small">\( \oint\mathbf{B}\cdot d\boldsymbol{\ell}=\mu_0 I_C \;\Rightarrow\; \text{simetria resolve} \)</div>
+            <div class="eq small gold">\( \mathbf{B}=-\nabla\psi\;(\mathbf{j}=0) \;\Rightarrow\; \nabla^2\psi=0\;\text{(Laplace)} \)</div>
+            <div class="eq small gold">\( \mathbf{B}=\nabla\times\mathbf{A} \;\Rightarrow\; \nabla^2\mathbf{A}=-\mu_0\mathbf{j}\;\text{(Poisson)} \)</div>
+            <div class="eq small green">\( \Phi_B=\oint\mathbf{A}\cdot d\boldsymbol{\ell} \;\Rightarrow\; \text{efeito Aharonov-Bohm} \)</div>
+          </div>
+          <div class="card">
+            <h3>Mensagem para levar</h3>
+            <p class="subtitle">Magnetostática é uma teoria de <strong>circulação</strong>: sem fontes escalares de \(\mathbf{B}\), mas com correntes que enrolam o campo ao redor de si. As linhas de campo podem ser complexas topologicamente — não fecham em geral, podem ser caóticas, e podem reconectar quando a topologia muda.</p>
+            <p class="note" style="margin-top:12px;">O potencial vetor \(\mathbf{A}\) tem realidade física própria (Aharonov-Bohm) e é o objeto fundamental de toda a eletrodinâmica — clássica e quântica.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════════ SLIDE 53: CRÉDITOS ═══════════════════════════════ -->
+    <article class="slide" data-title="Referências">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Fontes e créditos</p>
+          <h2>Referências</h2>
+        </header>
+        <div class="grid-2 source-list">
+          <div class="card">
+            <h3>Base conceitual</h3>
+            <ul>
+              <li>Zangwill, A. <em>Modern Electrodynamics</em>. Cambridge University Press, 2012. Cap. 10 (pp. 301–335): Seções 10.1–10.6.</li>
+              <li>Peshkin, M. &amp; Tonomura, A. <em>The Aharonov-Bohm Effect</em>. Lecture Notes in Physics 340. Springer, 1989.</li>
+              <li>McDonald, K. T. (1954). Figura 10.19: linha de corrente threading um anel.</li>
+              <li>Texto dos slides: elaboração autoral para aula de pós-graduação, UDESC.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Retratos históricos</h3>
+            <ul>
+              <li><a href="https://commons.wikimedia.org/wiki/Special:FilePath/Hans_Christian_%C3%98rsted.jpg">Oersted</a> — Wikimedia Commons</li>
+              <li><a href="https://en.wikipedia.org/wiki/Jean-Baptiste_Biot">Biot</a>, <a href="https://en.wikipedia.org/wiki/F%C3%A9lix_Savart">Savart</a> — Wikipedia</li>
+              <li><a href="https://commons.wikimedia.org/wiki/Special:FilePath/Andre-Marie_Ampere.jpg">Ampère</a>, <a href="https://commons.wikimedia.org/wiki/Special:FilePath/James_Clerk_Maxwell.png">Maxwell</a> — Wikimedia Commons</li>
+            </ul>
+            <h3 style="margin-top:16px;">Imagem de abertura</h3>
+            <ul>
+              <li>Gerada por IA para este repositório.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <nav class="control-bar" aria-label="Controles da apresentação">
+    <div class="nav-buttons">
+      <button class="icon-btn" id="prev" title="Slide anterior" aria-label="Slide anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn" id="next" title="Próximo slide" aria-label="Próximo slide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+    <div class="counter" id="counter">1 / 1</div>
+    <div class="kbd">← → navegam · F tela cheia</div>
+  </nav>
+</main>
+
+<script>
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const progress = document.querySelector("#progress");
+  const counter = document.querySelector("#counter");
+  const prev = document.querySelector("#prev");
+  const next = document.querySelector("#next");
+
+  let index = Number.parseInt(new URL(location.href).hash.replace("#", ""), 10) - 1;
+  if (!Number.isFinite(index) || index < 0 || index >= slides.length) index = 0;
+
+  function show(nextIndex) {
+    index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+    slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
+    counter.textContent = `${index + 1} / ${slides.length}`;
+    progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+    history.replaceState(null, "", `#${index + 1}`);
+  }
+
+  prev.addEventListener("click", () => show(index - 1));
+  next.addEventListener("click", () => show(index + 1));
+
+  document.querySelectorAll("[data-jump]").forEach((button) => {
+    button.addEventListener("click", () => show(Number(button.dataset.jump)));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+      event.preventDefault();
+      show(index + 1);
     }
-
-    prev.addEventListener("click", () => show(index - 1));
-    next.addEventListener("click", () => show(index + 1));
-
-    document.querySelectorAll("[data-jump]").forEach((button) => {
-      button.addEventListener("click", () => show(Number(button.dataset.jump)));
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
-        event.preventDefault();
-        show(index + 1);
+    if (event.key === "ArrowLeft" || event.key === "PageUp") {
+      event.preventDefault();
+      show(index - 1);
+    }
+    if (event.key.toLowerCase() === "f") {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
       }
-      if (event.key === "ArrowLeft" || event.key === "PageUp") {
-        event.preventDefault();
-        show(index - 1);
-      }
-      if (event.key.toLowerCase() === "f") {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen?.();
-        } else {
-          document.exitFullscreen?.();
-        }
-      }
-      if (event.key === "Home") show(0);
-      if (event.key === "End") show(slides.length - 1);
-    });
+    }
+    if (event.key === "Home") show(0);
+    if (event.key === "End") show(slides.length - 1);
+  });
 
-    show(index);
-  </script>
+  show(index);
+</script>
 </body>
 </html>
