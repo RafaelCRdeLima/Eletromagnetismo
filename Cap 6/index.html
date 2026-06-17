@@ -1,0 +1,1827 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Capítulo 6 — Matéria Dielétrica</title>
+  <meta name="description" content="Polarização, campo auxiliar D, energia e forças em matéria dielétrica (Zangwill Cap. 6).">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0f14;
+      --ink: #f2f7fb;
+      --muted: #b7c4cf;
+      --dim: #8091a2;
+      --panel: #121922;
+      --panel-2: #192232;
+      --line: #2a3645;
+      --accent: #57c5ff;
+      --accent-2: #ffcc66;
+      --accent-3: #7ee787;
+      --danger: #ff8f80;
+      --shadow: rgba(0,0,0,.36);
+      --control-h: 58px;
+      --stage-gap: 24px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; min-height: 100%;
+      background: var(--bg); color: var(--ink);
+      font: 20px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body { overflow: hidden; }
+    button, a { font: inherit; }
+    .deck {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: minmax(0,1fr) var(--control-h);
+      background:
+        radial-gradient(circle at 82% 12%, rgba(255,204,102,.18), transparent 28%),
+        radial-gradient(circle at 15% 85%, rgba(87,197,255,.15), transparent 30%),
+        linear-gradient(135deg, #0a0f18, #111620 45%, #0b0f14);
+    }
+    .viewport { display: grid; place-items: center; min-height: 0; padding: 12px; }
+    .slide {
+      display: none;
+      width: calc(100vw - var(--stage-gap));
+      height: calc(100vh - var(--control-h) - var(--stage-gap));
+      max-width: 1920px; max-height: 1080px;
+      border: 1px solid var(--line); border-radius: 8px;
+      background: linear-gradient(145deg, rgba(18,25,34,.98), rgba(9,15,22,.98));
+      box-shadow: 0 24px 90px var(--shadow);
+      overflow: hidden; position: relative;
+    }
+    .slide.active { display: grid; }
+    .slide::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      border: 1px solid rgba(255,255,255,.04);
+    }
+    .content {
+      padding: clamp(28px,4vw,54px);
+      display: grid; grid-template-rows: auto 1fr; gap: 22px;
+      min-height: 0; overflow: auto; scrollbar-width: thin;
+    }
+    .hero {
+      grid-template-columns: 1fr 1fr;
+      background:
+        radial-gradient(circle at 70% 50%, rgba(255,204,102,.18), transparent 42%),
+        radial-gradient(circle at 20% 30%, rgba(87,197,255,.12), transparent 35%),
+        linear-gradient(135deg,#060a10,#0e1520 60%,#080c12);
+    }
+    .hero .content { width: min(760px,62%); align-content: center; grid-template-rows: auto; }
+    .eyebrow { margin: 0 0 12px; color: var(--accent-2); font-size: .86rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(2.8rem,6.6vw,5.7rem); line-height: .94; max-width: 14ch; }
+    h2 { font-size: clamp(2rem,4.4vw,4rem); line-height: 1.02; }
+    h3 { font-size: clamp(1.2rem,2.1vw,1.9rem); line-height: 1.1; }
+    .subtitle { max-width: 720px; color: var(--muted); font-size: clamp(1rem,1.7vw,1.32rem); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; min-height: 0; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; min-height: 0; }
+    .card { border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.035); padding: 20px; min-width: 0; }
+    .card strong { color: var(--accent); }
+    .eq {
+      display: grid; align-content: center; min-height: 72px;
+      padding: 16px 20px; border: 1px solid rgba(87,197,255,.33); border-radius: 8px;
+      background: rgba(87,197,255,.08); color: #f8fbff;
+      font-size: clamp(1.15rem,2.3vw,1.95rem); line-height: 1.35; overflow-wrap: anywhere;
+    }
+    .eq.small { font-size: clamp(.95rem,1.75vw,1.38rem); }
+    .eq.gold { border-color: rgba(255,204,102,.4); background: rgba(255,204,102,.08); }
+    .eq.green { border-color: rgba(126,231,135,.4); background: rgba(126,231,135,.08); }
+    .eq.red { border-color: rgba(255,143,128,.35); background: rgba(255,143,128,.07); }
+    ul { margin: 0; padding-left: 1.1em; color: var(--muted); }
+    li + li { margin-top: 10px; }
+    .note { color: var(--dim); font-size: .9rem; }
+    .diagram { width: 100%; min-height: 0; aspect-ratio: 4/3; border: 1px solid var(--line); border-radius: 8px; background: #0d141d; overflow: hidden; }
+    .diagram > svg { display: block; width: 100%; height: 100%; }
+    .two-eq { display: grid; gap: 14px; }
+    .three-eq { display: grid; gap: 10px; }
+    .portrait-row { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; align-items: stretch; }
+    .portrait { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: rgba(255,255,255,.04); }
+    .portrait img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
+    .portrait figcaption { padding: 10px; color: var(--muted); font-size: .78rem; line-height: 1.25; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 7px 11px; color: var(--muted); font-size: .82rem; white-space: nowrap; }
+    .epigraph { display: grid; place-items: center; height: 100%; text-align: center; padding: clamp(28px,6vw,80px); }
+    .epigraph blockquote { margin: 0; font-size: clamp(1.3rem,2.7vw,2.2rem); line-height: 1.45; color: var(--ink); font-style: italic; max-width: 820px; }
+    .epigraph cite { display: block; margin-top: 28px; color: var(--accent-2); font-size: clamp(1rem,1.6vw,1.3rem); font-style: normal; font-weight: 700; }
+    .toc {
+      display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px;
+    }
+    .toc button {
+      text-align: left; min-height: 100px; border: 1px solid var(--line); border-radius: 8px;
+      padding: 16px; background: rgba(255,255,255,.04); color: var(--ink); cursor: pointer; font-size: .86rem; line-height: 1.3;
+    }
+    .toc button:hover { border-color: var(--accent); }
+    .toc span { display: block; color: var(--accent-2); font-weight: 800; margin-bottom: 7px; font-size: .9rem; }
+    .toc-4 { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 13px; }
+    .toc-4 button {
+      text-align: left; min-height: 82px; border: 1px solid var(--line); border-radius: 8px;
+      padding: 13px 15px; background: rgba(255,255,255,.04); color: var(--ink); cursor: pointer; font-size: .82rem; line-height: 1.3;
+    }
+    .toc-4 button:hover { border-color: var(--accent); }
+    .toc-4 span { display: block; color: var(--accent-2); font-weight: 800; margin-bottom: 5px; font-size: .88rem; }
+    .icon-btn { width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); cursor: pointer; display: grid; place-items: center; }
+    .icon-btn:hover { border-color: var(--accent); }
+    .icon-btn svg { display: block; width: 100%; height: 100%; }
+    .control-bar { height: 58px; display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 14px; padding: 0 22px; border-top: 1px solid var(--line); background: rgba(7,12,18,.92); backdrop-filter: blur(14px); }
+    .nav-buttons { display: flex; gap: 8px; }
+    .progress { height: 8px; border-radius: 999px; background: #1b2430; overflow: hidden; }
+    .progress span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-3)); transition: width .18s ease; }
+    .counter { color: var(--muted); font-size: .86rem; min-width: 78px; text-align: right; }
+    .kbd { color: var(--muted); font-size: .82rem; }
+    .source-list a { color: var(--accent); }
+    @media (max-width: 820px) {
+      body { overflow: auto; }
+      .deck { min-height: 100svh; }
+      .viewport { place-items: start; padding: 14px 0 14px 14px; }
+      .slide { width: min(340px, calc(100vw - 28px)); min-height: calc(100svh - 86px); max-height: none; }
+      .content { padding: 24px; overflow-x: hidden; }
+      h1, h2 { font-size: 1.65rem; line-height: 1.12; max-width: 100%; }
+      h3 { font-size: 1.4rem; }
+      .hero .content { width: 100%; }
+      .grid-2, .grid-3, .toc, .toc-4, .portrait-row { grid-template-columns: 1fr; }
+      .control-bar { grid-template-columns: auto 1fr auto; gap: 10px; }
+      .kbd { display: none; }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["\\(","\\)"],["$","$"]] },
+      svg: { fontCache: "global" }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<main class="deck" aria-label="Capítulo 6 Matéria Dielétrica">
+  <section class="viewport">
+
+    <!-- ══════════════════ SLIDE 1: CAPA ══════════════════ -->
+    <article class="slide hero active" data-title="Capa">
+      <div class="content">
+        <div>
+          <p class="eyebrow">Zangwill, Capítulo 6</p>
+          <h1>Matéria Dielétrica</h1>
+          <p class="subtitle">Polarização, campo auxiliar, energia e forças: a eletrostática dentro da matéria.</p>
+          <p class="subtitle" style="margin-top:18px; font-size: clamp(.9rem,1.4vw,1.1rem);">Prof. Dr. Rafael Camargo Rodrigues de Lima</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 2: EPÍGRAFE ══════════════════ -->
+    <article class="slide" data-title="Epígrafe">
+      <div class="epigraph">
+        <div>
+          <blockquote>"If we develop only a macroscopic description of matter in an electric field, we shall find it hard to answer some rather obvious sounding questions."</blockquote>
+          <cite>E. M. Purcell, <em>Electricity and Magnetism</em> (1965)</cite>
+          <p class="note" style="margin-top:28px; max-width: 680px; margin-left: auto; margin-right: auto;">A razão: a matéria é feita de cargas. A descrição macroscópica esconde toda a física microscópica que determina como ela responde a um campo elétrico externo. O Capítulo 6 constrói essa ponte.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 3: ROTEIRO ══════════════════ -->
+    <article class="slide" data-title="Roteiro">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Mapa do capítulo</p>
+          <h2>Oito seções</h2>
+        </header>
+        <div class="toc-4">
+          <button data-jump="4"><span>6.1</span>Introdução: dielétrico vs. condutor</button>
+          <button data-jump="7"><span>6.2</span>Polarização: a função P(r)</button>
+          <button data-jump="16"><span>6.3</span>Campo produzido por matéria polarizada</button>
+          <button data-jump="23"><span>6.4</span>Campo total e campo auxiliar D</button>
+          <button data-jump="29"><span>6.5</span>Matéria dielétrica simples</button>
+          <button data-jump="43"><span>6.6</span>Física da constante dielétrica</button>
+          <button data-jump="50"><span>6.7</span>Energia de matéria dielétrica</button>
+          <button data-jump="58"><span>6.8</span>Forças em matéria dielétrica</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 4: CONTEXTO HISTÓRICO ══════════════════ -->
+    <article class="slide" data-title="Contexto histórico">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Construindo a teoria</p>
+          <h2>Quatro séculos de eletrostática em matéria</h2>
+        </header>
+        <div class="portrait-row">
+          <figure class="portrait">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Michael_Faraday_001.jpg/220px-Michael_Faraday_001.jpg" alt="Faraday">
+            <figcaption><strong>Faraday (1837):</strong> insere diferentes materiais entre as placas de um capacitor e mede a variação da capacitância — define a <em>constante dielétrica</em> \(\kappa\). A unidade SI de capacitância leva seu nome.</figcaption>
+          </figure>
+          <figure class="portrait">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Ottaviano_Fabrizio_Mossotti.jpg/220px-Ottaviano_Fabrizio_Mossotti.jpg" alt="Mossotti">
+            <figcaption><strong>Mossotti (1850) e Clausius (1879):</strong> relacionam \(\kappa\) macroscópico à polarizabilidade molecular \(\alpha\) microscópica — a fórmula de Clausius-Mossotti, redescoberta independentemente pelos dois.</figcaption>
+          </figure>
+          <figure class="portrait">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/James_Clerk_Maxwell.png/220px-James_Clerk_Maxwell.png" alt="Maxwell">
+            <figcaption><strong>Maxwell (1864):</strong> incorpora a matéria polarizada nas equações de campo com o campo auxiliar \(\mathbf{D}=\epsilon_0\mathbf{E}+\mathbf{P}\). Unifica eletricidade, magnetismo e ótica.</figcaption>
+          </figure>
+          <figure class="portrait">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Lorentz_1916.tif/lossy-page1-220px-Lorentz_1916.tif.jpg" alt="Lorentz">
+            <figcaption><strong>Lorentz (1902):</strong> desenvolve o modelo do campo local que corrige a fórmula ingênua \(\kappa=1+n\alpha\), levando à relação de Clausius-Mossotti \((\kappa-1)/(\kappa+2)=n\alpha/3\).</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 5: O QUE É UM DIELÉTRICO ══════════════════ -->
+    <article class="slide" data-title="6.1 O que é um dielétrico?">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.1 Introdução</p>
+          <h2>O que é um dielétrico?</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="card" style="border-color:rgba(87,197,255,.35);">
+              <h3 style="color:var(--accent);">Definição operacional</h3>
+              <p class="subtitle" style="margin-top:10px;">Um dielétrico é um meio que <strong>não consegue excluir completamente</strong> um campo elétrico estático macroscópico de seu interior.</p>
+            </div>
+            <div class="eq small">\( \mathbf{E}_{\rm tot}(\mathbf{r}) = \mathbf{E}_{\rm ext}(\mathbf{r}) + \mathbf{E}_{\rm self}(\mathbf{r}) \neq 0 \quad (6.1)\)</div>
+            <p class="note">A blindagem incompleta origina-se em ligações químicas e efeitos quânticos que restringem o rearranjo das cargas internas. A matéria mantém sua neutralidade local mas adquire uma estrutura de dipolo induzido.</p>
+          </div>
+          <div class="card">
+            <h3>Origem física</h3>
+            <ul>
+              <li>Em um condutor perfeito: cargas livres se rearanjam livremente e o campo interno se anula.</li>
+              <li>Em um dielétrico: cargas estão ligadas a átomos e moléculas; podem deslocar-se apenas uma fração de ângstrom.</li>
+              <li>Resultado: o campo interno é <strong>reduzido</strong>, mas <em>não</em> eliminado.</li>
+              <li>Surgem <strong>cargas de polarização</strong> — redistribuição interna de carga que age sobre o campo externo.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 6: CONDUTOR VS. DIELÉTRICO ══════════════════ -->
+    <article class="slide" data-title="Condutor versus dielétrico">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Comparação fundamental</p>
+          <h2>Condutor versus dielétrico</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card" style="border-color:rgba(87,197,255,.4);">
+            <h3 style="color:var(--accent);">Condutor perfeito</h3>
+            <ul>
+              <li>Cargas livres se rearanjam sem barreira macroscópica.</li>
+              <li>O campo interno estático é nulo: \(E_{\rm in}=0\).</li>
+              <li>A carga excedente fica na superfície.</li>
+            </ul>
+            <div class="eq small" style="margin-top:14px;">\( \mathbf{E}_{\rm in} = 0 \)</div>
+          </div>
+          <div class="card" style="border-color:rgba(255,204,102,.4);">
+            <h3 style="color:var(--accent-2);">Dielétrico</h3>
+            <ul>
+              <li>Cargas deslocam-se apenas um pouco.</li>
+              <li>O campo interno é reduzido, mas não eliminado.</li>
+              <li>Surgem cargas de polarização.</li>
+            </ul>
+            <div class="eq small" style="margin-top:14px;">\( \mathbf{E}_{\rm in} \neq 0 \)</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:18px; border-color:rgba(126,231,135,.3); background:rgba(126,231,135,.06);">
+          <p class="subtitle"><strong style="color:var(--accent-3);">Ideia de continuidade:</strong> a constante dielétrica \(\kappa\equiv\epsilon/\epsilon_0\) interpola entre os dois casos. O limite \(\kappa\to\infty\) reproduz um condutor perfeito — um condutor é um caso especial extremo de dielétrico.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 7: LIMITE κ→∞ ══════════════════ -->
+    <article class="slide" data-title="Limite κ → ∞">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.1 Continuidade</p>
+          <h2>O limite \(\kappa\to\infty\): condutor como caso especial</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="eq small">\( \kappa\to\infty \;\Rightarrow\; \mathbf{E}_{\rm in}\to 0\)</div>
+            <div class="eq small">\( \mathbf{D}_{\rm in} = \kappa\epsilon_0\mathbf{E}_{\rm in} = \text{finito}\)</div>
+            <p class="subtitle">Quando \(\kappa\) cresce muito, o campo macroscópico no interior se anula — exatamente o comportamento de um condutor perfeito.</p>
+            <p class="note" style="margin-top:12px;"><strong>Uso prático:</strong> qualquer fórmula derivada para um dielétrico simples deve, no limite \(\kappa\to\infty\), reproduzir o resultado correspondente para um condutor perfeito. Esse é um teste de consistência poderoso.</p>
+            <p class="note" style="margin-top:10px;"><strong>Cuidado:</strong> o limite pode ser singular quando há carga livre em contato direto com o dielétrico. Nesse caso, \(\kappa\to\infty\) não equivale simplesmente a um condutor.</p>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 520 390" role="img" aria-label="κ vs campo interno">
+              <rect width="520" height="390" fill="#0d141d"/>
+              <line x1="60" y1="320" x2="470" y2="320" stroke="#2a3645" stroke-width="2"/>
+              <line x1="60" y1="320" x2="60" y2="50" stroke="#2a3645" stroke-width="2"/>
+              <text x="480" y="325" fill="#b7c4cf" font-size="18">κ</text>
+              <text x="30" y="55" fill="#b7c4cf" font-size="18">E_in</text>
+              <path d="M80 100 Q150 105 250 160 Q350 215 460 308" fill="none" stroke="#57c5ff" stroke-width="5"/>
+              <line x1="60" y1="308" x2="470" y2="308" stroke="#7ee787" stroke-width="3" stroke-dasharray="8 5"/>
+              <text x="130" y="85" fill="#57c5ff" font-size="18">E_vac / κ = E_in</text>
+              <text x="290" y="297" fill="#7ee787" font-size="16">E = 0 (condutor)</text>
+              <text x="180" y="354" fill="#8091a2" font-size="15">campo interno cai como 1/κ e vai a zero</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 8: 6.2 CARGA LIVRE E POLARIZAÇÃO ══════════════════ -->
+    <article class="slide" data-title="6.2 Carga livre e carga de polarização">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.2 Polarização</p>
+          <h2>Carga livre e carga de polarização</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">O campo externo é produzido por cargas que não pertencem ao dielétrico — as <strong>cargas livres</strong>. A carga que entra nas equações de Maxwell é a soma:</p>
+            <div class="eq">\( \rho(\mathbf{r}) = \rho_f(\mathbf{r}) + \rho_P(\mathbf{r}) \quad (6.2)\)</div>
+            <ul style="margin-top:10px;">
+              <li>\(\rho_f\): carga livre, colocada ou controlada externamente.</li>
+              <li>\(\rho_P\): carga de polarização, induzida dentro do material.</li>
+            </ul>
+            <p class="note">\(\rho_P\) é a carga macroscópica que aparece porque cargas positivas e negativas se deslocam levemente em sentidos opostos.</p>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 520 390" role="img" aria-label="Cargas livres e de polarização">
+              <defs>
+                <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <rect x="70" y="110" width="360" height="170" rx="10" fill="rgba(87,197,255,.07)" stroke="#57c5ff" stroke-width="2"/>
+              <text x="215" y="100" fill="#57c5ff" font-size="18">dielétrico</text>
+              <g fill="#57c5ff" opacity=".7">
+                <circle cx="140" cy="170" r="5"/><circle cx="180" cy="200" r="5"/>
+                <circle cx="220" cy="165" r="5"/><circle cx="260" cy="195" r="5"/>
+                <circle cx="300" cy="170" r="5"/><circle cx="340" cy="200" r="5"/>
+                <circle cx="140" cy="240" r="5"/><circle cx="180" cy="245" r="5"/>
+                <circle cx="220" cy="240" r="5"/><circle cx="260" cy="245" r="5"/>
+                <circle cx="300" cy="240" r="5"/><circle cx="340" cy="245" r="5"/>
+              </g>
+              <line x1="280" y1="50" x2="280" y2="100" stroke="#ffcc66" stroke-width="5" marker-end="url(#arr)" opacity=".7"/>
+              <text x="285" y="72" fill="#ffcc66" font-size="17">E_ext (carga livre)</text>
+              <text x="75" y="160" fill="#ff8f80" font-size="22">−−−</text>
+              <text x="425" y="160" fill="#7ee787" font-size="22">+++</text>
+              <text x="60" y="350" fill="#8091a2" font-size="15">ρ_P surge nas bordas: campo interno deslocou as cargas</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 9: FUNÇÃO P(r) ══════════════════ -->
+    <article class="slide" data-title="A função polarização P(r)">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.2.1 Definição de P</p>
+          <h2>A função polarização \(\mathbf{P}(\mathbf{r})\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="three-eq">
+            <p class="subtitle">Para uma amostra neutra de volume \(V\) e superfície \(S\), a carga de polarização total deve ser zero:</p>
+            <div class="eq small">\( \int_V d^3r\,\rho_P + \int_S dS\,\sigma_P = 0 \quad (6.3)\)</div>
+            <p class="subtitle" style="margin-top:8px;">Zangwill define \(\mathbf{P}(\mathbf{r})\) por:</p>
+            <div class="eq small">\( \rho_P(\mathbf{r}) = -\nabla\cdot\mathbf{P}(\mathbf{r}), \quad \mathbf{r}\in V \quad (6.4)\)</div>
+            <div class="eq small">\( \sigma_P(\mathbf{r}_S) = \mathbf{P}(\mathbf{r}_S)\cdot\hat{\mathbf{n}}(\mathbf{r}_S), \quad \mathbf{r}_S\in S \quad (6.5)\)</div>
+            <div class="eq small">\( \mathbf{P}(\mathbf{r}) = 0, \quad \mathbf{r}\notin V \quad (6.6)\)</div>
+          </div>
+          <div class="card">
+            <h3>O que \(\mathbf{P}\) não é</h3>
+            <ul>
+              <li>As equações (6.4)–(6.6) <strong>não</strong> determinam \(\mathbf{P}\) univocamente — o teorema de Helmholtz exige também especificar \(\nabla\times\mathbf{P}\) dentro de \(V\).</li>
+              <li>\(\mathbf{P}\) não é simplesmente o "momento de dipolo por volume" de moléculas individuais — essa identificação falha em sólidos covalentes e iônicos.</li>
+              <li>O que é invariante: o potencial eletrostático produzido pelo dielétrico. Esse é determinado apenas por \(\rho_P\) e \(\sigma_P\), independente da ambiguidade em \(\mathbf{P}\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 10: NEUTRALIDADE GARANTIDA ══════════════════ -->
+    <article class="slide" data-title="Neutralidade garantida">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.2 Verificação</p>
+          <h2>Por que essas definições garantem neutralidade?</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Substituindo \(\rho_P=-\nabla\cdot\mathbf{P}\) e \(\sigma_P=\mathbf{P}\cdot\hat{\mathbf{n}}\):</p>
+            <div class="eq small">\( Q_P = \int_V d^3r\,\rho_P + \int_S dS\,\sigma_P\)</div>
+            <div class="eq small">\( = -\int_V d^3r\,\nabla\cdot\mathbf{P} + \int_S dS\,\mathbf{P}\cdot\hat{\mathbf{n}}\)</div>
+            <p class="note" style="margin-top:8px;">Pelo teorema da divergência:</p>
+            <div class="eq small">\( \int_V d^3r\,\nabla\cdot\mathbf{P} = \int_S dS\,\mathbf{P}\cdot\hat{\mathbf{n}}\)</div>
+            <div class="eq green">\( Q_P = 0 \quad \checkmark\)</div>
+          </div>
+          <div class="card">
+            <h3>Interpretação</h3>
+            <p class="note" style="margin-top:8px;">A polarização transforma uma redistribuição interna de carga em uma combinação consistente de carga de volume e carga de superfície.</p>
+            <p class="note" style="margin-top:12px;">Intuitivamente: se \(\mathbf{P}\) é uniforme, cargas internas vizinhas se compensam; carga líquida só aparece onde a polarização <em>termina</em>, i.e., na superfície.</p>
+            <p class="note" style="margin-top:12px;">Se \(\mathbf{P}\) varia no interior: divergência não-nula cria \(\rho_P=-\nabla\cdot\mathbf{P}\neq 0\) dentro do volume também.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 11: ORIGEM DE ρ_P e σ_P ══════════════════ -->
+    <article class="slide" data-title="Origem de ρ_P e σ_P">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Visualização</p>
+          <h2>Origem física de \(\rho_P\) e \(\sigma_P\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="diagram">
+            <svg viewBox="0 0 520 390" role="img" aria-label="Dielétrico polarizado com cargas e campo">
+              <defs>
+                <marker id="bp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#57c5ff"/>
+                </marker>
+                <marker id="bp2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#ffcc66"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <rect x="90" y="100" width="340" height="190" rx="6" fill="rgba(87,197,255,.06)" stroke="#2a3645" stroke-width="2"/>
+              <g stroke="#57c5ff" stroke-width="4" marker-end="url(#bp)">
+                <line x1="125" y1="155" x2="165" y2="155"/>
+                <line x1="175" y1="195" x2="215" y2="195"/>
+                <line x1="225" y1="250" x2="265" y2="250"/>
+                <line x1="280" y1="155" x2="320" y2="155"/>
+                <line x1="330" y1="195" x2="370" y2="195"/>
+                <line x1="230" y1="195" x2="270" y2="195"/>
+              </g>
+              <text x="192" y="60" fill="#57c5ff" font-size="18">P →</text>
+              <line x1="170" y1="68" x2="250" y2="68" stroke="#57c5ff" stroke-width="4" marker-end="url(#bp)"/>
+              <text x="44" y="160" fill="#ff8f80" font-size="26">−</text>
+              <text x="44" y="200" fill="#ff8f80" font-size="26">−</text>
+              <text x="44" y="240" fill="#ff8f80" font-size="26">−</text>
+              <text x="448" y="160" fill="#7ee787" font-size="26">+</text>
+              <text x="448" y="200" fill="#7ee787" font-size="26">+</text>
+              <text x="448" y="240" fill="#7ee787" font-size="26">+</text>
+              <text x="30" y="298" fill="#ff8f80" font-size="16">σ_P &lt; 0</text>
+              <text x="435" y="298" fill="#7ee787" font-size="16">σ_P &gt; 0</text>
+              <text x="120" y="345" fill="#8091a2" font-size="15">dielétrico polarizado uniformemente</text>
+              <text x="118" y="365" fill="#8091a2" font-size="15">ρ_P = −∇·P = 0 (P uniforme); σ_P ≠ 0 nas bordas</text>
+            </svg>
+          </div>
+          <div>
+            <div class="card">
+              <h3>P uniforme: só superfície</h3>
+              <p class="note" style="margin-top:8px;">Se \(\mathbf{P}\) é uniforme, \(\rho_P=-\nabla\cdot\mathbf{P}=0\) em todo o volume. Cargas internas de cada dipolo cancelam as do dipolo vizinho. Só resta \(\sigma_P=\mathbf{P}\cdot\hat{\mathbf{n}}\) na superfície.</p>
+            </div>
+            <div class="card" style="margin-top:14px;">
+              <h3>P não-uniforme: volume também</h3>
+              <p class="note" style="margin-top:8px;">Se \(\mathbf{P}\) varia, os dipolos vizinhos não se cancelam completamente. A divergência negativa de \(\mathbf{P}\) deixa um excesso de carga positiva, e vice-versa.</p>
+              <div class="eq small" style="margin-top:10px;">\( \rho_P = -\nabla\cdot\mathbf{P} \quad \sigma_P = \mathbf{P}\cdot\hat{\mathbf{n}} \)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 12: INTEGRAL DE VOLUME DE P ══════════════════ -->
+    <article class="slide" data-title="Integral de volume de P = momento de dipolo">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.2.1 Resultado elegante</p>
+          <h2>A integral de volume de \(\mathbf{P}\) é o momento de dipolo total</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Usando a identidade \(\nabla\cdot(r_k\mathbf{P})=P_k+r_k\nabla\cdot\mathbf{P}\), para cada componente cartesiana \(k\):</p>
+            <div class="eq small">\( P_k = \nabla\cdot(r_k\mathbf{P}) - r_k\nabla\cdot\mathbf{P} \quad (6.7)\)</div>
+            <p class="note">Integrando sobre \(V\) e usando o teorema da divergência + \(\rho_P = -\nabla\cdot\mathbf{P}\):</p>
+            <div class="eq small">\( \int_V d^3r\,P_k = \int_S dS\,r_k\sigma_P + \int_V d^3r\,r_k\rho_P \quad (6.8)\)</div>
+            <div class="eq gold">\( \int_V d^3r\,\mathbf{P}(\mathbf{r}) = \mathbf{p} \quad (6.9)\)</div>
+            <p class="note">O lado direito é exatamente o momento de dipolo total da amostra.</p>
+          </div>
+          <div class="card">
+            <h3>Interpretação cuidadosa</h3>
+            <ul>
+              <li>É tentador dizer que \(\mathbf{P}\) é o "momento de dipolo por unidade de volume". Isso é útil, mas <strong>não</strong> é uma definição microscópica universal.</li>
+              <li>Em sólidos reais, \(\mathbf{P}\) não é simplesmente a soma de dipolos moleculares localizados — ela depende de correntes de polarização e da estrutura quântica do estado eletrônico.</li>
+              <li>O que (6.9) garante: a integral macroscópica de \(\mathbf{P}\) sempre coincide com o momento de dipolo total (que é mensurável).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 13: MODELO DE LORENTZ ══════════════════ -->
+    <article class="slide" data-title="Modelo de Lorentz da polarização">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.2.2 Modelo microscópico</p>
+          <h2>O modelo de Lorentz (1902) — e suas limitações</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Lorentz escolhe uma pequena célula microscópica \(\Omega\) centrada no ponto macroscópico \(\mathbf{r}\):</p>
+            <div class="eq small">\( \mathbf{P}(\mathbf{r}) = \frac{1}{\Omega}\int_\Omega d^3s\,\mathbf{s}\,\rho_{\rm micro}(\mathbf{s}) = \frac{\mathbf{p}(\mathbf{r})}{\Omega} \quad (6.10)\)</div>
+            <p class="note" style="margin-top:8px;">A teoria moderna corrige isso usando a corrente de polarização integrada no tempo:</p>
+            <div class="eq small">\( \mathbf{P}(\mathbf{R}) = \frac{1}{\Omega}\int_\Omega d^3s\int_{-\infty}^t dt'\,\mathbf{j}_{P,{\rm micro}}(\mathbf{s},t') \quad (6.11)\)</div>
+          </div>
+          <div>
+            <div class="card" style="border-color:rgba(87,197,255,.35);">
+              <h3 style="color:var(--accent);">Quando funciona bem?</h3>
+              <p class="note" style="margin-top:8px;">Gases, líquidos não polares e sólidos moleculares fracamente ligados. A célula \(\Omega\) é bem definida porque os átomos estão bem separados.</p>
+            </div>
+            <div class="card" style="margin-top:14px; border-color:rgba(255,143,128,.35); background:rgba(255,143,128,.06);">
+              <h3 style="color:var(--danger);">Quando falha?</h3>
+              <p class="note" style="margin-top:8px;">Em dielétricos covalentes (Si, Ge) ou iônicos (NaCl, NaBr): a escolha da célula \(\Omega\) pode mudar o resultado — até mudar de sinal! Correntes entre células dominam a polarização real.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 14: TEORIA MODERNA ══════════════════ -->
+    <article class="slide" data-title="Teoria moderna da polarização">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.2.3 Anos 1990</p>
+          <h2>A teoria moderna da polarização</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card" style="border-color:rgba(255,204,102,.35);">
+            <h3 style="color:var(--accent-2);">Ideia essencial</h3>
+            <p class="note" style="margin-top:10px;">A polarização macroscópica pode ser calculada por uma média temporal de correntes de polarização:</p>
+            <div class="eq small" style="margin-top:12px;">\( \mathbf{P}(\mathbf{R}) = \frac{1}{\Omega}\int_{-\infty}^{t}dt'\int_\Omega d^3s\,\mathbf{j}_{P,{\rm micro}}(\mathbf{s},t') \)</div>
+            <p class="note" style="margin-top:12px;"><strong>\(\mathbf{P}\) mede "quanto carregamento atravessou" uma célula ao ligar adiabaticamente o campo</strong>, não apenas onde a carga ficou no final.</p>
+          </div>
+          <div class="card">
+            <h3>O que isso muda?</h3>
+            <ul>
+              <li><strong>\(\mathbf{P}\) contém informação de fase:</strong> a estrutura quântica da função de onda determina \(\mathbf{P}\), não apenas a densidade de carga.</li>
+              <li><strong>A polarização macroscópica</strong> \(\mathbf{P}\) é bem definida e não ambígua — mesmo que o modelo de Lorentz falhe.</li>
+              <li><strong>O potencial eletrostático</strong> produzido pelo dielétrico é rigorosamente idêntico ao de uma distribuição contínua de dipolos com densidade \(\mathbf{P}(\mathbf{r})\) — independente da ambiguidade microscópica.</li>
+              <li>Essa teoria (Berry, King-Smith, Vanderbilt, 1990s) é a base do cálculo moderno de propriedades dielétricas por primeiros princípios.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 15: DIVISOR DE SEÇÃO 6.3 ══════════════════ -->
+    <article class="slide" data-title="6.3 Campo produzido por matéria polarizada">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.3 Campo de matéria polarizada</p>
+          <h2>O potencial e o campo produzidos por \(\mathbf{P}(\mathbf{r})\) dada</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Dada \(\mathbf{P}(\mathbf{r})\), as fontes do campo são \(\rho_P=-\nabla\cdot\mathbf{P}\) e \(\sigma_P=\mathbf{P}\cdot\hat{\mathbf{n}}\). O potencial é:</p>
+            <div class="eq small">\( \varphi_P(\mathbf{r}) = \frac{1}{4\pi\epsilon_0}\int_V d^3r'\frac{-\nabla'\cdot\mathbf{P}}{|\mathbf{r}-\mathbf{r}'|} + \frac{1}{4\pi\epsilon_0}\int_S dS'\frac{\mathbf{P}\cdot\hat{\mathbf{n}}'}{|\mathbf{r}-\mathbf{r}'|} \quad (6.12)\)</div>
+            <p class="note">O campo é \(\mathbf{E}_P=-\nabla\varphi_P\):</p>
+            <div class="eq small">\( \mathbf{E}_P(\mathbf{r}) = \frac{1}{4\pi\epsilon_0}\int_V d^3r'\frac{[-\nabla'\cdot\mathbf{P}(\mathbf{r}')](\mathbf{r}-\mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|^3} + \frac{1}{4\pi\epsilon_0}\int_S dS'\frac{[\mathbf{P}\cdot\hat{\mathbf{n}}'](\mathbf{r}-\mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|^3}\quad(6.13)\)</div>
+          </div>
+          <div class="card">
+            <h3>Ponto técnico importante</h3>
+            <p class="note" style="margin-top:8px;">A forma (6.13) é bem comportada mesmo para pontos de observação <em>dentro</em> do material — ao contrário da representação de dipolos pontuais, que diverge no interior. Use sempre (6.13) para campos interiores.</p>
+            <p class="note" style="margin-top:12px;">Para matéria uniformemente polarizada (\(\nabla\cdot\mathbf{P}=0\)), só a integral de superfície sobrevive, e a <strong>fórmula de Poisson</strong> simplifica o cálculo.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 16: FÓRMULA DE POISSON ══════════════════ -->
+    <article class="slide" data-title="Amostra uniformemente polarizada: fórmula de Poisson">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.3 P uniforme</p>
+          <h2>Fórmula de Poisson: \(\mathbf{E}_P = -(\mathbf{P}\cdot\nabla)\mathbf{E}_1\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Se \(\mathbf{P}\) é uniforme: \(\nabla\cdot\mathbf{P}=0\). Só resta a integral de superfície. Usando o teorema da divergência com \(F(\mathbf{r}')=|\mathbf{r}-\mathbf{r}'|^{-1}\):</p>
+            <div class="eq small">\( \mathbf{E}_P(\mathbf{r}) = \mathbf{P}\cdot\nabla'\left[\frac{1}{4\pi\epsilon_0}\int_V d^3r'\frac{\mathbf{r}-\mathbf{r}'}{|\mathbf{r}-\mathbf{r}'|^3}\right] \)</div>
+            <p class="note">Definindo \(\mathbf{E}_1(\mathbf{r})\) como o campo do mesmo corpo preenchido com densidade \(\rho=1\):</p>
+            <div class="eq gold">\( \mathbf{E}_P(\mathbf{r}) = -(\mathbf{P}\cdot\nabla)\mathbf{E}_1(\mathbf{r}) \quad (6.15)\)</div>
+            <p class="note">Poderoso: \(\mathbf{E}_1\) pode ser calculado uma vez e reutilizado para qualquer direção de \(\mathbf{P}\).</p>
+          </div>
+          <div class="card">
+            <h3>Como usar a fórmula</h3>
+            <ul>
+              <li>Calcular \(\mathbf{E}_1\) = campo elétrico do mesmo objeto com \(\rho=1\) uniforme (problema de Gauss).</li>
+              <li>Aplicar \(\mathbf{E}_P = -(\mathbf{P}\cdot\nabla)\mathbf{E}_1\).</li>
+              <li>Para uma esfera de raio \(R\): \(\mathbf{E}_1(r) = \begin{cases}\mathbf{r}/3\epsilon_0 & r &lt; R \\ V\mathbf{r}/4\pi\epsilon_0 r^3 & r > R\end{cases}\)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 17: ESFERA - MÉTODO I ══════════════════ -->
+    <article class="slide" data-title="Appl. 6.1: esfera uniformemente polarizada">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Aplicação 6.1 — Dois métodos</p>
+          <h2>Esfera uniformemente polarizada: campo completo</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle"><strong>Método I (fórmula de Poisson):</strong> Com \(\nabla_i r_j = \delta_{ij}\):</p>
+            <div class="eq small">\( \mathbf{E}_P(r&lt;R) = -(\mathbf{P}\cdot\nabla)\frac{\mathbf{r}}{3\epsilon_0} = -\frac{\mathbf{P}}{3\epsilon_0}\)</div>
+            <div class="eq small">\( \mathbf{E}_P(r&gt;R) = -(\mathbf{P}\cdot\nabla)\frac{V\mathbf{r}}{4\pi\epsilon_0 r^3} = \frac{V}{4\pi\epsilon_0}\frac{3(\mathbf{P}\cdot\hat{\mathbf{r}})\hat{\mathbf{r}}-\mathbf{P}}{r^3}\)</div>
+            <p class="subtitle" style="margin-top:12px;"><strong>Método II (carga superficial):</strong> \(\mathbf{P}=P\hat{\mathbf{z}}\) → \(\sigma_P=\mathbf{P}\cdot\hat{\mathbf{r}}=P\cos\theta\). Isso é exatamente a distribuição do Cap. 4 → mesmo resultado.</p>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 520 390" role="img" aria-label="Campo da esfera polarizada">
+              <defs>
+                <marker id="ef" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <circle cx="260" cy="195" r="90" fill="rgba(255,204,102,.08)" stroke="#ffcc66" stroke-width="3"/>
+              <g stroke="#57c5ff" stroke-width="4" marker-end="url(#ef)">
+                <line x1="205" y1="165" x2="205" y2="225"/>
+                <line x1="260" y1="165" x2="260" y2="225"/>
+                <line x1="315" y1="165" x2="315" y2="225"/>
+              </g>
+              <text x="218" y="194" fill="#ffcc66" font-size="16">uniforme</text>
+              <text x="184" y="212" fill="#ffcc66" font-size="16">E = −P/3ε₀</text>
+              <path d="M145 170 C80 130 80 260 145 220" fill="none" stroke="#57c5ff" stroke-width="3" stroke-dasharray="5 3"/>
+              <path d="M375 170 C440 130 440 260 375 220" fill="none" stroke="#57c5ff" stroke-width="3" stroke-dasharray="5 3"/>
+              <text x="25" y="155" fill="#57c5ff" font-size="14">fora: dipolo</text>
+              <text x="380" y="115" fill="#57c5ff" font-size="14">p = VP</text>
+              <text x="100" y="355" fill="#8091a2" font-size="14">dentro: campo uniforme antiparalelo a P</text>
+              <line x1="240" y1="52" x2="278" y2="52" stroke="#ffcc66" stroke-width="4" marker-end="url(#ef)"/>
+              <text x="175" y="57" fill="#ffcc66" font-size="18">P</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 18: RESULTADO DA ESFERA ══════════════════ -->
+    <article class="slide" data-title="Campo completo da esfera polarizada">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Aplicação 6.1 — Resultado</p>
+          <h2>Campo da esfera: resultado completo (6.17)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="eq gold">\( \mathbf{E}_P(\mathbf{r}) = \begin{cases} -\dfrac{\mathbf{P}}{3\epsilon_0}, & r &lt; R\\[10pt] \dfrac{V}{4\pi\epsilon_0}\dfrac{3(\mathbf{P}\cdot\hat{\mathbf{r}})\hat{\mathbf{r}}-\mathbf{P}}{r^3}, & r &gt; R \end{cases} \quad (6.17)\)</div>
+            <div class="card" style="border-color:rgba(255,204,102,.3);">
+              <h3 style="color:var(--accent-2);">Leitura física</h3>
+              <ul>
+                <li><strong>Dentro:</strong> campo uniforme, antiparalelo a \(\mathbf{P}\). O campo de polarização <em>se opõe</em> ao campo aplicado (comportamento dielétrico).</li>
+                <li><strong>Fora:</strong> campo de dipolo puro com \(\mathbf{p}=V\mathbf{P}\).</li>
+                <li>O campo é <em>descontínuo</em> em \(r=R\), como esperado de uma camada de carga superficial \(\sigma_P=P\cos\theta\).</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Exemplo 6.1: dipolo em esfera dielétrica</h3>
+            <p class="note" style="margin-top:10px;">Um dipolo \(\mathbf{p}_0\) no centro de uma esfera com constante dielétrica \(\kappa\) (raio \(R\)) e meio externo vácuo. O dielétrico <em>blindam</em> o dipolo:</p>
+            <div class="eq small" style="margin-top:10px;">\( \mathbf{p}_{\rm tot} = \frac{3}{2+\kappa}\,\mathbf{p}_0 \)</div>
+            <p class="note" style="margin-top:10px;">Como \(\kappa\geq 1\), o momento efetivo é reduzido: \(\mathbf{p}_{\rm tot}\leq\mathbf{p}_0\). O dielétrico envolve o dipolo com carga de polarização de sinal oposto.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 19: MATÉRIA COMO COLEÇÃO DE DIPOLOS ══════════════════ -->
+    <article class="slide" data-title="Matéria polarizada = coleção de dipolos pontuais">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.3.1 Resultado fundamental</p>
+          <h2>Matéria polarizada é eletrostaticamente equivalente a dipolos</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Convertendo a integral de superfície em (6.12) via teorema da divergência:</p>
+            <div class="eq gold">\( \varphi_P(\mathbf{r}) = \frac{1}{4\pi\epsilon_0}\int_V d^3r'\,\mathbf{P}(\mathbf{r}')\cdot\nabla'\frac{1}{|\mathbf{r}-\mathbf{r}'|} \quad (6.22)\)</div>
+            <p class="note">Compare com o potencial de um dipolo pontual \(\mathbf{p}\) em \(\mathbf{r}'\):</p>
+            <div class="eq small">\( \varphi_{\rm dip}(\mathbf{r}) = \frac{1}{4\pi\epsilon_0}\,\mathbf{p}\cdot\nabla'\frac{1}{|\mathbf{r}-\mathbf{r}'|}\)</div>
+            <div class="card" style="border-color:rgba(126,231,135,.3); background:rgba(126,231,135,.06);">
+              <h3 style="color:var(--accent-3);">Conclusão</h3>
+              <p class="note" style="margin-top:8px;">Matéria polarizada é eletrostaticamente equivalente a uma distribuição contínua de dipolos pontuais com densidade \(d\mathbf{p}=\mathbf{P}\,d^3r\).</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Por que isso é válido mesmo que Lorentz seja errado?</h3>
+            <ul>
+              <li>A equivalência (6.22) é <strong>matemática</strong>, não física: qualquer par (\(\rho_P,\sigma_P\)) que obedece (6.4)–(6.5) produz o mesmo \(\varphi_P\) independente do modelo microscópico.</li>
+              <li>O potencial \(\varphi_P\) é a quantidade mensurável.</li>
+              <li>A representação de dipolos contínuos é uma construção auxiliar conveniente, não uma afirmação sobre moléculas individuais.</li>
+              <li><strong>Cuidado com o campo interior:</strong> a soma de dipolo \(\mathbf{E}^L_P\) diverge em pontos interiores — use sempre (6.13).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 20: MÉTODO II DA ESFERA ══════════════════ -->
+    <article class="slide" data-title="Esfera: potencial via distribuição de carga">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Appl. 6.1 — Método alternativo</p>
+          <h2>Esfera polarizada: segundo método via carga superficial \(\sigma_P\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Com \(\mathbf{P}=P\hat{\mathbf{z}}\): a carga superficial de polarização é:</p>
+            <div class="eq small">\( \sigma_P = \mathbf{P}\cdot\hat{\mathbf{r}} = P\cos\theta \quad (6.18)\)</div>
+            <p class="note">Essa é exatamente a distribuição \(\sigma(\theta)=\sigma_0\cos\theta\) do Cap. 4. O potencial:</p>
+            <div class="eq small">\( \varphi_P(r,\theta)=\frac{P}{3\epsilon_0}\begin{cases}z, & r&lt;R\\ R^3\cos\theta/r^2, & r&gt;R\end{cases}\quad(6.19)\)</div>
+            <p class="note">O campo elétrico \(\mathbf{E}_P=-\nabla\varphi_P\) reproduz exatamente (6.17). Os dois métodos são equivalentes.</p>
+          </div>
+          <div class="card">
+            <h3>Conexão com multipolos</h3>
+            <ul>
+              <li>\(\sigma_P=P\cos\theta\) é proporcional a \(Y_1^0(\theta)\), o harmônico esférico de dipolo.</li>
+              <li>Por ortogonalidade: só o termo \(\ell=1\) sobrevive na expansão multipolar.</li>
+              <li>Isso garante que o campo externo é <em>puramente dipolâr</em> — sem contribuições de ordem superior.</li>
+              <li>Para uma polarização não-uniforme, ordens superiores aparecem naturalmente.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 21: SEÇÃO 6.4 GAUSS EM MATÉRIA ══════════════════ -->
+    <article class="slide" data-title="6.4 Lei de Gauss em matéria">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.4 Campo total e campo auxiliar D</p>
+          <h2>Lei de Gauss em matéria</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">A carga total é a soma de livre e de polarização: \(\rho=\rho_f+\rho_P\). Usando \(\rho_P=-\nabla\cdot\mathbf{P}\):</p>
+            <div class="eq small">\( \epsilon_0\nabla\cdot\mathbf{E} = \rho_f - \nabla\cdot\mathbf{P} \quad (6.24)\)</div>
+            <p class="note">Reorganizando:</p>
+            <div class="eq small">\( \nabla\cdot(\epsilon_0\mathbf{E}+\mathbf{P}) = \rho_f \)</div>
+            <p class="note">Define-se o <strong>campo de deslocamento</strong>:</p>
+            <div class="eq gold">\( \mathbf{D}(\mathbf{r}) \equiv \epsilon_0\mathbf{E}(\mathbf{r}) + \mathbf{P}(\mathbf{r}) \quad (6.25)\)</div>
+          </div>
+          <div class="card">
+            <h3>Intuição para D</h3>
+            <ul>
+              <li>\(\mathbf{D}\) foi introduzido para que sua divergência seja determinada apenas pela carga livre (controlável externamente).</li>
+              <li><strong>Não confundir:</strong> \(\mathbf{D}\) não é "o campo em matéria". Ele é uma combinação de \(\epsilon_0\mathbf{E}\) e \(\mathbf{P}\), conveniente mas não fundamental.</li>
+              <li>O campo físico é sempre \(\mathbf{E}\) — é ele que exerce força sobre cargas de teste.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 22: EQUAÇÕES DE MAXWELL EM MATÉRIA ══════════════════ -->
+    <article class="slide" data-title="Equações de Maxwell em matéria dielétrica">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.4.1 O sistema completo</p>
+          <h2>Equações de Maxwell em matéria dielétrica</h2>
+        </header>
+        <div class="grid-2">
+          <div class="three-eq">
+            <div class="eq small">\( \nabla\times\mathbf{E} = 0 \quad (6.26)\)</div>
+            <div class="eq small">\( \nabla\cdot\mathbf{D} = \rho_f \quad (6.27)\)</div>
+            <div class="eq small red">\( \nabla\times\mathbf{D} = \nabla\times\mathbf{P} \quad (6.28)\)</div>
+            <div class="eq small">\( \oint_S d\mathbf{S}\cdot\mathbf{D} = Q_f \quad (6.29)\)</div>
+            <p class="note">A equação (6.28) mostra que <strong>variações espaciais de \(\mathbf{P}\)</strong> contribuem para o rotacional de \(\mathbf{D}\). Esta equação é frequentemente esquecida!</p>
+          </div>
+          <div>
+            <div class="card" style="border-color:rgba(255,143,128,.35);">
+              <h3 style="color:var(--danger);">Cuidado com ∇×D</h3>
+              <p class="note" style="margin-top:8px;">Em geral, \(\nabla\times\mathbf{D}=\nabla\times\mathbf{P}\neq 0\)! Apenas para dielétrico simples homogêneo (constante em regiões), \(\nabla\times\mathbf{P}=\epsilon_0(\kappa-1)\nabla\times\mathbf{E}=0\).</p>
+              <p class="note" style="margin-top:8px;">O campo \(\mathbf{D}\) tem tanto fontes (\(\rho_f\)) quanto rotacional (\(\nabla\times\mathbf{P}\)) — não é irrotacional em geral.</p>
+            </div>
+            <div class="card" style="margin-top:14px;">
+              <h3>Utilidade de (6.29)</h3>
+              <p class="note" style="margin-top:8px;">Quando a simetria é boa, (6.29) calcula \(\mathbf{D}\) diretamente da carga livre, sem conhecer \(\mathbf{P}\) ou \(\mathbf{E}\) a priori. Análogo à lei de Gauss para \(\mathbf{E}\) no vácuo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 23: CONDIÇÕES DE CONTORNO ══════════════════ -->
+    <article class="slide" data-title="Condições de contorno para D e E">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.4.2 Na interface</p>
+          <h2>Condições de contorno para \(\mathbf{D}\) e \(\mathbf{E}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="three-eq">
+            <p class="subtitle">Na interface entre dois meios com densidade superficial de carga livre \(\sigma_f\):</p>
+            <div class="eq small">\( \hat{\mathbf{n}}_2\cdot(\mathbf{D}_1-\mathbf{D}_2)=\sigma_f \quad (6.31)\)</div>
+            <div class="eq small">\( \hat{\mathbf{n}}_2\times(\mathbf{D}_1-\mathbf{D}_2)=\hat{\mathbf{n}}_2\times(\mathbf{P}_1-\mathbf{P}_2) \quad (6.32)\)</div>
+            <div class="eq gold">\( \hat{\mathbf{n}}_2\times(\mathbf{E}_1-\mathbf{E}_2)=0 \quad (6.33)\)</div>
+            <p class="note">(6.33): componente tangencial de \(\mathbf{E}\) é sempre contínua — segue de \(\nabla\times\mathbf{E}=0\).</p>
+          </div>
+          <div class="card">
+            <h3>Resumo das condições</h3>
+            <ul>
+              <li><strong>Normal de D:</strong> salta por \(\sigma_f\) (análogo a \(\mathbf{E}\) no vácuo).</li>
+              <li><strong>Tangencial de E:</strong> sempre contínua.</li>
+              <li><strong>Tangencial de D:</strong> salta por \(\hat{\mathbf{n}}\times(\mathbf{P}_1-\mathbf{P}_2)\) — uma condição muitas vezes ignorada.</li>
+              <li>Sem carga livre (\(\sigma_f=0\)): normal de \(\mathbf{D}\) é contínua; tangencial de \(\mathbf{E}\) é contínua — mas tangencial de \(\mathbf{D}\) <em>pode</em> ser descontínua.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 24: RELAÇÕES CONSTITUTIVAS ══════════════════ -->
+    <article class="slide" data-title="Relações constitutivas">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.4.3 Fechando o sistema</p>
+          <h2>Relações constitutivas: relacionando P a E</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">O sistema (6.26)–(6.28) tem mais incógnitas que equações. Precisamos de uma relação entre \(\mathbf{P}\) e \(\mathbf{E}\). A expansão fenomenológica mais geral:</p>
+            <div class="eq small">\( P_i = \epsilon_0\chi_{ij}E_j + \epsilon_0\chi^{(2)}_{ijk}E_jE_k + \cdots \quad (6.34)\)</div>
+            <ul style="margin-top:12px;">
+              <li><strong>Tensor \(\chi_{ij}\):</strong> resposta linear; permite anisotropia (cristais).</li>
+              <li><strong>Termos quadráticos:</strong> óptica não-linear, campos intensos.</li>
+              <li><strong>Ferroelétricos:</strong> \(\mathbf{P}\neq 0\) mesmo com \(\mathbf{E}=0\) (não coberto aqui).</li>
+            </ul>
+            <p class="note" style="margin-top:10px;">Neste capítulo, o caso mais importante: dielétrico simples — linear, isotrópico e homogêneo por regiões.</p>
+          </div>
+          <div class="card">
+            <h3>Exemplos de anisotropia</h3>
+            <ul>
+              <li><strong>Cristal uniaxial</strong> (quartzo, calcita): \(\kappa\) diferente ao longo do eixo óptico.</li>
+              <li><strong>Cristal biaxial:</strong> três valores principais de \(\kappa\).</li>
+              <li>Anisotropia → birrefringência, que é a base de óculos polarizados e displays LCD.</li>
+              <li>Para fluidos e gases (desordem orientacional): mesmo um material anisotropicamente polarizável aparece como isotrópico macroscópico.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 25: RELAÇÕES CONSTITUTIVAS ══════════════════ -->
+    <article class="slide" data-title="Relações constitutivas — continuação">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.4.3 Continuado</p>
+          <h2>Tabela de constantes dielétricas experimentais</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Valores experimentais de \(\kappa\) a 20°C, 10⁵ Pa</h3>
+            <table style="width:100%; margin-top:12px; border-collapse:collapse; color:var(--muted); font-size:.9rem;">
+              <tr style="color:var(--accent-2); font-weight:700;"><td>Material</td><td style="text-align:right;">\(\kappa\)</td><td style="padding-left:16px;">Tipo</td></tr>
+              <tr><td>Hélio (He)</td><td style="text-align:right;">1.000065</td><td style="padding-left:16px;">gás nobre, não polar</td></tr>
+              <tr><td>Nitrogênio (N₂)</td><td style="text-align:right;">1.00055</td><td style="padding-left:16px;">gás molecular, não polar</td></tr>
+              <tr><td>Metano (CH₄)</td><td style="text-align:right;">1.7</td><td style="padding-left:16px;">molecular, não polar</td></tr>
+              <tr><td>Sílica (SiO₂)</td><td style="text-align:right;">4.5</td><td style="padding-left:16px;">iônico covalente</td></tr>
+              <tr><td>Silício (Si)</td><td style="text-align:right;">11.8</td><td style="padding-left:16px;">covalente</td></tr>
+              <tr><td>Água (H₂O)</td><td style="text-align:right;">80</td><td style="padding-left:16px;">polar, ligações H</td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Por que H₂O tem κ = 80?</h3>
+            <ul>
+              <li>A molécula de água tem um momento de dipolo permanente \(p_0\approx 1.85\) D.</li>
+              <li>Sem campo: dipolos apontam aleatoriamente (campo térmico desorienta).</li>
+              <li>Com campo: dipolos se alinham parcialmente — contribuição gigantesca à polarização.</li>
+              <li>O modelo de Clausius-Mossotti falha para H₂O. O modelo de Onsager (1936) — com campo de cavidade — funciona melhor.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 26: SEÇÃO 6.5 DIELÉTRICO SIMPLES ══════════════════ -->
+    <article class="slide" data-title="6.5 Dielétrico simples">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.5 Matéria dielétrica simples</p>
+          <h2>Dielétrico simples: linear, isotrópico, homogêneo por regiões</h2>
+        </header>
+        <div class="grid-2">
+          <div class="three-eq">
+            <div class="eq small">\( \mathbf{P} = \epsilon_0\chi\mathbf{E} \quad (6.35)\)</div>
+            <div class="eq small">\( \mathbf{P} = (\epsilon-\epsilon_0)\mathbf{E} = \epsilon_0(\kappa-1)\mathbf{E} \quad (6.36)\)</div>
+            <div class="eq gold">\( \mathbf{D} = \epsilon\mathbf{E} = \kappa\epsilon_0\mathbf{E} \quad (6.37)\)</div>
+            <p class="note">Relações entre os parâmetros: \(\epsilon=\kappa\epsilon_0\) (permissividade); \(\chi=\kappa-1\geq 0\) (susceptibilidade). A constante dielétrica \(\kappa\geq 1\) sempre para materiais passivos.</p>
+          </div>
+          <div class="card">
+            <h3>Em cada região homogênea</h3>
+            <ul>
+              <li>\(\nabla\cdot(\epsilon\mathbf{E})=\rho_f\) → no vácuo de carga: \(\nabla^2\varphi=0\).</li>
+              <li>\(\nabla\times\mathbf{P}=\epsilon_0(\kappa-1)\nabla\times\mathbf{E}=0\) — logo \(\nabla\times\mathbf{D}=0\) também!</li>
+              <li>Toda a maquinaria do Cap. 3 (Laplace, separação de variáveis, funções de Green) se aplica dentro de cada região com a permissividade \(\epsilon\) daquela região.</li>
+              <li>As interfaces são tratadas pelas condições de contorno (6.31)–(6.33).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 27: CARGA DE POLARIZAÇÃO ══════════════════ -->
+    <article class="slide" data-title="Carga de polarização em dielétrico simples">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.5.1 Fontes de campo</p>
+          <h2>Carga de polarização em dielétrico simples</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">De \(\mathbf{P}=\epsilon_0(\kappa-1)\mathbf{E}\) e \(\rho_P=-\nabla\cdot\mathbf{P}\):</p>
+            <div class="eq small">\( \rho_P = -\nabla\cdot[\epsilon_0(\kappa-1)\mathbf{E}] = -\epsilon_0(\kappa-1)\nabla\cdot\mathbf{E} \)</div>
+            <p class="note">Em região homogênea, \(\nabla\cdot\mathbf{E}=\rho_f/\epsilon=\rho_f/(\kappa\epsilon_0)\):</p>
+            <div class="eq gold">\( \rho_P = \left(\frac{1}{\kappa}-1\right)\rho_f \quad (6.43)\)</div>
+            <p class="note">Na superfície:</p>
+            <div class="eq small">\( \sigma_P = \mathbf{P}\cdot\hat{\mathbf{n}}\big|_S = \epsilon_0(\kappa-1)\mathbf{E}\cdot\hat{\mathbf{n}}\big|_S \quad (6.44)\)</div>
+          </div>
+          <div class="card">
+            <h3>O que (6.43) diz</h3>
+            <ul>
+              <li>A carga de polarização é proporcional à carga livre no mesmo ponto.</li>
+              <li>O sinal é oposto: \(\rho_P\) se opõe a \(\rho_f\).</li>
+              <li>A carga efetiva total é \(\rho_f+\rho_P=\rho_f/\kappa\) — reduzida por fator \(\kappa\).</li>
+              <li>Em um dielétrico puro sem carga livre: \(\rho_f=0\Rightarrow\rho_P=0\). A carga de polarização só aparece no volume quando há carga livre também ali.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 28: SCREENING / CARGA PONTUAL ══════════════════ -->
+    <article class="slide" data-title="6.5.2 Blindagem de carga pontual">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.5.2 Screening</p>
+          <h2>Carga pontual em meio dielétrico simples infinito</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Carga \(q_0\) em meio com \(\kappa\). Pela lei de Gauss para \(\mathbf{D}\):</p>
+            <div class="eq small">\( \oint\mathbf{D}\cdot d\mathbf{S} = q_0 \;\Rightarrow\; \mathbf{D}=\frac{q_0}{4\pi r^2}\hat{\mathbf{r}} \)</div>
+            <div class="eq small">\( \mathbf{E}(\mathbf{r}) = \frac{q_0}{4\pi\kappa\epsilon_0 r^2}\hat{\mathbf{r}} \quad (6.46)\)</div>
+            <div class="eq gold">\( \varphi(\mathbf{r}) = \frac{q_0}{4\pi\kappa\epsilon_0 r} = \frac{\varphi_{\rm vac}}{κ} \quad (6.47)\)</div>
+            <p class="note">Campo e potencial reduzidos por \(\kappa\) em todos os pontos do espaço. Resultado exato: a carga de polarização \(\rho_P=-(1-1/\kappa)\,q_0\delta(\mathbf{r})\) se acumula exatamente sobre a carga livre, blindando-a.</p>
+          </div>
+          <div class="card">
+            <h3>Screening e suas consequências</h3>
+            <ul>
+              <li>A interação entre duas cargas \(q_1\) e \(q_2\) a distância \(r\) em um dielétrico é \(F=q_1q_2/(4\pi\kappa\epsilon_0r^2)\) — reduzida por \(\kappa\).</li>
+              <li>Em água (\(\kappa=80\)): a interação coulombiana entre íons é 80 vezes mais fraca que no vácuo. Por isso o sal dissolve-se tão facilmente em água!</li>
+              <li>Em semicondutores (\(\kappa\approx 12\)): a energia de ligação do éxciton é reduzida por \(\kappa^2\approx 144\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 29: CAPACITOR CARGA FIXA ══════════════════ -->
+    <article class="slide" data-title="6.5.2 Capacitor com carga fixa">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.5.2 Capacitor</p>
+          <h2>Capacitor de placas paralelas: carga fixa vs. potencial fixo</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Carga fixa (\(\pm Q_f\) nas placas)</h3>
+            <div class="eq small" style="margin-top:10px;">\( D = \sigma_f = Q_f/A \)</div>
+            <div class="eq small">\( E = D/\epsilon = \sigma_f/(\kappa\epsilon_0) = E_0/\kappa \quad (6.48)\)</div>
+            <div class="eq small">\( \Delta\varphi = Ed = \Delta\varphi_0/\kappa \)</div>
+            <div class="eq gold">\( C = Q_f/\Delta\varphi = \kappa C_0 \quad (6.52)\)</div>
+            <p class="note">O dielétrico reduz o campo (e o potencial) por \(\kappa\). A capacitância aumenta \(\kappa\) vezes.</p>
+          </div>
+          <div class="card">
+            <h3>Potencial fixo (\(V\) mantido pela bateria)</h3>
+            <div class="eq small" style="margin-top:10px;">\( V = \int_0^d d\ell\,E \;\Rightarrow\; E = V/d = E_0 \quad (6.63)\)</div>
+            <div class="eq small">\( \sigma_f = D = \epsilon E = \kappa\epsilon_0 V/d \quad (6.65)\)</div>
+            <div class="eq gold">\( C = \sigma_f A/V = \kappa C_0 \quad (6.66)\)</div>
+            <p class="note"><strong>Diferença crucial:</strong> com \(V\) fixo, o campo \(E\) não é reduzido — a bateria fornece mais carga livre para manter o potencial. O resultado final \(C=\kappa C_0\) é o mesmo!</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 30: INTERFACE ESFÉRICA ══════════════════ -->
+    <article class="slide" data-title="6.5.3 Interface esférica: carga no centro">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.5.3 Interface dielétrica</p>
+          <h2>Carga \(q\) no centro de esfera dielétrica (\(\kappa_1\)) em meio \(\kappa_2\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Por simetria esférica, \(\mathbf{D}\) é radial. Lei de Gauss integral para \(\mathbf{D}\):</p>
+            <div class="eq small">\( \mathbf{D}(\mathbf{r}) = \frac{q}{4\pi r^2}\hat{\mathbf{r}}, \quad r&gt;0 \quad (6.53)\)</div>
+            <div class="eq small">\( \mathbf{E}_i = \frac{\mathbf{D}}{\epsilon_i} = \frac{q}{4\pi\kappa_i\epsilon_0 r^2}\hat{\mathbf{r}}\)</div>
+            <p class="note">A carga superficial de polarização na interface \(r=R\):</p>
+            <div class="eq gold">\( \sigma_P(R) = \hat{\mathbf{r}}\cdot(\mathbf{P}_1-\mathbf{P}_2)\big|_{r=R} = \frac{q}{4\pi R^2}\!\left(\frac{1}{\kappa_2}-\frac{1}{\kappa_1}\right)\quad(6.58)\)</div>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 520 390" role="img" aria-label="Carga no centro de esfera dielétrica">
+              <defs>
+                <marker id="ef2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <circle cx="260" cy="195" r="115" fill="rgba(255,204,102,.06)" stroke="#ffcc66" stroke-width="3"/>
+              <circle cx="260" cy="195" r="55" fill="rgba(87,197,255,.1)" stroke="#57c5ff" stroke-width="3"/>
+              <circle cx="260" cy="195" r="7" fill="#7ee787"/>
+              <text x="272" y="200" fill="#7ee787" font-size="18">q</text>
+              <g stroke="#57c5ff" stroke-width="3" marker-end="url(#ef2)">
+                <line x1="260" y1="195" x2="260" y2="135"/>
+                <line x1="260" y1="195" x2="310" y2="157"/>
+                <line x1="260" y1="195" x2="310" y2="233"/>
+                <line x1="260" y1="195" x2="210" y2="157"/>
+              </g>
+              <text x="110" y="100" fill="#57c5ff" font-size="16">κ₁ (dentro)</text>
+              <text x="340" y="110" fill="#ffcc66" font-size="16">κ₂ (fora)</text>
+              <text x="294" y="145" fill="#57c5ff" font-size="16">D/ε₁</text>
+              <text x="80" y="340" fill="#8091a2" font-size="14">D radial e contínuo; E é descontinuo na interface</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 31: EXEMPLO 6.2 ══════════════════ -->
+    <article class="slide" data-title="Exemplo 6.2: carga perto de interface plana">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 6.2</p>
+          <h2>Carga perto de uma interface plana entre dois dielétricos</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Geometria</h3>
+            <p class="note" style="margin-top:8px;">Carga \(q\) em \(z=-d\). Meio à esquerda (\(z&lt;0\)): \(\kappa_L\). Meio à direita (\(z&gt;0\)): \(\kappa_R\). Interface: plano \(z=0\).</p>
+            <p class="note" style="margin-top:12px;">Perto de \(\mathbf{r}_0=(x,y,0)\) na interface:</p>
+            <div class="eq small" style="margin-top:8px;">\( \sigma_P = \hat{\mathbf{z}}\cdot(\mathbf{P}_L-\mathbf{P}_R) = \epsilon_0(\chi_L E_{Lz}-\chi_R E_{Rz})\)</div>
+            <p class="note" style="margin-top:10px;">Usando continuidade de \(D_z=\kappa_L\epsilon_0 E_{Lz}=\kappa_R\epsilon_0 E_{Rz}\) e resolvendo para \(\sigma_P\):</p>
+            <div class="eq gold" style="margin-top:8px;">\( \sigma_P(x,y) = \frac{1}{2\pi}\frac{\kappa_L-\kappa_R}{\kappa_L(\kappa_L+\kappa_R)}\frac{qd}{(x^2+y^2+d^2)^{3/2}}\)</div>
+          </div>
+          <div class="card">
+            <h3>Interpretações</h3>
+            <ul>
+              <li>Se \(\kappa_L&gt;\kappa_R\): \(\sigma_P&gt;0\) — a carga de polarização tem o mesmo sinal que \(q\). Parece contra-intuitivo?</li>
+              <li>Lembrando: o meio à esquerda é mais polarizável. Ele atrai cargas negativas para perto de \(q\), deixando cargas positivas do lado de \(z=0\).</li>
+              <li>Este resultado é usado no Exemplo 6.7 para calcular a força sobre \(q\) (seção 6.8).</li>
+              <li>Limite \(\kappa_R\to\infty\): reproduz o resultado do método das imagens para uma carga perto de um condutor!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 32: CONDIÇÕES EM POTENCIAL ══════════════════ -->
+    <article class="slide" data-title="6.5.5 Condições de contorno em potencial">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.5.5 Teoria de potencial</p>
+          <h2>Condições de contorno em potencial</h2>
+        </header>
+        <div class="grid-2">
+          <div class="three-eq">
+            <p class="subtitle">Em termos do potencial \(\varphi\): de \(\mathbf{E}=-\nabla\varphi\), a continuidade de \(E_t\) implica:</p>
+            <div class="eq small">\( \varphi_1(\mathbf{r}_S) = \varphi_2(\mathbf{r}_S) \quad (6.70)\)</div>
+            <p class="note">Com carga livre \(\sigma_f\):</p>
+            <div class="eq small">\( \epsilon_1\frac{\partial\varphi_1}{\partial n} - \epsilon_2\frac{\partial\varphi_2}{\partial n} = -\sigma_f \quad (6.71)\)</div>
+            <p class="note">Sem carga livre na interface:</p>
+            <div class="eq gold">\( \epsilon_1\frac{\partial\varphi_1}{\partial n}\bigg|_S = \epsilon_2\frac{\partial\varphi_2}{\partial n}\bigg|_S \quad (6.73)\)</div>
+            <div class="card" style="border-color:rgba(126,231,135,.3); background:rgba(126,231,135,.06);">
+              <h3 style="color:var(--accent-3);">Receita para problemas dielétricos simples</h3>
+              <p class="note" style="margin-top:8px;">Resolver \(\nabla^2\varphi=0\) em cada região; aplicar \(\varphi_1=\varphi_2\) e \(\epsilon_1\partial_n\varphi_1=\epsilon_2\partial_n\varphi_2\) nas interfaces.</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Analogia com condutores</h3>
+            <ul>
+              <li>Condutor: \(\varphi=\text{const}\) na superfície, \(\epsilon_0\partial_n\varphi=-\sigma_f/\epsilon_0\).</li>
+              <li>Dielétrico simples: \(\varphi\) contínuo, \(\kappa_1\partial_n\varphi_1=\kappa_2\partial_n\varphi_2\).</li>
+              <li>A segunda condição é a analogia exata da lei de Gauss na interface.</li>
+              <li>Diferença: potencial é sempre contínuo para dielétrico (tangencial de E é zero), mas pode ser descontínuo para distribuição de dipolos (seção 10.4.3 do Zangwill!).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 33: EXEMPLO 6.3 ══════════════════ -->
+    <article class="slide" data-title="Exemplo 6.3: cavidade esférica em campo uniforme">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 6.3</p>
+          <h2>Cavidade esférica de raio \(R\) em meio dielétrico com campo \(E_0\hat{\mathbf{z}}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Pela simetria axial e \(\nabla^2\varphi=0\):</p>
+            <div class="eq small">\( \varphi_{\rm in} = Ar\cos\theta, \quad \varphi_{\rm out}=\left(-E_0r+\frac{B}{r^2}\right)\cos\theta\)</div>
+            <p class="note">Condições em \(r=R\): continuidade de \(\varphi\) e de \(\epsilon\partial_r\varphi\):</p>
+            <div class="eq small">\( A = -\frac{3\kappa}{2\kappa+1}E_0, \quad B=-\frac{\kappa-1}{2\kappa+1}E_0R^3\)</div>
+            <div class="eq gold">\( \mathbf{E}_{\rm in} = -A\hat{\mathbf{z}} = \frac{3\kappa}{2\kappa+1}E_0\hat{\mathbf{z}} &gt; E_0\hat{\mathbf{z}}\)</div>
+            <p class="note">Campo dentro da cavidade é <strong>maior</strong> que \(E_0\) para \(\kappa&gt;1\).</p>
+          </div>
+          <div class="card">
+            <h3>Interpretação</h3>
+            <ul>
+              <li>A carga de polarização na parede da cavidade tem sinal que <em>reforça</em> o campo no interior vazio.</li>
+              <li>\(\kappa=1\) (vácuo): \(E_{\rm in}=E_0\) ✓.</li>
+              <li>\(\kappa\to\infty\): \(E_{\rm in}\to\frac{3}{2}E_0\). Isso é o "campo de cavidade de Lorentz" que aparece na derivação de Clausius-Mossotti (Seção 6.6).</li>
+              <li>Contraste: para uma esfera <em>dielétrica</em> em vácuo com campo \(E_0\), o campo dentro é reduzido: \(E_{\rm in}=3E_0/(κ+2)&lt;E_0\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 34: REFRAÇÃO LINHAS DE CAMPO ══════════════════ -->
+    <article class="slide" data-title="Appl. 6.2: refração de linhas de campo">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Aplicação 6.2</p>
+          <h2>Refração de linhas de campo na interface dielétrica</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Das condições de contorno (6.33) e (6.31) sem \(\sigma_f\):</p>
+            <div class="eq small" style="margin-top:10px;">\( E_{1\parallel}=E_{2\parallel}, \quad \epsilon_1 E_{1\perp}=\epsilon_2 E_{2\perp}\)</div>
+            <p class="note" style="margin-top:10px;">Se \(\theta_i\) é o ângulo entre \(\mathbf{E}_i\) e a normal:</p>
+            <div class="eq small">\( \tan\theta_i = E_{i\parallel}/E_{i\perp}\)</div>
+            <div class="eq gold" style="margin-top:10px;">\( \frac{\tan\theta_1}{\tan\theta_2} = \frac{\epsilon_1}{\epsilon_2} = \frac{\kappa_1}{\kappa_2} \quad (6.68)\)</div>
+            <p class="note" style="margin-top:10px;"><strong>Limite condutor \(\kappa_2\to\infty\):</strong> \(\tan\theta_2\to 0\) → \(\mathbf{E}_2\perp\) à superfície, como esperado.</p>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 520 390" role="img" aria-label="Refração de linhas de campo">
+              <defs>
+                <marker id="efr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#57c5ff"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <rect x="0" y="0" width="520" height="195" fill="rgba(87,197,255,.05)"/>
+              <rect x="0" y="195" width="520" height="195" fill="rgba(255,204,102,.05)"/>
+              <line x1="0" y1="195" x2="520" y2="195" stroke="#2a3645" stroke-width="3"/>
+              <text x="20" y="50" fill="#57c5ff" font-size="18">ε₁ (κ₁)</text>
+              <text x="20" y="370" fill="#ffcc66" font-size="18">ε₂ = 4ε₁ (κ₂ = 4κ₁)</text>
+              <line x1="170" y1="40" x2="260" y2="195" stroke="#57c5ff" stroke-width="5" marker-end="url(#efr)"/>
+              <line x1="260" y1="195" x2="370" y2="350" stroke="#ffcc66" stroke-width="5" marker-end="url(#efr)"/>
+              <line x1="320" y1="40" x2="360" y2="195" stroke="#57c5ff" stroke-width="4" marker-end="url(#efr)" opacity=".6"/>
+              <line x1="360" y1="195" x2="430" y2="350" stroke="#ffcc66" stroke-width="4" marker-end="url(#efr)" opacity=".6"/>
+              <line x1="260" y1="130" x2="260" y2="260" stroke="#2a3645" stroke-width="1" stroke-dasharray="5 4"/>
+              <text x="186" y="162" fill="#f2f7fb" font-size="18">θ₁</text>
+              <text x="272" y="240" fill="#f2f7fb" font-size="18">θ₂</text>
+              <text x="62" y="220" fill="#8091a2" font-size="15">linhas dobram ao cruzar: tan θ₁ / tan θ₂ = κ₁/κ₂</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 35: POTENCIAL FIXO / EXEMPLO 6.3 SIMPLIFICADO ══════════════════ -->
+    <article class="slide" data-title="6.5.4 Dielétrico a potencial fixo">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.5.4 Potencial fixo</p>
+          <h2>Resposta dielétrica a campo fixo: o campo não é blindado</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Capacitor com bateria mantendo \(V\) fixo</h3>
+            <p class="note" style="margin-top:10px;">Com potencial fixo, inserir o dielétrico não altera \(\mathbf{E}\)! A bateria fornece carga extra para manter \(V=Ed\).</p>
+            <ul style="margin-top:10px;">
+              <li>Campo: \(\mathbf{E}=V/d\,\hat{\mathbf{z}}\) (inalterado).</li>
+              <li>Carga de superfície dielétrica: \(\sigma_P=-\epsilon_0(\kappa-1)V/d&lt;0\).</li>
+              <li>Carga livre extra das placas: \(\sigma_f=\kappa\epsilon_0 V/d\).</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Por que não há blindagem?</h3>
+            <p class="note" style="margin-top:10px;">A carga de polarização \(\sigma_P&lt;0\) tende a reduzir o campo. Mas a bateria fornece mais carga livre \(\sigma_f\) para compensar exatamente, mantendo \(E=V/d\).</p>
+            <p class="note" style="margin-top:10px;">Moral: a blindagem é uma propriedade das fontes serem <em>fixas</em>. Com potencial fixo, as fontes se ajustam e o campo permanece.</p>
+            <div class="eq gold" style="margin-top:12px;">\( C = \frac{\sigma_f A}{V} = \kappa C_0 \quad (6.66) \)</div>
+            <p class="note" style="margin-top:8px;">Faraday mediu exatamente esse aumento de capacitância para diferentes materiais — definindo \(\kappa\) experimentalmente.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 36: SEÇÃO 6.6 FÍSICA DE κ ══════════════════ -->
+    <article class="slide" data-title="6.6 Física da constante dielétrica">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.6 Microscópico</p>
+          <h2>Física da constante dielétrica: o que determina \(\kappa\)?</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">A questão central: como a susceptibilidade macroscópica \(\kappa\) se relaciona com a polarizabilidade microscópica \(\alpha\) de moléculas individuais?</p>
+            <div class="eq small">\( \mathbf{p} = \alpha\epsilon_0\mathbf{E}_0 \quad (6.75)\)</div>
+            <p class="note">\(\alpha\) mede quão facilmente a nuvem eletrônica e os núcleos se deformam sob ação do campo. Para uma esfera condutora de raio \(R\): \(\alpha=4\pi R^3\).</p>
+            <p class="subtitle" style="margin-top:12px;"><strong>Estimativa ingênua:</strong> com \(n\) moléculas por volume, cada com \(\mathbf{p}=\alpha\epsilon_0\mathbf{E}\):</p>
+            <div class="eq small">\( \mathbf{P} = n\mathbf{p} = n\alpha\epsilon_0\mathbf{E} \;\Rightarrow\; \kappa\simeq 1+n\alpha \quad (6.79)\)</div>
+            <div class="card" style="border-color:rgba(255,143,128,.35); background:rgba(255,143,128,.06);">
+              <p class="note" style="color:var(--danger);">Limitação: ignora que cada molécula responde ao <strong>campo local</strong>, não ao campo macroscópico médio.</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Por que o campo local importa?</h3>
+            <ul>
+              <li>O campo que polariza uma molécula individual é o campo de todos os <em>outros</em> — não inclui o campo da própria molécula.</li>
+              <li>Lorentz calculou esse campo local para uma esfera de cavidade dentro de um meio uniformemente polarizado:</li>
+            </ul>
+            <div class="eq small" style="margin-top:10px;">\( \mathbf{E}_{\rm self} = -\frac{\mathbf{P}}{3\epsilon_0}\)</div>
+            <div class="eq small" style="margin-top:8px;">\( \mathbf{E}_{\rm local} = \mathbf{E} + \frac{\mathbf{P}}{3\epsilon_0} \quad (6.80\text{--}6.81)\)</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 37: CLAUSIUS-MOSSOTTI DEDUÇÃO ══════════════════ -->
+    <article class="slide" data-title="Clausius-Mossotti: dedução">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.6.2 Derivação</p>
+          <h2>Cláusius-Mossotti: derivação completa</h2>
+        </header>
+        <div class="grid-2">
+          <div class="three-eq">
+            <p class="subtitle">Cada molécula responde ao campo local: \(\mathbf{p}=\alpha\epsilon_0\mathbf{E}_{\rm local}\). Como \(\mathbf{P}=n\mathbf{p}\):</p>
+            <div class="eq small">\( \mathbf{P} = n\alpha\epsilon_0\left(\mathbf{E}+\frac{\mathbf{P}}{3\epsilon_0}\right)\)</div>
+            <p class="note">Agrupando os termos em \(\mathbf{P}\):</p>
+            <div class="eq small">\( \left(1-\frac{n\alpha}{3}\right)\mathbf{P} = n\alpha\epsilon_0\mathbf{E} \;\Rightarrow\; \mathbf{P} = \frac{n\alpha\epsilon_0}{1-n\alpha/3}\mathbf{E} \quad (6.82)\)</div>
+            <p class="note">Comparando com \(\mathbf{P}=\epsilon_0(\kappa-1)\mathbf{E}\):</p>
+            <div class="eq small">\( \kappa-1 = \frac{n\alpha}{1-n\alpha/3}\)</div>
+            <div class="eq gold">\( \frac{\kappa-1}{\kappa+2} = \frac{n\alpha}{3} \quad (6.84)\)</div>
+          </div>
+          <div class="card">
+            <h3>Validade e limitações</h3>
+            <ul>
+              <li><strong>Boa para:</strong> gases não-polares (N₂, O₂, CH₄), líquidos simples (benzeno), vidros.</li>
+              <li><strong>Ruim para:</strong> líquidos polares (H₂O) e sólidos iônicos — moléculas com momento de dipolo permanente precisam do modelo de Onsager (1936).</li>
+              <li><strong>Coincidência histórica:</strong> Mossotti derivou em 1850 e Clausius em 1879, sem conhecimento mútuo.</li>
+              <li>Limite de gás diluído (\(n\alpha\ll 1\)): \(\kappa\simeq 1+n\alpha\) — recupera a estimativa ingênua.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 38: FÓRMULA DE CLAUSIUS-MOSSOTTI ══════════════════ -->
+    <article class="slide" data-title="Fórmula de Clausius-Mossotti">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.6.2 Resultado</p>
+          <h2>Fórmula de Clausius-Mossotti</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <div class="eq gold">\( \frac{\kappa-1}{\kappa+2} = \frac{n\alpha}{3} \quad (6.84)\)</div>
+            <p class="subtitle">O campo local:</p>
+            <div class="eq small">\( \mathbf{E}_{\rm local} = \frac{\kappa+2}{3}\,\mathbf{E} \quad (6.85)\)</div>
+            <p class="note">A correção de Lorentz amplifica o campo local por fator \((\kappa+2)/3\). Para \(\kappa=80\) (água): fator de amplificação ≈ 27!</p>
+          </div>
+          <div class="card">
+            <h3>Exemplos de uso</h3>
+            <ul>
+              <li><strong>Verificação:</strong> para He, \(\kappa-1=6.5\times10^{-5}\), \(n=2.7\times10^{19}\) cm⁻³ → \(\alpha=7.2\times10^{-25}\) cm³ (boa concordância com cálculo quântico).</li>
+              <li><strong>Índice de refração:</strong> \(\kappa=n_{\rm ind}^2\) para luz visível → Clausius-Mossotti = Lorentz-Lorenz para óptica.</li>
+              <li><strong>Colapso ferroelétrico:</strong> quando \(n\alpha\to 3\), o denominador \(1-n\alpha/3\to 0\): polarização diverge — transição ferroelétrica!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 39: LIMITE κ→∞ ══════════════════ -->
+    <article class="slide" data-title="6.6.4 O limite κ → ∞">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.6.4 Conexão</p>
+          <h2>O limite \(\kappa\to\infty\) reproduz um condutor perfeito</h2>
+        </header>
+        <div class="grid-3">
+          <div class="card" style="border-color:rgba(87,197,255,.4);">
+            <h3 style="color:var(--accent);">Ideia</h3>
+            <p class="note" style="margin-top:8px;">Quando \(\kappa\) cresce muito, o campo macroscópico no interior tende a zero:</p>
+            <div class="eq small" style="margin-top:10px;">\( \kappa\to\infty \;\Rightarrow\; E_{\rm in}\to 0 \)</div>
+            <p class="note" style="margin-top:8px;">Esse é exatamente o comportamento de um condutor perfeito.</p>
+          </div>
+          <div class="card" style="border-color:rgba(126,231,135,.4);">
+            <h3 style="color:var(--accent-3);">Uso prático</h3>
+            <p class="note" style="margin-top:8px;">Qualquer resultado derivado para dielétrico simples deve reproduzir o resultado de condutor quando \(\kappa\to\infty\). Poderoso teste de consistência.</p>
+            <p class="note" style="margin-top:10px;"><strong>Exemplos:</strong><br>
+            • Esfera dielétrica: \(E_{\rm in}=3E_0/(\kappa+2)\xrightarrow{\kappa\to\infty}0\) ✓<br>
+            • Capacitância: \(C=\kappa C_0\to\infty\) (condutor ideal não tem capacitância finita) ✓</p>
+          </div>
+          <div class="card" style="border-color:rgba(255,143,128,.35);">
+            <h3 style="color:var(--danger);">Cuidado</h3>
+            <p class="note" style="margin-top:8px;">O limite pode ser singular quando há carga livre em contato direto com o dielétrico. Nesse caso, \(\kappa\to\infty\) não equivale simplesmente a um condutor perfeito.</p>
+            <p class="note" style="margin-top:8px;">Exemplo: Exemplo 6.7 (força sobre carga perto da interface) tem comportamento singular no limite condutor.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 40: EXEMPLO: DIPOLO EM ESFERA DIELÉTRICA ══════════════════ -->
+    <article class="slide" data-title="Exemplo 6.1: dipolo em esfera dielétrica">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 6.1 — Screening do dipolo</p>
+          <h2>Dipolo embutido em esfera dielétrica: blindagem</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Dipolo \(\mathbf{p}_0\) no centro de esfera de raio \(R\) e constante \(\kappa\), em vácuo. Qual o momento de dipolo total?</p>
+            <div class="eq small">\( \mathbf{p}_{\rm tot} = \frac{3}{2+\kappa}\,\mathbf{p}_0 \)</div>
+            <p class="note" style="margin-top:12px;"><strong>Derivação:</strong> a polarização induzida cria carga superficial \(\sigma_P\), que por sua vez produz um campo dipolar. O campo total dentro da esfera é:</p>
+            <div class="eq small">\( \mathbf{E}_{\rm in} = \frac{1}{(2+\kappa)}\frac{1}{4\pi\epsilon_0\kappa}\frac{3(\mathbf{p}_0\cdot\hat{\mathbf{r}})\hat{\mathbf{r}}-\mathbf{p}_0}{r^3}\)</div>
+            <p class="note">Fora: campo de dipolo com momento efetivo \(\mathbf{p}_{\rm tot}=3\mathbf{p}_0/(2+\kappa)\).</p>
+          </div>
+          <div class="card">
+            <h3>Interpreação e limite</h3>
+            <ul>
+              <li>\(\kappa=1\): \(\mathbf{p}_{\rm tot}=\mathbf{p}_0\) (vácuo) ✓</li>
+              <li>\(\kappa&gt;1\): \(\mathbf{p}_{\rm tot}&lt;\mathbf{p}_0\) — o dielétrico <em>blinda</em> o dipolo.</li>
+              <li>\(\kappa\to\infty\): \(\mathbf{p}_{\rm tot}\to 0\) — dentro de um condutor, nenhum campo externo penetra.</li>
+              <li>Relevante para espectroscopia de moléculas em solvente: o campo efetivo da molécula é reduzido pela constante dielétrica do meio.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 41: SEÇÃO 6.7 ENERGIA ══════════════════ -->
+    <article class="slide" data-title="6.7 Energia de matéria dielétrica">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.7 Energia</p>
+          <h2>Trabalho para estabelecer o campo: \(\delta U_E = \mathbf{E}\cdot\delta\mathbf{D}\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Considere um condutor com carga \(Q\) dentro de um dielétrico. Ao trazer carga \(\delta Q\) do infinito ao condutor:</p>
+            <div class="eq small">\( \delta U_E = \varphi\,\delta Q = \int_S d\mathbf{S}\cdot\delta\mathbf{D}\,\varphi \)</div>
+            <p class="note">Pelo teorema da divergência e \(\mathbf{E}=-\nabla\varphi\):</p>
+            <div class="eq gold">\( \delta U_E = \int_V d^3r\;\mathbf{E}\cdot\delta\mathbf{D} \quad (6.87)\)</div>
+            <p class="note">A energia total (construindo o campo do zero):</p>
+            <div class="eq small">\( U_E = \int d^3r\int_0^{\mathbf{D}} \mathbf{E}\cdot\delta\mathbf{D}' \quad (6.91)\)</div>
+          </div>
+          <div class="card">
+            <h3>Resultado chave</h3>
+            <ul>
+              <li>A energia \(U_E\) é uma função natural de \(\mathbf{D}\) (ou das cargas livres \(Q_k\)).</li>
+              <li>Para calcular, precisamos de uma relação constitutiva que diga como \(\mathbf{E}\) depende de \(\mathbf{D}\).</li>
+              <li>Analogia com condutores: \(U_E\) natural nas cargas \(Q_k\). Aqui: natural em \(\mathbf{D}\).</li>
+              <li>A força sobre o dielétrico: \(\mathbf{F}=-(\partial U_E/\partial\mathbf{R})_{\mathbf{D}}\) (cargas fixas).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 42: ENERGIA EM DIELÉTRICO SIMPLES ══════════════════ -->
+    <article class="slide" data-title="Energia em dielétrico simples">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.7.2 Resultado</p>
+          <h2>Energia em dielétrico simples: \(U_E=\frac{1}{2}\int\mathbf{E}\cdot\mathbf{D}\,d^3r\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Para dielétrico simples \(\mathbf{D}=\epsilon\mathbf{E}\), a integral sobre \(\delta\mathbf{D}\) fecha:</p>
+            <div class="eq small">\( \int_0^{\mathbf{D}}\mathbf{E}\cdot\delta\mathbf{D}'=\int_0^D \frac{D'}{ε}\,dD'=\frac{D^2}{2\epsilon}\)</div>
+            <div class="eq gold">\( U_E[\mathbf{D}] = \frac{1}{2}\int d^3r\,\frac{|\mathbf{D}|^2}{\epsilon} = \frac{1}{2}\int d^3r\,\mathbf{E}\cdot\mathbf{D} \quad (6.94)\)</div>
+            <p class="note">Analogia com vácuo: \(U_E=\frac{1}{2}\int\epsilon_0 E^2\,d^3r\). Aqui \(\epsilon\) substitui \(\epsilon_0\).</p>
+          </div>
+          <div class="card">
+            <h3>Leitura física da energia</h3>
+            <ul>
+              <li>\(\frac{|\mathbf{D}|^2}{2\epsilon}\) é minimizado onde \(\epsilon\) é <em>maior</em>.</li>
+              <li>Logo, a energia é minimizada quando matéria de alta \(\epsilon\) ocupa regiões de campo intenso.</li>
+              <li>Isso explica por que dielétricos são <em>atraídos</em> para regiões de campo forte — o sistema busca minimizar \(U_E\).</li>
+              <li>Comparação: energia no vácuo \(\frac{\epsilon_0 E^2}{2}\). Em dielétrico: \(\frac{\epsilon_0\kappa E^2}{2}=\frac{\epsilon_0 E^2}{2}+\frac{\epsilon_0(\kappa-1)E^2}{2}\). O segundo termo é a energia armazenada na polarização.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 43: MUDANÇA DE ENERGIA ══════════════════ -->
+    <article class="slide" data-title="6.7.3 Mudança de energia ao inserir dielétrico">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.7.3 ΔU</p>
+          <h2>Inserir dielétrico sempre <em>reduz</em> a energia (cargas fixas)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Ao inserir um dielétrico mantendo as cargas livres fixas (\(\mathbf{E}_0,\mathbf{D}_0\to\mathbf{E},\mathbf{D}\)):</p>
+            <div class="eq small">\( \Delta U_E = \frac{1}{2}\int d^3r\,(\mathbf{E}\cdot\mathbf{D}-\mathbf{E}_0\cdot\mathbf{D}_0)\)</div>
+            <p class="note">Usando que a carga livre não mudou (\(\int\mathbf{E}\cdot(\mathbf{D}-\mathbf{D}_0)d^3r=0\)):</p>
+            <div class="eq red">\( \Delta U_E = -\frac{1}{2}\int d^3r\,\mathbf{P}\cdot\mathbf{E}_0 \quad (6.101)\)</div>
+            <p class="note">Negativo: o dielétrico abaixa a energia total.</p>
+          </div>
+          <div class="card">
+            <h3>De onde vem o fator 1/2?</h3>
+            <ul>
+              <li>Para um pequeno objeto linear: \(\mathbf{p}=\alpha\epsilon_0\mathbf{E}_0\).</li>
+              <li>Energia de interação: \(U_{\rm ext}=-\mathbf{p}\cdot\mathbf{E}_0=-pE_0\).</li>
+              <li>Custo interno para <em>criar</em> o dipolo: \(U_{\rm int}=\zeta p^2\) (restoring force).</li>
+              <li>Minimizando: \(p=E_0/(2\zeta)\) → \(\Delta U_E=-\frac{1}{2}\mathbf{p}\cdot\mathbf{E}_0\).</li>
+              <li>O fator 1/2 vem do custo de polarizar o dielétrico.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 44: ENERGIA FUNCIONAL / TRANSFORMADA ══════════════════ -->
+    <article class="slide" data-title="6.7.5 Transformada de Legendre para potenciais fixos">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.7.5 Potenciais fixos</p>
+          <h2>Transformada de Legendre: \(\hat{U}_E\) para condutores a potencial fixo</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Quando condutores estão ligados a baterias, os potenciais \(\varphi_k\) são mantidos fixos. Define-se:</p>
+            <div class="eq small">\( \hat{U}_E = U_E - \int d^3r\,\mathbf{D}\cdot\mathbf{E} = -\frac{1}{2}\int d^3r\,\mathbf{D}\cdot\mathbf{E} \quad (6.109)\)</div>
+            <div class="card" style="border-color:rgba(255,204,102,.3);">
+              <h3 style="color:var(--accent-2);">Ideia</h3>
+              <p class="note" style="margin-top:8px;">\(U_E\) é natural em cargas livres. \(\hat{U}_E\) é natural em potenciais fixos. Para dielétrico simples: \(\hat{U}_E=-U_E\).</p>
+            </div>
+            <div class="eq small">\( \mathbf{F} = -\frac{\partial\hat{U}_E}{\partial\mathbf{R}}\bigg|_\varphi = +\frac{\partial U_E}{\partial\mathbf{R}}\bigg|_Q \quad (6.114)\)</div>
+          </div>
+          <div class="card">
+            <h3>Sutileza da força</h3>
+            <ul>
+              <li>Com carga fixa: \(\mathbf{F}=-\partial U_E/\partial\mathbf{R}\) (reduz energia).</li>
+              <li>Com potencial fixo: \(\mathbf{F}=-\partial\hat{U}_E/\partial\mathbf{R}=+\partial U_E/\partial\mathbf{R}\) — a força ainda puxa o dielétrico para dentro (aumenta \(U_E\)).</li>
+              <li>Isso não contradiz a conservação de energia: a bateria fornece energia extra \(+\Delta U_E\) que compensa o trabalho e o aumento de \(U_E\).</li>
+              <li>O resultado final para a força é o mesmo nos dois casos para um dado campo \(\mathbf{E}\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 45: APPL. 6.3 QUARKS ══════════════════ -->
+    <article class="slide" data-title="Appl. 6.3: modelo de confinamento de quarks">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Aplicação 6.3 — Conexão com QCD</p>
+          <h2>Modelo clássico de confinamento de quarks</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card">
+            <h3>O modelo</h3>
+            <p class="note" style="margin-top:8px;">O vácuo de QCD (cromodinâmica quântica) age como um dielétrico com \(\kappa&lt;1\) — <em>anti-screening</em>. Um quark isolado cria uma cavidade esférica de raio \(R\) no vácuo.</p>
+            <div class="eq small" style="margin-top:10px;">\( U_{\rm tot}(R) = \frac{q^2}{8\pi\epsilon_0}\!\left(\frac{1}{a}+\frac{1}{\kappa R}\right) + \gamma 4\pi R^2 \)</div>
+            <p class="note" style="margin-top:8px;">O segundo termo: campo elétrico dentro da casca de raio \(R\) (reduzido por \(\kappa\to 0\) fora). O terceiro: energia de superfície da casca.</p>
+          </div>
+          <div class="card">
+            <h3>Por que quarks não escapam?</h3>
+            <ul>
+              <li>Minimizando sobre \(R\): a cavidade tem raio ótimo \(R^*\propto\kappa^{-1/3}\).</li>
+              <li>\(U_{\rm tot}(R^*)\propto\kappa^{-2/3}\to\infty\) quando \(\kappa\to 0\).</li>
+              <li>Energia de um quark livre é <strong>infinita</strong> quando \(\kappa\to 0\): confinamento!</li>
+              <li>Um méson (quark-antiquark) pode ter uma única cavidade — energia finita — e <em>não} está} confinado\).</li>
+              <li>Resultado análogo ao confinamento real da QCD, mas obtido por eletrostática clássica em dielétrico com \(\kappa&lt;1\).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 46: SEÇÃO 6.8 FORÇAS ══════════════════ -->
+    <article class="slide" data-title="6.8 Forças em matéria dielétrica">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.8 Forças</p>
+          <h2>Força sobre um corpo dielétrico isolado</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Para dielétrico polarizado \(\mathbf{P}(\mathbf{r})\) em campo externo \(\mathbf{E}_0(\mathbf{r})\), a força de Coulomb sobre as cargas de polarização:</p>
+            <div class="eq small">\( \mathbf{F} = \int_V d^3r\,\rho_P\mathbf{E}_0 + \int_S dS\,\sigma_P\mathbf{E}_0 \quad (6.115)\)</div>
+            <p class="note">Usando a representação de dipolos (6.22):</p>
+            <div class="eq gold">\( \mathbf{F} = \int_V d^3r\,(\mathbf{P}\cdot\nabla)\mathbf{E}_0 \quad (6.116)\)</div>
+            <div class="card" style="border-color:rgba(255,143,128,.35); background:rgba(255,143,128,.06);">
+              <p class="note" style="color:var(--danger);"><strong>Importante:</strong> (6.115) e (6.116) valem para a força total sobre um corpo isolado em campo externo. Não valem para subvolumes dentro de dielétrico contínuo!</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Dieletroforese</h3>
+            <p class="note" style="margin-top:8px;">Para campo quase-uniforme sobre corpo pequeno: \(\mathbf{p}\approx\alpha\epsilon_0\mathbf{E}_0\). A força:</p>
+            <div class="eq small" style="margin-top:8px;">\( \mathbf{F}\approx(\mathbf{p}\cdot\nabla)\mathbf{E}_0 = \frac{\alpha\epsilon_0}{2}\nabla|\mathbf{E}_0|^2\)</div>
+            <p class="note" style="margin-top:8px;">Dielétrico neutro é <strong>atraído</strong> para regiões de campo mais intenso, independente do sinal da carga!</p>
+            <p class="note" style="margin-top:8px;"><strong>Aplicação:</strong> dieletroforese é usada para separar e transportar células biológicas, nanopartículas, DNA. Um dielétrico neutro pode ser "levitado" ou "guiado" por campo não-uniforme.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 47: SUBVOLUMES SUTIS ══════════════════ -->
+    <article class="slide" data-title="6.8.3 Por que subvolumes são sutis">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.8.3 Forças em subvolumes</p>
+          <h2>Por que a fórmula de Coulomb falha para subvolumes</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card" style="border-color:rgba(255,143,128,.35); background:rgba(255,143,128,.06);">
+            <h3 style="color:var(--danger);">O problema</h3>
+            <p class="note" style="margin-top:8px;">Se cortamos mentalmente um subvolume de um dielétrico contínuo, aparecem forças microscópicas de curto alcance nas fronteiras artificiais — ligações químicas cortadas.</p>
+            <p class="note" style="margin-top:12px;">A fórmula de Coulomb com \(\rho_P\) e \(\sigma_P\) não conta corretamente todas as forças internas quando a fronteira não é uma superfície física real.</p>
+            <p class="note" style="margin-top:12px;"><strong>Consequência:</strong> uma tentativa ingênua de calcular a força na interface entre dois dielétricos pode errar por um fator 2 no limite condutor!</p>
+          </div>
+          <div class="card">
+            <h3>A solução correta</h3>
+            <ul>
+              <li>Para força total em corpo isolado: use (6.116) ✓</li>
+              <li>Para força em subvolume ou interface: use a <strong>fórmula de Helmholtz</strong> (6.130) ou o <strong>tensor de tensões</strong> (6.133).</li>
+              <li>Essas fórmulas incorporam corretamente as forças de curto alcance através da relação constitutiva.</li>
+              <li>Brown (1951) foi o primeiro a derivar o resultado correto sistematicamente.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 48: TENTATIVA INGÊNUA ══════════════════ -->
+    <article class="slide" data-title="6.8.2 Interface: tentativa ingênua">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Comparação errada vs. correta</p>
+          <h2>Interface dielétrica: tentativa ingênua vs. fórmula de Helmholtz</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card" style="border-color:rgba(255,143,128,.35); background:rgba(255,143,128,.06);">
+            <h3 style="color:var(--danger);">Tentativa ingênua (incorreta)</h3>
+            <p class="note" style="margin-top:8px;">Força de Coulomb sobre carga de polarização na interface \(\kappa_1|\kappa_2\) em capacitor de carga \(\sigma_f\):</p>
+            <div class="eq small" style="margin-top:8px;">\( f_{\rm ing} = \frac{\sigma_f^2}{\epsilon_0}\!\left(\frac{1}{\kappa_2}-\frac{1}{\kappa_1}\right)\hat{\mathbf{z}} \quad (6.121)\)</div>
+            <p class="note" style="margin-top:8px;"><strong>Diagnóstico:</strong> no limite \(\kappa_1\to\infty\), isso dá \(f\to\sigma_f^2/(\kappa_2\epsilon_0)\). Mas o resultado correto para pressão entre placas condutoras é \(\sigma_f^2/(2\kappa_2\epsilon_0)\) — fator 2 errado!</p>
+          </div>
+          <div class="card" style="border-color:rgba(126,231,135,.35); background:rgba(126,231,135,.06);">
+            <h3 style="color:var(--accent-3);">Fórmula de Helmholtz (correta)</h3>
+            <div class="eq small" style="margin-top:8px;">\( \mathbf{F} = \int d^3r\!\left[\rho_f\mathbf{E} - \frac{1}{2}E^2\nabla\epsilon\right] \quad (6.130)\)</div>
+            <p class="note" style="margin-top:8px;">O segundo termo age apenas onde \(\epsilon\) varia — na interface. Usando \(D_z=\sigma_f=\text{const}\) e \(E=D/\epsilon\):</p>
+            <div class="eq gold" style="margin-top:8px;">\( f = \frac{\sigma_f^2}{2\epsilon_0}\!\left(\frac{1}{\kappa_2}-\frac{1}{\kappa_1}\right)\hat{\mathbf{z}} \quad (\text{Ex. 6.6})\)</div>
+            <p class="note" style="margin-top:8px;">Limite \(\kappa_1\to\infty\): \(f\to\sigma_f^2/(2\kappa_2\epsilon_0)\) ✓ — reproduz a pressão eletrostática correta.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 49: TENSOR DE TENSÕES ══════════════════ -->
+    <article class="slide" data-title="6.8.5 Tensor de tensões elétrico em dielétrico">
+      <div class="content">
+        <header>
+          <p class="eyebrow">6.8.5 Tensores</p>
+          <h2>Tensor de tensões elétrico em dielétrico simples</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">A força de Helmholtz pode ser reescrita como integral de superfície:</p>
+            <div class="eq small">\( \mathbf{F} = \oint_S d\mathbf{S}\!\left[(\hat{\mathbf{n}}\cdot\mathbf{D})\mathbf{E} - \frac{1}{2}\hat{\mathbf{n}}(\mathbf{D}\cdot\mathbf{E})\right] \quad (6.132)\)</div>
+            <p class="note">Isso motiva o tensor de tensões elétrico para dielétrico simples:</p>
+            <div class="eq gold">\( T_{ij}(\mathbf{D}) \equiv D_i E_j - \frac{1}{2}\delta_{ij}\mathbf{D}\cdot\mathbf{E} \quad (6.133)\)</div>
+            <div class="eq small">\( F_i = \oint_S T_{ij}\hat{n}_j\,dS \quad (6.134)\)</div>
+          </div>
+          <div class="card">
+            <h3>Propriedades do tensor</h3>
+            <ul>
+              <li>\(T_{ij}\) é simétrico: \(D_i E_j=\epsilon E_i E_j=\epsilon E_j E_i=D_j E_i\).</li>
+              <li>No vácuo (\(\mathbf{D}=\epsilon_0\mathbf{E}\)): reduz ao tensor de Maxwell \(T_{ij}^{\rm Max}=\epsilon_0(E_iE_j-\frac{1}{2}\delta_{ij}E^2)\).</li>
+              <li><strong>Vantagem:</strong> permite calcular a força sobre qualquer corpo por integrar \(T_{ij}\) em uma superfície que envolve o corpo — a superfície pode estar em qualquer região, inclusive no dielétrico.</li>
+              <li>Appl. 6.4 (Zangwill): força sobre corpo embutido em dielétrico hospedeiro → \(\mathbf{F}=\kappa\int\rho\mathbf{E}\,d^3r\). O fator \(\kappa\) vem das forças de curto alcance do hospedeiro.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 50: SLAB EM CAPACITOR ══════════════════ -->
+    <article class="slide" data-title="Exemplo 6.8: slab dielétrico em capacitor">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 6.8</p>
+          <h2>Slab dielétrico parcialmente inserido em capacitor a potencial fixo</h2>
+        </header>
+        <div class="grid-2">
+          <div>
+            <p class="subtitle">Slab de constante \(\kappa\), espessura \(d\) (igual ao gap do capacitor), largura \(L\) por \(L\). Inserido uma distância \(s\) entre as placas. Potencial \(V\) fixo.</p>
+            <div class="eq small" style="margin-top:12px;">\( \Delta\hat{U}_E = -\frac{1}{2}\epsilon_0(\kappa-1)\left(\frac{V}{d}\right)^2(Lds)\)</div>
+            <div class="eq gold" style="margin-top:10px;">\( \mathbf{F} = -\frac{\partial\hat{U}_E}{\partial s}\hat{\mathbf{x}} = \frac{\epsilon_0(\kappa-1)LV^2}{2d}\hat{\mathbf{x}}\)</div>
+            <p class="note" style="margin-top:10px;">Força positiva: o slab é <strong>puxado para dentro</strong> do capacitor.</p>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 520 390" role="img" aria-label="Slab dielétrico em capacitor">
+              <defs>
+                <marker id="ef3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" fill="#7ee787"/>
+                </marker>
+              </defs>
+              <rect width="520" height="390" fill="#0d141d"/>
+              <rect x="70" y="90" width="360" height="30" rx="3" fill="#57c5ff" opacity=".3" stroke="#57c5ff" stroke-width="2"/>
+              <rect x="70" y="270" width="360" height="30" rx="3" fill="#57c5ff" opacity=".3" stroke="#57c5ff" stroke-width="2"/>
+              <rect x="70" y="120" width="170" height="150" rx="4" fill="rgba(255,204,102,.15)" stroke="#ffcc66" stroke-width="3"/>
+              <g stroke="#8091a2" stroke-width="3">
+                <line x1="260" y1="120" x2="260" y2="270" stroke-dasharray="6 4"/>
+                <line x1="300" y1="120" x2="300" y2="270" stroke-dasharray="6 4"/>
+                <line x1="340" y1="120" x2="340" y2="270" stroke-dasharray="6 4"/>
+                <line x1="380" y1="120" x2="380" y2="270" stroke-dasharray="6 4"/>
+                <line x1="420" y1="120" x2="420" y2="270" stroke-dasharray="6 4"/>
+              </g>
+              <text x="110" y="205" fill="#ffcc66" font-size="20">κ</text>
+              <line x1="248" y1="195" x2="340" y2="195" stroke="#7ee787" stroke-width="7" marker-end="url(#ef3)"/>
+              <text x="353" y="200" fill="#7ee787" font-size="22">F</text>
+              <text x="140" y="350" fill="#ffcc66" font-size="15">s = inserção</text>
+              <line x1="70" y1="320" x2="240" y2="320" stroke="#ffcc66" stroke-width="3"/>
+              <text x="475" y="75" fill="#57c5ff" font-size="18">+V</text>
+              <text x="475" y="310" fill="#57c5ff" font-size="18">0</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 51: SLAB: INTERPRETAÇÃO ══════════════════ -->
+    <article class="slide" data-title="Slab: interpretação e dieletroforese">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 6.8 — Leitura física</p>
+          <h2>Por que o slab é puxado para dentro?</h2>
+        </header>
+        <div class="grid-2">
+          <div class="card" style="border-color:rgba(255,204,102,.4);">
+            <h3 style="color:var(--accent-2);">Mensagem prática</h3>
+            <p class="note" style="margin-top:8px;">Dielétricos são atraídos para regiões onde o campo elétrico é mais intenso.</p>
+            <div class="eq small" style="margin-top:10px;">\( F \propto (\kappa-1),\quad F\propto V^2,\quad F\propto \frac{L}{d}\)</div>
+            <p class="note" style="margin-top:8px;">A força cresce com a polarizabilidade do material, com o quadrado do campo aplicado e com a área de borda que entra no capacitor.</p>
+          </div>
+          <div class="card">
+            <h3>A origem real da força</h3>
+            <p class="note" style="margin-top:8px;">A fórmula mostra que a força é proporcional a \((V/d)^2\propto E^2\). Mas onde exatamente ela age?</p>
+            <p class="note" style="margin-top:10px;">Aplicando (6.116) ao volume inteiro do slab: a força de Coulomb sobre \(\rho_P\) e \(\sigma_P\) no interior é zero (se campo for uniforme). A força vem do <strong>campo de franja</strong> nas bordas laterais do capacitor — onde o campo não é uniforme!</p>
+            <p class="note" style="margin-top:10px;">O cálculo de energia evita ter que encontrar o campo de franja explicitamente. Elegante!</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 52: EXEMPLO 6.7 FORÇA PERTO DE INTERFACE ══════════════════ -->
+    <article class="slide" data-title="Exemplo 6.7: força sobre carga perto de interface">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Exemplo 6.7</p>
+          <h2>Força sobre carga \(q\) perto de interface plana entre \(\kappa_L\) e \(\kappa_R\)</h2>
+        </header>
+        <div class="grid-2">
+          <div class="two-eq">
+            <p class="subtitle">Usando o tensor de tensões sobre uma superfície que envolve \(q\), ou via Appl. 6.4:</p>
+            <div class="eq gold">\( \mathbf{F}_{q} = -\hat{\mathbf{z}}\,\frac{1}{\kappa_L}\frac{\kappa_L-\kappa_R}{\kappa_L+\kappa_R}\frac{1}{4\pi\epsilon_0}\frac{q^2}{(2d)^2}\)</div>
+            <p class="note" style="margin-top:12px;">Observações:</p>
+            <ul style="margin-top:8px;">
+              <li>\(\kappa_R&gt;\kappa_L\): força atrativa (em direção à interface — ao meio de maior \(\kappa\)).</li>
+              <li>\(\kappa_R&lt;\kappa_L\): força repulsiva (em direção oposta à interface).</li>
+              <li>\(\kappa_R=\kappa_L\): força nula ✓.</li>
+              <li>\(\kappa_R\to\infty\): \(F\to -q^2/(4\pi\kappa_L\epsilon_0 (2d)^2)\) — resultado do método das imagens para condutor!</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Conexão com Exemplo 6.2</h3>
+            <ul>
+              <li>O resultado usa diretamente \(\sigma_P\) do Exemplo 6.2.</li>
+              <li>A força também pode ser calculada via energia: inserir \(q\) a distância \(d\) da interface abaixa \(U_E\) — a força aponta para onde a energia é menor.</li>
+              <li>Aplicação: adsorção de íons em interfaces biológicas (\(\kappa_L\approx 80\) água, \(\kappa_R\approx 2-4\) membrana lipídica).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 53: RESUMO ══════════════════ -->
+    <article class="slide" data-title="Resumo do capítulo 6">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Fechamento</p>
+          <h2>O coração do Capítulo 6 em oito equações</h2>
+        </header>
+        <div class="grid-2">
+          <div class="three-eq">
+            <div class="eq small">\( \rho_P=-\nabla\cdot\mathbf{P},\quad\sigma_P=\mathbf{P}\cdot\hat{\mathbf{n}} \)</div>
+            <div class="eq small">\( \int_V\mathbf{P}\,d^3r = \mathbf{p} \quad \text{(dipolo total)}\)</div>
+            <div class="eq small">\( \mathbf{D}=\epsilon_0\mathbf{E}+\mathbf{P},\quad\nabla\cdot\mathbf{D}=\rho_f\)</div>
+            <div class="eq small gold">\( \text{Simples: }\mathbf{D}=\epsilon\mathbf{E}=\kappa\epsilon_0\mathbf{E},\quad C=\kappa C_0 \)</div>
+            <div class="eq small gold">\( U_E = \tfrac{1}{2}\int\mathbf{E}\cdot\mathbf{D}\,d^3r,\quad\Delta U_E=-\tfrac{1}{2}\int\mathbf{P}\cdot\mathbf{E}_0\,d^3r\)</div>
+            <div class="eq small green">\( \mathbf{F}=\int(\mathbf{P}\cdot\nabla)\mathbf{E}_0\,d^3r\quad\text{(corpo isolado)}\)</div>
+            <div class="eq small green">\( \mathbf{F}_{\rm Helmholtz}=\int\!\!\left[\rho_f\mathbf{E}-\tfrac{1}{2}E^2\nabla\epsilon\right]\!d^3r\quad\text{(subvolumes)}\)</div>
+            <div class="eq small">\( \frac{\kappa-1}{\kappa+2}=\frac{n\alpha}{3}\quad\text{(Clausius-Mossotti)}\)</div>
+          </div>
+          <div class="card">
+            <h3>Ideia unificadora</h3>
+            <p class="subtitle" style="margin-top:10px;">A resposta dielétrica é uma competição entre <strong>energia eletrostática</strong> (que quer alinhar os dipolos com o campo), <strong>polarização induzida</strong> (que custa energia interna) e <strong>forças microscópicas</strong> de curto alcance (que mantêm a matéria coesa).</p>
+            <p class="note" style="margin-top:14px;">O dielétrico sempre abaixa a energia do sistema ao ser inserido num campo (cargas fixas) e sempre é atraído para regiões de campo mais intenso — resultado universal, independente do sinal da carga.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 54: CRÉDITOS ══════════════════ -->
+    <article class="slide" data-title="Referências">
+      <div class="content">
+        <header>
+          <p class="eyebrow">Fontes e créditos</p>
+          <h2>Referências</h2>
+        </header>
+        <div class="grid-2 source-list">
+          <div class="card">
+            <h3>Base conceitual</h3>
+            <ul>
+              <li>Zangwill, A. <em>Modern Electrodynamics</em>. Cambridge University Press, 2012. Cap. 6 (pp. 158–191).</li>
+              <li>Purcell, E. M. <em>Electricity and Magnetism</em>. McGraw-Hill, 1965 (epígrafe).</li>
+              <li>Onsager, L. "Electric Moments of Molecules in Liquids". J. Am. Chem. Soc. 58 (1936).</li>
+              <li>Brown, W. F. "Electric and Magnetic Forces: A Direct Calculation". Am. J. Phys. 19 (1951).</li>
+              <li>Texto dos slides: elaboração autoral para aula de pós-graduação, UDESC.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Retratos históricos</h3>
+            <ul>
+              <li><a href="https://commons.wikimedia.org/wiki/File:Michael_Faraday_001.jpg">Faraday</a> — Wikimedia Commons</li>
+              <li><a href="https://commons.wikimedia.org/wiki/File:James_Clerk_Maxwell.png">Maxwell</a> — Wikimedia Commons</li>
+              <li><a href="https://commons.wikimedia.org/wiki/File:Lorentz_1916.tif">Lorentz</a> — Wikimedia Commons</li>
+              <li>Mossotti — domínio público</li>
+            </ul>
+            <h3 style="margin-top:16px;">Prof. Dr. Rafael Camargo Rodrigues de Lima</h3>
+            <ul>
+              <li>Eletromagnetismo Clássico — Pós-Graduação UDESC/CCT</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <nav class="control-bar" aria-label="Controles">
+    <div class="nav-buttons">
+      <button class="icon-btn" id="prev" aria-label="Slide anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn" id="next" aria-label="Próximo slide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+    <div class="counter" id="counter">1 / 1</div>
+    <div class="kbd">← → navegam · F tela cheia</div>
+  </nav>
+</main>
+
+<script>
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const progress = document.querySelector("#progress");
+  const counter = document.querySelector("#counter");
+  const prev = document.querySelector("#prev");
+  const next = document.querySelector("#next");
+
+  let index = Number.parseInt(new URL(location.href).hash.replace("#",""), 10) - 1;
+  if (!Number.isFinite(index) || index < 0 || index >= slides.length) index = 0;
+
+  function show(n) {
+    index = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, i) => s.classList.toggle("active", i === index));
+    counter.textContent = `${index + 1} / ${slides.length}`;
+    progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+    history.replaceState(null, "", `#${index + 1}`);
+  }
+
+  prev.addEventListener("click", () => show(index - 1));
+  next.addEventListener("click", () => show(index + 1));
+
+  document.querySelectorAll("[data-jump]").forEach(b =>
+    b.addEventListener("click", () => show(Number(b.dataset.jump)))
+  );
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(index + 1); }
+    if (e.key === "ArrowLeft"  || e.key === "PageUp")                    { e.preventDefault(); show(index - 1); }
+    if (e.key.toLowerCase() === "f") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    }
+    if (e.key === "Home") show(0);
+    if (e.key === "End")  show(slides.length - 1);
+  });
+
+  show(index);
+</script>
+</body>
+</html>
