@@ -130,6 +130,44 @@
     .counter { color: var(--muted); font-size: .86rem; min-width: 78px; text-align: right; }
     .kbd { color: var(--muted); font-size: .82rem; }
     .source-list a { color: var(--accent); }
+    .dielectric-dashboard {
+      display: grid; grid-template-columns: minmax(0,1.08fr) minmax(340px,.92fr);
+      gap: 18px; min-height: 0; align-items: stretch;
+    }
+    .dash-slide { gap: 10px; padding: clamp(22px,2.6vw,34px); overflow: hidden; }
+    .dash-slide h2 { font-size: clamp(1.8rem,3vw,2.65rem); }
+    .dash-visuals { display: grid; grid-template-rows: auto 88px; gap: 10px; min-height: 0; }
+    .dash-canvas {
+      width: 100%; height: clamp(300px,42vh,410px); min-height: 0;
+      border: 1px solid var(--line); border-radius: 8px; background: #071019; display: block;
+    }
+    .dash-side { display: grid; grid-template-rows: auto auto minmax(0,1fr); gap: 9px; min-height: 0; }
+    .dash-controls { display: grid; gap: 8px; }
+    .dash-control {
+      display: grid; gap: 5px; padding: 8px 11px; border: 1px solid var(--line);
+      border-radius: 8px; background: rgba(255,255,255,.035);
+    }
+    .dash-control label { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .86rem; }
+    .dash-control output { color: var(--accent-2); font-weight: 800; min-width: 58px; text-align: right; }
+    .dash-control input[type="range"] { width: 100%; accent-color: var(--accent); }
+    .dash-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
+    .dash-metric {
+      border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.035);
+      padding: 8px 10px; min-width: 0;
+    }
+    .dash-metric span { display: block; color: var(--dim); font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }
+    .dash-metric strong { display: block; margin-top: 3px; color: var(--ink); font-size: clamp(.95rem,1.35vw,1.18rem); overflow-wrap: anywhere; }
+    .dash-equations { display: grid; gap: 7px; align-content: start; overflow: auto; min-height: 0; }
+    .dash-equations .eq { min-height: 0; padding: 7px 12px; font-size: clamp(.74rem,1vw,.92rem); }
+    .dash-equations .eq mjx-container { font-size: 72% !important; }
+    .dash-equations .note { font-size: .78rem; line-height: 1.35; }
+    .dash-plot-wrap { display: grid; grid-template-columns: minmax(0,1fr) minmax(180px,.44fr); gap: 10px; align-items: stretch; }
+    .dash-plot { width: 100%; height: 88px; border: 1px solid var(--line); border-radius: 8px; background: #0a121c; display: block; }
+    .dash-legend {
+      display: grid; align-content: center; gap: 7px; color: var(--muted); font-size: .78rem;
+      border: 1px solid var(--line); border-radius: 8px; padding: 10px; background: rgba(255,255,255,.03);
+    }
+    .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 999px; margin-right: 7px; vertical-align: -1px; }
     @media (max-width: 820px) {
       body { overflow: auto; }
       .deck { min-height: 100svh; }
@@ -139,7 +177,16 @@
       h1, h2 { font-size: 1.65rem; line-height: 1.12; max-width: 100%; }
       h3 { font-size: 1.4rem; }
       .hero .content { width: 100%; }
-      .grid-2, .grid-3, .toc, .toc-4, .portrait-row { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .toc, .toc-4, .portrait-row, .dielectric-dashboard, .dash-plot-wrap { grid-template-columns: 1fr; }
+      .dash-metrics { grid-template-columns: 1fr; }
+      .dash-slide { overflow: auto; padding: 24px; }
+      .dash-slide h2 { font-size: 1.65rem; }
+      .dash-visuals { grid-template-rows: auto; }
+      .dash-canvas { height: 235px; }
+      .dash-plot-wrap { display: none; }
+      .dash-plot { height: 115px; }
+      .dash-side { margin-top: 12px; }
+      .dash-control label { font-size: .78rem; flex-wrap: wrap; }
       .control-bar { grid-template-columns: auto 1fr auto; gap: 10px; }
       .kbd { display: none; }
     }
@@ -192,9 +239,9 @@
           <button data-jump="14"><span>6.3</span>Campo produzido por matéria polarizada</button>
           <button data-jump="20"><span>6.4</span>Campo total e campo auxiliar D</button>
           <button data-jump="26"><span>6.5</span>Matéria dielétrica simples</button>
-          <button data-jump="36"><span>6.6</span>Física da constante dielétrica</button>
-          <button data-jump="41"><span>6.7</span>Energia de matéria dielétrica</button>
-          <button data-jump="46"><span>6.8</span>Forças em matéria dielétrica</button>
+          <button data-jump="37"><span>6.6</span>Física da constante dielétrica</button>
+          <button data-jump="42"><span>6.7</span>Energia de matéria dielétrica</button>
+          <button data-jump="47"><span>6.8</span>Forças em matéria dielétrica</button>
         </div>
       </div>
     </article>
@@ -1028,6 +1075,57 @@
               <li>Em um dielétrico puro sem carga livre: \(\rho_f=0\Rightarrow\rho_P=0\). A carga de polarização só aparece no volume quando há carga livre também ali.</li>
             </ul>
           </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ══════════════════ SLIDE 28: DASHBOARD ESFERA DIELÉTRICA ══════════════════ -->
+    <article class="slide" data-title="Dashboard: esfera dielétrica polarizada">
+      <div class="content dash-slide">
+        <header>
+          <p class="eyebrow">Laboratório visual</p>
+          <h2>Esfera dielétrica em campo externo</h2>
+        </header>
+        <div class="dielectric-dashboard">
+          <div class="dash-visuals">
+            <canvas id="dielectricFieldCanvas" class="dash-canvas" width="960" height="600" aria-label="Esfera dielétrica com linhas de campo e cargas de polarização"></canvas>
+            <div class="dash-plot-wrap">
+              <canvas id="dielectricChargeCanvas" class="dash-plot" width="960" height="300" aria-label="Gráfico da carga superficial e volumétrica de polarização"></canvas>
+              <div class="dash-legend">
+                <p><span class="legend-dot" style="background:#ff8f80;"></span>\(\sigma_P>0\) ou \(\rho_P>0\)</p>
+                <p><span class="legend-dot" style="background:#57c5ff;"></span>\(\sigma_P<0\) ou \(\rho_P<0\)</p>
+                <p><span class="legend-dot" style="background:#ffcc66;"></span>linhas de \(\mathbf{E}\)</p>
+              </div>
+            </div>
+          </div>
+          <aside class="dash-side">
+            <div class="dash-controls" aria-label="Controles do dashboard">
+              <div class="dash-control">
+                <label for="dashE0">Campo externo \(E_0\)<output id="dashE0Out">1.00</output></label>
+                <input id="dashE0" type="range" min="-3" max="3" step="0.05" value="1">
+              </div>
+              <div class="dash-control">
+                <label for="dashKappa">Constante dielétrica \(\kappa\)<output id="dashKappaOut">4.0</output></label>
+                <input id="dashKappa" type="range" min="1" max="20" step="0.1" value="4">
+              </div>
+              <div class="dash-control">
+                <label for="dashRhoF">Carga livre uniforme \(\rho_f\)<output id="dashRhoFOut">0.00</output></label>
+                <input id="dashRhoF" type="range" min="-3" max="3" step="0.05" value="0">
+              </div>
+            </div>
+            <div class="dash-metrics">
+              <div class="dash-metric"><span>Campo interno</span><strong id="dashEin">0.50 E0</strong></div>
+              <div class="dash-metric"><span>Carga no volume</span><strong id="dashRhoP">0.00</strong></div>
+              <div class="dash-metric"><span>Superfície</span><strong id="dashSigmaMax">±0.00</strong></div>
+            </div>
+            <div class="dash-equations">
+              <div class="eq small">\(E_{\rm in}=\dfrac{3}{\kappa+2}E_0\)</div>
+              <div class="eq small">\(P_z=\epsilon_0(\kappa-1)E_{\rm in}\)</div>
+              <div class="eq gold">\( \sigma_P(\theta)=P_z\cos\theta+\dfrac{\kappa-1}{\kappa}\dfrac{\rho_f R}{3}\)</div>
+              <div class="eq green">\( \rho_P=\left(\dfrac{1}{\kappa}-1\right)\rho_f \)</div>
+              <p class="note">Modelo normalizado: esfera de raio \(R=1\), vácuo fora e dielétrico linear homogêneo dentro. A carga livre uniforme mostra por que \(\rho_P\) aparece no volume; o campo externo puro produz principalmente carga superficial.</p>
+            </div>
+          </aside>
         </div>
       </div>
     </article>
@@ -1902,6 +2000,277 @@
     if (e.key === "End")  show(slides.length - 1);
   });
 
+  function initDielectricDashboard() {
+    const fieldCanvas = document.querySelector("#dielectricFieldCanvas");
+    const chargeCanvas = document.querySelector("#dielectricChargeCanvas");
+    if (!fieldCanvas || !chargeCanvas) return;
+
+    const controls = {
+      e0: document.querySelector("#dashE0"),
+      kappa: document.querySelector("#dashKappa"),
+      rhoF: document.querySelector("#dashRhoF")
+    };
+    const outputs = {
+      e0: document.querySelector("#dashE0Out"),
+      kappa: document.querySelector("#dashKappaOut"),
+      rhoF: document.querySelector("#dashRhoFOut"),
+      ein: document.querySelector("#dashEin"),
+      rhoP: document.querySelector("#dashRhoP"),
+      sigmaMax: document.querySelector("#dashSigmaMax")
+    };
+
+    const css = getComputedStyle(document.documentElement);
+    const colors = {
+      ink: css.getPropertyValue("--ink").trim(),
+      muted: css.getPropertyValue("--muted").trim(),
+      dim: css.getPropertyValue("--dim").trim(),
+      line: css.getPropertyValue("--line").trim(),
+      accent: css.getPropertyValue("--accent").trim(),
+      gold: css.getPropertyValue("--accent-2").trim(),
+      green: css.getPropertyValue("--accent-3").trim(),
+      red: css.getPropertyValue("--danger").trim()
+    };
+
+    function fit(canvas) {
+      const box = canvas.getBoundingClientRect();
+      const ratio = Math.max(1, window.devicePixelRatio || 1);
+      const width = Math.max(320, Math.round(box.width * ratio));
+      const height = Math.max(180, Math.round(box.height * ratio));
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+      }
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return { ctx, w: width / ratio, h: height / ratio };
+    }
+
+    function fmt(x, digits = 2) {
+      return Math.abs(x) < 0.005 ? "0.00" : x.toFixed(digits);
+    }
+
+    function values() {
+      const e0 = Number(controls.e0.value);
+      const kappa = Number(controls.kappa.value);
+      const rhoF = Number(controls.rhoF.value);
+      const ein = (3 / (kappa + 2)) * e0;
+      const pz = (kappa - 1) * ein;
+      const rhoP = (1 / kappa - 1) * rhoF;
+      const sigmaUniform = ((kappa - 1) / kappa) * rhoF / 3;
+      return { e0, kappa, rhoF, ein, pz, rhoP, sigmaUniform };
+    }
+
+    function chargeColor(value, scale) {
+      const amount = Math.min(1, Math.abs(value) / Math.max(scale, 0.001));
+      const color = value >= 0 ? colors.red : colors.accent;
+      return { color, amount };
+    }
+
+    function arrow(ctx, x1, y1, x2, y2, color, width = 2) {
+      const angle = Math.atan2(y2 - y1, x2 - x1);
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = width;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - 10 * Math.cos(angle - 0.45), y2 - 10 * Math.sin(angle - 0.45));
+      ctx.lineTo(x2 - 10 * Math.cos(angle + 0.45), y2 - 10 * Math.sin(angle + 0.45));
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function drawField() {
+      const { ctx, w, h } = fit(fieldCanvas);
+      const v = values();
+      const cx = w * 0.5;
+      const cy = h * 0.52;
+      const r = Math.min(w, h) * 0.235;
+      const direction = v.e0 >= 0 ? 1 : -1;
+      const fieldStrength = Math.min(1, Math.abs(v.e0) / 3);
+      const sigmaScale = Math.max(0.8, Math.abs(v.pz) + Math.abs(v.sigmaUniform));
+
+      ctx.clearRect(0, 0, w, h);
+      const bg = ctx.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, "#071019");
+      bg.addColorStop(1, "#0e1824");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = "rgba(42,54,69,.8)";
+      ctx.lineWidth = 1;
+      for (let x = 40; x < w; x += 70) {
+        ctx.beginPath(); ctx.moveTo(x, 24); ctx.lineTo(x, h - 24); ctx.stroke();
+      }
+      for (let y = 35; y < h; y += 60) {
+        ctx.beginPath(); ctx.moveTo(24, y); ctx.lineTo(w - 24, y); ctx.stroke();
+      }
+
+      const lineCount = 11;
+      for (let i = 0; i < lineCount; i++) {
+        const y = cy - r * 1.75 + (i / (lineCount - 1)) * r * 3.5;
+        const distance = Math.abs(y - cy) / r;
+        const bow = Math.max(0, 1.25 - distance) * r * (0.28 + 0.42 * fieldStrength) * (v.kappa - 1) / (v.kappa + 2);
+        const xStart = direction > 0 ? 38 : w - 38;
+        const xEnd = direction > 0 ? w - 38 : 38;
+        const c1x = cx - direction * r * 1.3;
+        const c2x = cx + direction * r * 1.3;
+        const offset = y < cy ? -bow : bow;
+        ctx.beginPath();
+        ctx.moveTo(xStart, y);
+        ctx.bezierCurveTo(c1x, y + offset, c2x, y + offset, xEnd, y);
+        ctx.strokeStyle = `rgba(255,204,102,${0.18 + 0.58 * fieldStrength})`;
+        ctx.lineWidth = 1.5 + 2.4 * fieldStrength;
+        ctx.stroke();
+        const ax = direction > 0 ? xEnd - 46 : xEnd + 46;
+        arrow(ctx, ax - direction * 22, y, ax, y, `rgba(255,204,102,${0.4 + 0.45 * fieldStrength})`, 1.5);
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.clip();
+      const sphereGrad = ctx.createRadialGradient(cx - r * .32, cy - r * .45, r * .12, cx, cy, r);
+      sphereGrad.addColorStop(0, "rgba(87,197,255,.26)");
+      sphereGrad.addColorStop(1, "rgba(87,197,255,.07)");
+      ctx.fillStyle = sphereGrad;
+      ctx.fillRect(cx - r, cy - r, 2 * r, 2 * r);
+      for (let i = 0; i < 7; i++) {
+        const y = cy - r * .72 + i * r * .24;
+        const len = r * (1.1 - Math.abs(y - cy) / r * .42) * Math.min(1, Math.abs(v.ein) / 2.2);
+        if (len > 4) arrow(ctx, cx - direction * len * .5, y, cx + direction * len * .5, y, "rgba(126,231,135,.75)", 2);
+      }
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(87,197,255,.06)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(87,197,255,.86)";
+      ctx.lineWidth = 2.4;
+      ctx.stroke();
+
+      const dotRows = 6;
+      for (let row = 0; row < dotRows; row++) {
+        const y = cy - r * .68 + row * (r * 1.36 / (dotRows - 1));
+        const span = Math.sqrt(Math.max(0, r * r - (y - cy) ** 2));
+        for (let col = -3; col <= 3; col++) {
+          const x = cx + col * span / 3.7;
+          if ((x - cx) ** 2 + (y - cy) ** 2 > r * r * .92) continue;
+          const { color, amount } = chargeColor(v.rhoP, Math.max(1, Math.abs(v.rhoF)));
+          ctx.globalAlpha = 0.18 + amount * 0.55;
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(x, y, 3.4 + amount * 2.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      const samples = 56;
+      for (let i = 0; i < samples; i++) {
+        const theta = (i / samples) * Math.PI * 2;
+        const sigma = v.pz * Math.cos(theta) + v.sigmaUniform;
+        const { color, amount } = chargeColor(sigma, sigmaScale);
+        const x = cx + Math.cos(theta) * r;
+        const y = cy - Math.sin(theta) * r;
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.22 + amount * 0.78;
+        ctx.beginPath();
+        ctx.arc(x, y, 3 + amount * 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      const pLen = Math.min(r * .72, Math.abs(v.pz) * r * .22);
+      if (pLen > 5) arrow(ctx, cx - direction * pLen * .5, cy + r * 1.28, cx + direction * pLen * .5, cy + r * 1.28, colors.green, 3);
+      ctx.fillStyle = colors.muted;
+      ctx.font = "600 15px Inter, sans-serif";
+      ctx.fillText("E externo", direction > 0 ? 42 : w - 132, 38);
+      ctx.fillStyle = colors.green;
+      ctx.fillText("P induzida", cx - 42, cy + r * 1.48);
+      ctx.fillStyle = colors.ink;
+      ctx.font = "800 17px Inter, sans-serif";
+      ctx.fillText("esfera dielétrica", cx - 64, cy - r - 18);
+    }
+
+    function drawChargePlot() {
+      const { ctx, w, h } = fit(chargeCanvas);
+      const v = values();
+      const pad = { l: 44, r: 18, t: 22, b: 36 };
+      const plotW = w - pad.l - pad.r;
+      const plotH = h - pad.t - pad.b;
+      const maxSigma = Math.max(0.5, Math.abs(v.pz) + Math.abs(v.sigmaUniform), Math.abs(v.rhoP));
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#0a121c";
+      ctx.fillRect(0, 0, w, h);
+
+      const y0 = pad.t + plotH / 2;
+      ctx.strokeStyle = colors.line;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(pad.l, y0); ctx.lineTo(w - pad.r, y0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, h - pad.b); ctx.stroke();
+
+      ctx.strokeStyle = colors.gold;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i <= 240; i++) {
+        const theta = (i / 240) * Math.PI * 2;
+        const sigma = v.pz * Math.cos(theta) + v.sigmaUniform;
+        const x = pad.l + (theta / (Math.PI * 2)) * plotW;
+        const y = y0 - (sigma / maxSigma) * plotH * .44;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      const barX = pad.l + plotW * .78;
+      const barW = Math.min(56, plotW * .09);
+      const barH = (v.rhoP / maxSigma) * plotH * .44;
+      ctx.fillStyle = v.rhoP >= 0 ? colors.red : colors.accent;
+      ctx.globalAlpha = 0.85;
+      ctx.fillRect(barX, y0 - Math.max(barH, 0), barW, Math.abs(barH));
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = colors.muted;
+      ctx.font = "11px Inter, sans-serif";
+      ctx.fillText("0", 14, y0 + 4);
+      if (h > 110) {
+        ctx.fillText("θ = 0", pad.l, h - 12);
+        ctx.fillText("π", pad.l + plotW / 2 - 5, h - 12);
+        ctx.fillText("2π", w - pad.r - 24, h - 12);
+      }
+      ctx.fillStyle = colors.gold;
+      ctx.fillText("σP(θ)", pad.l + 8, pad.t + 12);
+      if (h > 110) {
+        ctx.fillStyle = colors.muted;
+        ctx.fillText("barra: ρP no volume", barX - 34, pad.t + 14);
+      }
+    }
+
+    function render() {
+      const v = values();
+      outputs.e0.textContent = fmt(v.e0);
+      outputs.kappa.textContent = v.kappa.toFixed(1);
+      outputs.rhoF.textContent = fmt(v.rhoF);
+      outputs.ein.textContent = `${fmt(v.ein)} (${fmt(3 / (v.kappa + 2))} E0)`;
+      outputs.rhoP.textContent = fmt(v.rhoP);
+      outputs.sigmaMax.textContent = `de ${fmt(v.sigmaUniform - Math.abs(v.pz))} a ${fmt(v.sigmaUniform + Math.abs(v.pz))}`;
+      drawField();
+      drawChargePlot();
+    }
+
+    Object.values(controls).forEach(control => {
+      control.addEventListener("input", render);
+      control.addEventListener("keydown", event => event.stopPropagation());
+    });
+    window.addEventListener("resize", render);
+    render();
+  }
+
+  initDielectricDashboard();
   show(index);
 </script>
 </body>
